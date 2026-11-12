@@ -1,0 +1,23 @@
+{
+  "name": "boardcore-packs",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": { "node": ">=22.12" },
+  "scripts": {
+    "setup": "git submodule update --init && pnpm -C boardcore install --frozen-lockfile && pnpm -C boardcore build && pnpm install",
+    "build": "pnpm -r --if-present run build",
+    "typecheck": "tsc -p .",
+    "test": "pnpm build && vitest run",
+    "check": "pnpm typecheck && pnpm test",
+    "packs": "node tools/local-packs.mjs"
+  },
+  "devDependencies": {
+    "@effect/vitest": "4.1.2",
+    "@types/node": "24.19.2",
+    "effect": "4.1.2",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}

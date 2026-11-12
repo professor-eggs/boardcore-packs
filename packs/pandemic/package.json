@@ -1,0 +1,24 @@
+{
+  "name": "@boardcore-packs/pandemic",
+  "version": "0.1.0",
+  "description": "Pandemic with On the Brink (roles, events, Virulent Strain, Mutation, the Bio-Terrorist) as switchable add-ons.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./dist/manifest.json": "./dist/manifest.json",
+    "./dist/bundle.mjs": "./dist/bundle.mjs"
+  },
+  "scripts": {
+    "build": "node ../../boardcore/tools/pack-build/cli.mjs ."
+  },
+  "dependencies": {
+    "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk"
+  },
+  "devDependencies": {
+    "@boardcore/testkit": "link:../../boardcore/packages/testkit",
+    "@boardcore/core": "link:../../boardcore/packages/core"
+  }
+}

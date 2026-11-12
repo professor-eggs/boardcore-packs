@@ -1,0 +1,24 @@
+{
+  "id": "boardcore/pandemic",
+  "version": "0.1.0",
+  "name": "Pandemic",
+  "description": "Cooperative: cure four diseases before outbreaks overrun the world. On the Brink's roles and events, Virulent Strain, Mutation and the Bio-Terrorist are switchable add-ons. Private local build: not for distribution.",
+  "authors": ["Boardcore"],
+  "licence": "UNLICENSED",
+  "contract": 1,
+  "seats": {
+    "min": 2,
+    "max": 6,
+    "names": ["red", "blue", "green", "yellow", "purple", "black"]
+  },
+  "options": {
+    "epidemics": { "title": "Epidemic cards", "type": "integer", "default": 4, "minimum": 4, "maximum": 7, "description": "4 introductory, 5 standard, 6 heroic, 7 legendary (needs On the Brink)." },
+    "onTheBrink": { "title": "On the Brink: roles and events", "type": "boolean", "default": false, "description": "6 more roles, 8 more events (2 events per player), up to 5 players." },
+    "virulentStrain": { "title": "Virulent Strain challenge", "type": "boolean", "default": false, "description": "Virulent Strain epidemic cards replace the normal ones." },
+    "mutation": { "title": "Mutation challenge", "type": "boolean", "default": false, "description": "A fifth, purple disease. Not with the Bio-Terrorist." },
+    "bioterrorist": { "title": "Bio-Terrorist challenge", "type": "boolean", "default": false, "description": "One seat is a hidden Bio-Terrorist spreading the purple disease. 3 or 4 seats suit it best (5 at most). Not with Mutation." },
+    "bioterroristSeat": { "title": "Who is the Bio-Terrorist", "type": "string", "default": "last", "enum": ["last", "random"], "labels": { "last": "The last seat (a volunteer)", "random": "A random seat" }, "description": "Only with the Bio-Terrorist challenge." },
+    "openHands": { "title": "Open hands", "type": "boolean", "default": false, "description": "Everyone sees every hand. Always on in the introductory game (4 epidemics); optional otherwise." }
+  },
+  "hiddenInformation": true
+}

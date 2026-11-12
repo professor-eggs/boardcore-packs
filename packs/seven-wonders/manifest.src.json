@@ -1,0 +1,24 @@
+{
+  "id": "boardcore/seven-wonders",
+  "version": "0.1.0",
+  "name": "7 Wonders",
+  "description": "Draft cards over three ages to build a city and a wonder. Leaders, Cities and the Wonder Pack are switchable add-ons. Private local build: not for distribution.",
+  "authors": ["Boardcore"],
+  "licence": "UNLICENSED",
+  "contract": 1,
+  "seats": {
+    "min": 3,
+    "max": 8,
+    "names": ["red", "blue", "green", "yellow", "purple", "orange", "teal", "pink"]
+  },
+  "options": {
+    "leaders": { "title": "Leaders expansion", "type": "boolean", "default": false, "description": "Leader draft, recruiting each age, 6 starting coins, Rome, 4 guilds." },
+    "leaderPromos": { "title": "Leaders goodies: Louis, Stevie, Esteban", "type": "boolean", "default": false, "description": "Adds the three promo leaders to the Leaders pool (needs Leaders)." },
+    "cities": { "title": "Cities expansion", "type": "boolean", "default": false, "description": "Black cards, debt, diplomacy, Petra and Byzantium, 3 guilds; allows 8 players (deal 7, play 6, set up like 7)." },
+    "teamPlay": { "title": "Cities team play", "type": "boolean", "default": false, "description": "4, 6 or 8 players in adjacent pairs: teammates do not fight, conflict tokens are doubled (needs Cities)." },
+    "wonderPack": { "title": "Wonder Pack", "type": "boolean", "default": false, "description": "The Great Wall, Stonehenge, Manneken Pis, and Abu Simbel (with Leaders)." },
+    "sideB": { "title": "Play the B side of every wonder", "type": "boolean", "default": false, "description": "Otherwise every wonder is on its A side." },
+    "randomSides": { "title": "Random wonder sides", "type": "boolean", "default": false, "description": "Each wonder's side is drawn at random (overrides the B side option)." }
+  },
+  "hiddenInformation": true
+}

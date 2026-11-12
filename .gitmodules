@@ -1,0 +1,3 @@
+[submodule "boardcore"]
+	path = boardcore
+	url = https://github.com/professor-eggs/boardcore.git

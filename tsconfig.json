@@ -1,0 +1,6 @@
+{
+  "extends": "./boardcore/tsconfig.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["packs/*/src", "packs/*/test"],
+  "exclude": ["**/node_modules", "boardcore"]
+}
