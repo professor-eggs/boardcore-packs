@@ -1,0 +1,16 @@
+{
+  "name": "@boardcore-packs/kit",
+  "version": "0.1.0",
+  "description": "Runs a built private pack through Boardcore's test kit in both adapters (random games, replays, interleaving, two-worlds leak check, resample views).",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": {
+    "@boardcore/core": "link:../../boardcore/packages/core",
+    "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk",
+    "@boardcore/runtime-quickjs": "link:../../boardcore/packages/runtime-quickjs",
+    "@boardcore/testkit": "link:../../boardcore/packages/testkit"
+  }
+}

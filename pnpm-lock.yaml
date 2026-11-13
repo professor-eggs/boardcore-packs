@@ -30,6 +30,9 @@ importers:
         specifier: link:../../boardcore/packages/pack-sdk
         version: link:../../boardcore/packages/pack-sdk
     devDependencies:
+      '@boardcore-packs/kit':
+        specifier: workspace:*
+        version: link:../../tools/kit
       '@boardcore/core':
         specifier: link:../../boardcore/packages/core
         version: link:../../boardcore/packages/core
@@ -43,9 +46,27 @@ importers:
         specifier: link:../../boardcore/packages/pack-sdk
         version: link:../../boardcore/packages/pack-sdk
     devDependencies:
+      '@boardcore-packs/kit':
+        specifier: workspace:*
+        version: link:../../tools/kit
       '@boardcore/core':
         specifier: link:../../boardcore/packages/core
         version: link:../../boardcore/packages/core
+      '@boardcore/testkit':
+        specifier: link:../../boardcore/packages/testkit
+        version: link:../../boardcore/packages/testkit
+
+  tools/kit:
+    dependencies:
+      '@boardcore/core':
+        specifier: link:../../boardcore/packages/core
+        version: link:../../boardcore/packages/core
+      '@boardcore/pack-sdk':
+        specifier: link:../../boardcore/packages/pack-sdk
+        version: link:../../boardcore/packages/pack-sdk
+      '@boardcore/runtime-quickjs':
+        specifier: link:../../boardcore/packages/runtime-quickjs
+        version: link:../../boardcore/packages/runtime-quickjs
       '@boardcore/testkit':
         specifier: link:../../boardcore/packages/testkit
         version: link:../../boardcore/packages/testkit

@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@boardcore/testkit": "link:../../boardcore/packages/testkit",
-    "@boardcore/core": "link:../../boardcore/packages/core"
+    "@boardcore/core": "link:../../boardcore/packages/core",
+    "@boardcore-packs/kit": "workspace:*"
   }
 }

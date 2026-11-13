@@ -5,7 +5,8 @@ Xavier's own Boardcore packs of published games, for personal use only. Never di
 ## Layout
 
 - `boardcore/`: the Boardcore repository as a git submodule, pinned to the commit whose pack SDK, build tool and test kit these packs are written against.
-- `packs/<name>/`: one pack each (`manifest.src.json`, `src/`, `test/`, `README.md`, `RULES-AUDIT.md`).
+- `packs/<name>/`: one pack each (`manifest.src.json`, `src/`, `test/`, `README.md`, `RULES-AUDIT.md`, `CONTRACT-GAPS.md`: where contract v1 was awkward, with the test-kit numbers).
+- `tools/kit/`: runs a built pack (`dist/`) through Boardcore's test kit in both adapters: random games with equal hashes every ply, BGN replays, interleaved rooms, the two-worlds leak check (D52) and D82's resampled-view check. Each pack's `test/kit-*.test.ts` uses it.
 - `tools/local-packs.mjs`: writes each built pack as a pack file (`{ manifest, bundle }`) for a server's `PACKS_DIR`.
 
 ## Use
