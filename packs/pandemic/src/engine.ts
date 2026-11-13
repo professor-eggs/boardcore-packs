@@ -351,7 +351,8 @@ export function beginDraw(s: State, ctx: Ctx): State {
 
 /** An epidemic: Increase and Infect, then a window for Resilient Population if anyone holds it, then Intensify. */
 export function startEpidemic(s: State, card: string, ctx: Ctx, rng: Rng): State {
-  s = say({ ...s, removed: [...s.removed, card] }, "Epidemic!");
+  // The bottom infection card is turned up: a reveal even when no shuffle follows in this action.
+  s = say(touch({ ...s, removed: [...s.removed, card] }), "Epidemic!");
   s = epidemicInfect(s, card, ctx, rng);
   if (s.outcome) return s;
   if (rpHolders(s, ctx).length) return { ...s, phase: "epidemic", epidemicCard: card };
@@ -388,8 +389,9 @@ export const beginInfect = (s: State): State => ({ ...s, phase: "infect", inf: n
  * cards, a hook may add more (once). Then the step ends and the between-turns phases run.
  */
 export function infectOne(s: State, ctx: Ctx, rng: Rng): State {
+  // Every infection card drawn is hidden until now (a reveal), not only the first of the step.
+  s = touch(s);
   if (!s.inf) {
-    s = touch(s);
     if (s.quiet) return endInfect(say({ ...s, quiet: false }, "One quiet night: no infections."), ctx);
     s = { ...s, inf: { left: ctx.hooks.chain<number>("infectionRate", RATES[s.rateIdx]!, s), drawn: [], bonus: false } };
   }

@@ -177,7 +177,13 @@ export const bioterrorist: PandemicAddOn = {
     // His budget for the turn he takes after this player's.
     turnStart: (s: State): State => (s.ext.bioterrorist ? withExt(s, { left: 2, freeDrive: 1, used: {}, turn: ext(s).turn + 1 }) : s),
     infectAlso: purpleFollows,
-    onEnter: (s: State, seat: SeatId, city: string) => (ext(s).city === city && !ext(s).captured && !ext(s).out ? say(s, `${seat} spots the Bio-Terrorist in ${city}!`) : s),
+    // Entering a city tells everyone whether he is there (L5): a commit point either way while he is unseen.
+    onEnter(s: State, seat: SeatId, city: string): State {
+      const e = ext(s);
+      if (e.captured || e.out || e.city === null) return s;
+      s = touch(s);
+      return e.city === city ? say(s, `${seat} spots the Bio-Terrorist in ${city}!`) : s;
+    },
     // Flare-out: the outbreaking city gives back 2 purple before its neighbours get 1 each.
     outbreakSource: (s: State, city: string, c: string): State | null => (c === "purple" ? removeCubes(s, city, "purple", 2) : null),
     cureGoal: purpleGoal,
