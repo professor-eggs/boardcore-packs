@@ -10,6 +10,7 @@ import { checkAddOns, makeHooks } from "./hooks";
 import { cities } from "./addons/cities";
 import { leaders, effText } from "./addons/leaders";
 import { wonderPack } from "./addons/wonder-pack";
+import { resample } from "./resample";
 
 /** The Leaders goodies (Louis, Stevie, Esteban): only adds them to the leader pool; their rules live in leaders.ts. */
 const leaderPromos: SevenAddOn = { id: "leaderPromos", requires: ["leaders"], handlers: {} };
@@ -95,6 +96,22 @@ function firstPath(s: State, seat: SeatId, f: Flow): Action | null {
   return null;
 }
 
+/**
+ * The outcome (11 §2, D79): places by points, a tie broken by the most coins, still tied shares the place;
+ * scores are the points. Places are competition ranks (1, 1, 3), so the winners are the seats at place 1.
+ */
+export function outcomeOf(s: State, pts: { [seat: string]: number }) {
+  const coins = (x: SeatId) => s.players[x]!.coins;
+  const beats = (a: SeatId, b: SeatId) => pts[a]! > pts[b]! || (pts[a] === pts[b] && coins(a) > coins(b));
+  const places: { [seat: string]: number } = {};
+  for (const x of s.seats) places[x] = 1 + s.seats.filter((y) => beats(y, x)).length;
+  const scores: { [seat: string]: number } = {};
+  for (const x of s.seats) scores[x] = pts[x]!;
+  const top = s.seats.filter((x) => places[x] === 1);
+  const ranking = s.seats.slice().sort((a, b) => places[a]! - places[b]! || compareStrings(a, b)).map((x) => `${x} ${pts[x]}`).join(", ");
+  return { winners: top, places, scores, text: `${top.join(" and ")} win${top.length === 1 ? "s" : ""}: ${ranking}` };
+}
+
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
 export default definePack<State, View>({
@@ -124,14 +141,7 @@ export default definePack<State, View>({
   status(s) {
     const f = flowOf(s);
     if (s.phase !== "over") return { actors: actors(s, f) };
-    const pts = finalScores(s, f);
-    const best = Math.max(...s.seats.map((x) => pts[x]!));
-    let top = s.seats.filter((x) => pts[x] === best);
-    // Ties go to the most coins; still tied, they share the win.
-    const coins = Math.max(...top.map((x) => s.players[x]!.coins));
-    top = top.filter((x) => s.players[x]!.coins === coins);
-    const ranking = s.seats.slice().sort((a, b) => pts[b]! - pts[a]! || compareStrings(a, b)).map((x) => `${x} ${pts[x]}`).join(", ");
-    return { actors: [], outcome: { winners: top, text: `${top.join(" and ")} win${top.length === 1 ? "s" : ""}: ${ranking}` } };
+    return { actors: [], outcome: outcomeOf(s, finalScores(s, f)) };
   },
 
   describe(s, seat, action, viewer) {
@@ -150,6 +160,8 @@ export default definePack<State, View>({
   audience: () => "seat",
 
   onTimeout: (s, seat) => firstPath(s, seat, flowOf(s)),
+
+  resampleHidden: (s, seat, rng) => resample(s, seat, flowOf(s), rng),
 
   extensionPoints: Object.entries(POINTS).map(([name, combine]) => ({ name, combine })),
 

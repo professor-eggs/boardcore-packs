@@ -523,6 +523,25 @@ export function baseDecks(n: number, opts: Opts): { age: number; names: string[]
   })).map((d) => { void opts; return d; });
 }
 
+/** The three age decks, shuffled: base cards for the seat count, the guilds, then add-on cards (the decks point).
+ *  Also used by resampleHidden to redraw decks a seat hasn't seen. */
+export function buildDecks(n: number, opts: Opts, ctx: Ctx, rng: Rng): string[][] {
+  let decks = baseDecks(n, opts);
+  const guilds = shuffle(rng, CARDS.filter((c) => c.color === "purple" && c.set === "base").map((c) => c.name));
+  decks = decks.map((d) => (d.age === 3 ? { ...d, names: [...d.names, ...guilds] } : d));
+  decks = ctx.hooks.chain<{ age: number; names: string[] }[]>("decks", decks, opts, n, rng);
+  // Guilds: players + 2 (concise; cheatsheet). The 8-player Cities variant is set up like 7 players, so
+  // 9 guilds, not 10 — otherwise Age III would have 57 cards and would not deal evenly (56 / 8 = 7).
+  decks = decks.map((d) => {
+    if (d.age !== 3) return d;
+    const isGuild = (nm: string) => CARDS.some((c) => c.name === nm && c.color === "purple");
+    const want = n === 8 ? 9 : n + 2;
+    const g = shuffle(rng, d.names.filter(isGuild)).slice(0, want);
+    return { ...d, names: [...d.names.filter((x) => !isGuild(x)), ...g] };
+  });
+  return decks.map((d) => shuffle(rng, d.names.map((nm) => `${nm}@${d.age}`)));
+}
+
 export function setupState(seats: SeatId[], opts: Opts, addons: string[], table: { [id: string]: AddOn }, rng: Rng): State {
   const ctx: Ctx = { hooks: makeHooks(table, addons, POINTS), addons: table };
   const n = seats.length;
@@ -539,22 +558,9 @@ export function setupState(seats: SeatId[], opts: Opts, addons: string[], table:
     const side = opts.randomSides ? (rng.int(2) === 0 ? "A" : "B") : opts.sideB ? "B" : "A";
     players[seat] = { wonder: w.name, side, built: [], cards: [], coins: 3 + (w.coins ?? 0), debt: 0, victories: [], defeats: 0, hand: [], leaders: [], leaderHand: [], entombed: [], diplomacy: 0, freeAge: 0, stageCards: [] };
   });
-  let decks = baseDecks(n, opts);
-  const guilds = shuffle(rng, CARDS.filter((c) => c.color === "purple" && c.set === "base").map((c) => c.name));
-  decks = decks.map((d) => (d.age === 3 ? { ...d, names: [...d.names, ...guilds] } : d));
-  decks = ctx.hooks.chain<{ age: number; names: string[] }[]>("decks", decks, opts, n, rng);
-  // Guilds: players + 2 (concise; cheatsheet). The 8-player Cities variant is set up like 7 players, so
-  // 9 guilds, not 10 — otherwise Age III would have 57 cards and would not deal evenly (56 / 8 = 7).
-  decks = decks.map((d) => {
-    if (d.age !== 3) return d;
-    const isGuild = (nm: string) => CARDS.some((c) => c.name === nm && c.color === "purple");
-    const want = n === 8 ? 9 : n + 2;
-    const g = shuffle(rng, d.names.filter(isGuild)).slice(0, want);
-    return { ...d, names: [...d.names.filter((x) => !isGuild(x)), ...g] };
-  });
   let s: State = {
     seats, addons, age: 0, turn: 0, phase: "start", players, picks: Object.fromEntries(seats.map((x) => [x, null])),
-    decks: decks.map((d) => shuffle(rng, d.names.map((nm) => `${nm}@${d.age}`))), discard: [], leaderBox: [], draft: {}, draftRound: 0,
+    decks: buildDecks(n, opts, ctx, rng), discard: [], leaderBox: [], draft: {}, draftRound: 0,
     pending: [], losses: {}, after: "turn", gained: {}, bought: [], log: [], logPly: -1, ply: 0, ext: {},
   };
   s = ctx.hooks.chain<State>("setup", s, rng);
