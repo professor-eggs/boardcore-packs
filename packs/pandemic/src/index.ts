@@ -12,6 +12,7 @@ import { virulentStrain } from "./addons/virulent-strain";
 import { mutation } from "./addons/mutation";
 import { bioterrorist } from "./addons/bioterrorist";
 import { lab } from "./addons/lab";
+import { resample } from "./resample";
 
 const ADDONS: { [id: string]: PandemicAddOn } = { base, onTheBrink, virulentStrain, mutation, bioterrorist, lab };
 const ORDER = ["onTheBrink", "virulentStrain", "mutation", "bioterrorist"] as const;
@@ -127,6 +128,8 @@ export default definePack<State, View>({
   },
 
   onTimeout: (s, seat) => firstPath(s, seat, ctxFor(s)),
+
+  resampleHidden: (s, seat, rng) => resample(s, seat, rng),
 
   extensionPoints: Object.entries(POINTS).map(([name, combine]) => ({ name, combine })),
 

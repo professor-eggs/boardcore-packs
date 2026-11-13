@@ -100,6 +100,9 @@ export interface State {
   outbreaks: number;
   rateIdx: number;
   playerDeck: string[];
+  /** Sizes of the player deck's piles at setup, top first (each held one epidemic). Kept so that
+   *  resampleHidden can redraw epidemic positions within their piles; no rule reads it. */
+  piles: number[];
   playerDiscard: string[];
   infDeck: string[];
   infDiscard: string[];
@@ -471,7 +474,7 @@ export function setupState(seatIds: SeatId[], opts: Opts, addons: string[], ctx:
   if (reasons.length) throw new Error(reasons[0]);
   let s: State = {
     seats: seatIds, players, addons, pl: {}, cubes: {}, supply: { ...SUPPLY }, stations: ["Atlanta"], cured: [], eradicated: [], outbreaks: 0, rateIdx: 0,
-    playerDeck: [], playerDiscard: [], infDeck: shuffle(rng, Object.keys(CITIES)), infDiscard: [], removed: [], unusedRoles: [],
+    playerDeck: [], piles: [], playerDiscard: [], infDeck: shuffle(rng, Object.keys(CITIES)), infDiscard: [], removed: [], unusedRoles: [],
     current: 0, actionsLeft: 0, phase: "actions", queue: [], drawn: [], epidemicCard: null, inf: null, openHands: opts.openHands || opts.epidemics === 4,
     pending: [], quiet: false, outcome: null, log: [], logPly: -1, ply: 0, touched: 0, ext: btSeat ? { btSeat } : {},
   };
@@ -497,7 +500,7 @@ export function setupState(seatIds: SeatId[], opts: Opts, addons: string[], ctx:
   const piles: string[][] = epis.map(() => []);
   cards.forEach((c, i) => piles[i % piles.length]!.push(c));
   const deck = piles.flatMap((pile, i) => shuffle(rng, [...pile, epis[i]!]));
-  s = { ...s, playerDeck: deck, current: firstPlayer(s) };
+  s = { ...s, playerDeck: deck, piles: piles.map((p) => p.length + 1), current: firstPlayer(s) };
   s = startTurn(s, ctx);
   return ctx.hooks.chain<State>("setup", s, rng);
 }
