@@ -163,7 +163,6 @@ export default definePack<State, View>({
 
   resampleHidden: (s, seat, rng) => resample(s, seat, flowOf(s), rng),
 
-  extensionPoints: Object.entries(POINTS).map(([name, combine]) => ({ name, combine })),
 
   text: {
     legend: (v) =>

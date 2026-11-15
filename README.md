@@ -12,9 +12,9 @@ Xavier's own Boardcore packs of published games, for personal use only. Never di
 ## Use
 
 ```sh
-pnpm setup        # submodule, Boardcore's install and build, then this repo's install
+pnpm run setup    # submodule, Boardcore's install and build, then this repo's install
 pnpm check        # typecheck, build every pack, run every pack's tests
 pnpm packs out/   # pack files for a local server
 ```
 
-To move to a newer Boardcore: `git -C boardcore fetch origin <ref> && git -C boardcore checkout <commit>`, run `pnpm setup` and `pnpm check`, and commit the new submodule pointer.
+To move to a newer Boardcore: `git -C boardcore fetch origin <ref> && git -C boardcore checkout <commit>`, stage the new pointer (`git add boardcore`, since `pnpm run setup` runs `git submodule update`), run `pnpm run setup` and `pnpm check`, and commit it. (`pnpm setup` alone is pnpm's own command, which edits the shell profile.)
