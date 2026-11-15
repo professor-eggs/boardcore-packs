@@ -13,7 +13,6 @@ import { interleaved, makeKit, playRandom, soloGame, verifyReplay, type PlayOpti
 
 export type { PlayOptions };
 export { leakCheck as kitLeakCheck, LEAK_KINDS, type LeakReport as KitLeakReport } from "@boardcore/testkit";
-export { leakCheck, diff, type Finding, type LeakReport } from "./legacy";
 
 export const kit = makeKit({ quickjs: defaultLoader });
 
