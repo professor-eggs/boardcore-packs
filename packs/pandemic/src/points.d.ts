@@ -174,8 +174,8 @@ interface BoardcorePoints {
       phases: { shape: "phases"; op: PDOp };
       /** The current player's add-on actions. */
       actions: { shape: "scoring"; result: PDActionOpt[]; args: { seat: string } };
-      /** The prompt after an add-on action's or event's id and `rest` (`{ prompt: null }`: complete), or null when not its own. */
-      steps: { shape: "scoring"; first: true; result: { [k: string]: PDJson; prompt: PDPrompt | null }; args: { id: string; seat: string; rest: PDStep[] } };
+      /** The prompt (a Prompt) after an add-on action's or event's id and `rest` (`{ prompt: null }`: complete), or null when not its own. */
+      steps: { shape: "scoring"; first: true; result: { [k: string]: PDJson; prompt: PDJson }; args: { id: string; seat: string; rest: PDStep[] } };
       /** An add-on action's or event's effect. */
       act: { shape: "event"; op: PDOp; args: { id: string; seat: string; rest: PDStep[] } };
       /** Whether a seat may play an add-on event now: `why` null, a reason, or "hide"; null when not its own. */
@@ -183,6 +183,8 @@ interface BoardcorePoints {
       actionLimit: { shape: "modifier"; value: number; args: { seat: string } };
       handLimit: { shape: "modifier"; value: number; args: { seat: string } };
       cureCost: { shape: "modifier"; value: number; args: { seat: string; color: string } };
+      /** Samples on the seat's role card that may stand in for cards in a cure: `samples` of the colour for `cards` cards (0: none). */
+      cureSwap: { shape: "modifier"; value: { [k: string]: PDJson; cards: number; samples: number }; args: { seat: string; color: string } };
       infectionRate: { shape: "modifier"; value: number };
       infectCubes: { shape: "modifier"; value: number; args: { city: string; color: string } };
       infectBonus: { shape: "modifier"; value: number; args: { drawn: string[] } };

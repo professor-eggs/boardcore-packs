@@ -1,0 +1,20 @@
+{
+  "name": "@boardcore-packs/pandemic-virulent-strain",
+  "version": "1.0.0",
+  "description": "An add-on of boardcore/pandemic.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./dist/manifest.json": "./dist/manifest.json",
+    "./dist/bundle.mjs": "./dist/bundle.mjs"
+  },
+  "scripts": {
+    "build": "node ../../boardcore/tools/pack-build/cli.mjs ."
+  },
+  "dependencies": {
+    "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk"
+  }
+}

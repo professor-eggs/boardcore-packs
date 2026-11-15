@@ -77,7 +77,7 @@ export function pickCards(eligible: string[], need: number, chosen: Step[], labe
   return pick(`${label} (${chosen.length + 1} of ${need})`, ok);
 }
 export const pickedCards = (eligible: string[], need: number, chosen: Step[]) => (chosen.length ? chosen.map(String) : eligible.slice(0, need));
-export const canPick = (eligible: string[], need: number, mustOne?: (k: string) => boolean) => eligible.length >= need && (!mustOne || eligible.some(mustOne));
+export const canPick = (eligible: string[], need: number, mustOne?: (k: string) => boolean) => need <= 0 || eligible.length >= need && (!mustOne || eligible.some(mustOne));
 
 /** The asker's Share Knowledge options: its own cards to give, and whom to ask for a card (never their cards). */
 function shareOptions(s: State, seat: SeatId): Prompt["options"] {
@@ -91,6 +91,21 @@ function shareOptions(s: State, seat: SeatId): Prompt["options"] {
   return out;
 }
 
+interface CureWay { id: string; color: string; need: number; samples: number; label: string; disabled: string | null }
+/** Each way the seat may cure each curable disease: with cards, or with samples standing in for some (cureSwap). */
+function cureWays(s: State, L: Lib, seat: SeatId): CureWay[] {
+  return curable(s).flatMap((c) => {
+    const need = cureCost(s, L, seat, c);
+    const e = cureCards(s, seat, c);
+    const out: CureWay[] = [{ id: c, color: c, need, samples: 0, label: `Cure ${c} (${need} cards)`, disabled: canPick(e.cards, need, e.mustOne) ? null : `you need ${need} cards for ${c}` }];
+    const swap = L.pts.cureSwap(s, { cards: 0, samples: 0 }, { seat, color: c });
+    if (swap.cards > 0 && (s.pl[seat]!.samples[c] ?? 0) >= swap.samples) {
+      const k = Math.max(0, need - swap.cards);
+      out.push({ id: `${c}+samples`, color: c, need: k, samples: swap.samples, label: `Cure ${c} (${k} cards and ${swap.samples} samples)`, disabled: canPick(e.cards, k, e.mustOne) ? null : `you need ${k} cards for ${c}` });
+    }
+    return out;
+  });
+}
 const curable = (s: State) => s.diseases.filter((d) => !s.cured.includes(d.id) && (d.standard || d.cure === "any")).map((d) => d.id);
 
 export const BASE_ACTIONS: ActionDef[] = [
@@ -140,25 +155,21 @@ export const BASE_ACTIONS: ActionDef[] = [
     },
   },
   {
+    // A cure at a research station: the cards (or, with a role that keeps samples, fewer cards and the samples).
     id: "cure", cost: 1,
-    check: (s, L, seat) => (s.stations.includes(here(s, seat)) && curable(s).some((c) => { const e = cureCards(s, seat, c); return canPick(e.cards, cureCost(s, L, seat, c), e.mustOne); }) ? null : "hide"),
+    check: (s, L, seat) => (s.stations.includes(here(s, seat)) && cureWays(s, L, seat).some((w) => !w.disabled) ? null : "hide"),
     label: () => "Discover a cure",
     steps(s, L, seat, rest) {
-      if (rest.length === 0) {
-        const options = curable(s).map((c) => {
-          const need = cureCost(s, L, seat, c);
-          const e = cureCards(s, seat, c);
-          return opt(c, `Cure ${c} (${need} cards)`, canPick(e.cards, need, e.mustOne) ? null : `you need ${need} cards for ${c}`);
-        });
-        return options.some((o) => !o.disabled) ? pick("Cure which disease", options) : null;
-      }
-      const c = String(rest[0]);
-      const e = cureCards(s, seat, c);
-      return pickCards(e.cards, cureCost(s, L, seat, c), rest.slice(1), "Discard which card", e.mustOne);
+      const ways = cureWays(s, L, seat);
+      if (rest.length === 0) return ways.some((w) => !w.disabled) ? pick("Cure which disease", ways.map((w) => opt(w.id, w.label, w.disabled))) : null;
+      const w = ways.find((x) => x.id === rest[0]);
+      if (!w) return null;
+      const e = cureCards(s, seat, w.color);
+      return pickCards(e.cards, w.need, rest.slice(1), "Discard which card", e.mustOne);
     },
     apply(s, L, seat, rest, fx) {
-      const c = String(rest[0]);
-      return cure(s, L, seat, c, pickedCards(cureCards(s, seat, c).cards, cureCost(s, L, seat, c), rest.slice(1)), 0, fx);
+      const w = cureWays(s, L, seat).find((x) => x.id === rest[0])!;
+      return cure(s, L, seat, w.color, pickedCards(cureCards(s, seat, w.color).cards, w.need, rest.slice(1)), w.samples, fx);
     },
   },
   {

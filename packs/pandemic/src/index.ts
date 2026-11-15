@@ -34,6 +34,7 @@ const POINTS: PointDecl[] = [
   { name: "actionLimit", shape: "modifier", result: "integer" },
   { name: "handLimit", shape: "modifier", result: "integer" },
   { name: "cureCost", shape: "modifier", result: "integer" },
+  { name: "cureSwap", shape: "modifier", result: "object" },
   { name: "infectionRate", shape: "modifier", result: "integer" },
   { name: "infectCubes", shape: "modifier", result: "integer" },
   { name: "infectBonus", shape: "modifier", result: "integer" },
@@ -124,7 +125,7 @@ export default defineBase<"boardcore/pandemic">({
       const n = String(partial[0]).slice(3);
       const def = baseEvent.get(n);
       if (def) return def.steps(s, L, seat, partial.slice(1));
-      return pts.steps(s, { id: n, seat, rest: partial.slice(1) })?.prompt ?? null;
+      return (pts.steps(s, { id: n, seat, rest: partial.slice(1) })?.prompt ?? null) as Prompt | null;
     };
     /** Plays an event: the base's own, or an add-on's operations (a lone consent carries the card's spending). */
     const playEvent = (s: State, seat: SeatId, action: Action, fx: Fx): State => {
@@ -184,7 +185,7 @@ export default defineBase<"boardcore/pandemic">({
       if (id.startsWith("ev:")) return eventSteps(s, seat, partial);
       const a = baseAction.get(id);
       if (a) return a.steps(s, L, seat, partial.slice(1));
-      return pts.steps(s, { id, seat, rest: partial.slice(1) })?.prompt ?? null;
+      return (pts.steps(s, { id, seat, rest: partial.slice(1) })?.prompt ?? null) as Prompt | null;
     }
 
     function actionApply(s: State, seat: SeatId, action: Action, ctx: PhaseCtx): State {
