@@ -9,6 +9,7 @@
   "exports": { ".": "./src/index.ts" },
   "dependencies": {
     "@boardcore/core": "link:../../boardcore/packages/core",
+    "@boardcore/pack-library": "link:../../boardcore/packages/pack-library",
     "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk",
     "@boardcore/runtime-quickjs": "link:../../boardcore/packages/runtime-quickjs",
     "@boardcore/testkit": "link:../../boardcore/packages/testkit"

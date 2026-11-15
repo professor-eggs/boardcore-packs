@@ -61,6 +61,9 @@ importers:
       '@boardcore/core':
         specifier: link:../../boardcore/packages/core
         version: link:../../boardcore/packages/core
+      '@boardcore/pack-library':
+        specifier: link:../../boardcore/packages/pack-library
+        version: link:../../boardcore/packages/pack-library
       '@boardcore/pack-sdk':
         specifier: link:../../boardcore/packages/pack-sdk
         version: link:../../boardcore/packages/pack-sdk
