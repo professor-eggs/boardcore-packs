@@ -1,34 +1,34 @@
-// resampleHidden (11 §2, D52, D82): the same state with everything one seat can't see redrawn. Test kit only.
+// resampleHidden (11 §2, D52, D82) for the base: the same state with everything one seat can't see redrawn.
+// Test kit only.
 //
-// What a seat can't see: the order of the player deck (city, event and Mutation cards, and where in its pile
-// each remaining epidemic lies), which Virulent Strain epidemics are still in it, the other players' hands
-// when hands are closed, the infection deck's order, and, for anyone but the Bio-Terrorist, his hand, his
-// city while he is unseen, and his location sheet. Public facts stay: every count, each pile's remaining
-// epidemic, a Troubleshooter's peeked cards for that seat.
-//
-// Coarser than a player's real knowledge: the state keeps no history, so the infection deck is redrawn as a
-// whole although players know which cards an Intensify put back on top (CONTRACT-GAPS.md).
-import { shuffle, type Rng, type SeatId } from "@boardcore/pack-sdk";
-import { CITY_NAMES, VS_EPIDEMICS } from "./data";
-import { setPl, type State } from "./engine";
+// What a seat can't see: the player deck's order (and where in its pile each remaining epidemic lies, and which
+// epidemic cards of the pool are still in it), the other players' closed hands, the infection deck's order
+// within each segment the table knows as a set (beyond the top cards this seat has looked at), other seats'
+// held infection cards, and a forecast someone else is ordering. Counts, segments and piles stay.
+import { canSee, shuffle, withItems, type Rng, type SeatId } from "@boardcore/pack-sdk";
+import { isEpidemic, type State } from "./engine";
 
-const isPileCard = (k: string) => k === "epidemic" || k.startsWith("vs:");
+/** `pool` less one copy of each of `out`. */
+function less(pool: readonly string[], out: readonly string[]): string[] {
+  const rest = pool.slice();
+  for (const k of out) { const i = rest.indexOf(k); if (i >= 0) rest.splice(i, 1); }
+  return rest;
+}
 
-interface Bt { seat: SeatId; city: string | null; hand: string[]; captured: boolean; sheet: string[] }
+export function resampleBase(s: State, seat: SeatId, rng: Rng): State {
+  // Player cards: hands this seat can't see and the deck's non-epidemic slots, pooled.
+  const hidden = s.players.filter((x) => !canSee(s.pl[x]!.hand, seat));
+  const deck = s.playerDeck.items.slice();
+  const pool = shuffle(rng, [...hidden.flatMap((x) => s.pl[x]!.hand.items), ...deck.filter((k) => !isEpidemic(k))]);
+  const pl = { ...s.pl };
+  for (const x of hidden) pl[x] = { ...pl[x]!, hand: withItems(pl[x]!.hand, pool.splice(0, pl[x]!.hand.items.length)) };
 
-export function resample(s: State, seat: SeatId, rng: Rng): State {
-  const others = s.players.filter((x) => x !== seat);
-  const closed = !s.openHands;
-
-  // Player cards: other closed hands and the deck's non-epidemic slots, pooled.
-  const deck = s.playerDeck;
-  const pool = shuffle(rng, [...(closed ? others.flatMap((x) => s.pl[x]!.hand) : []), ...deck.filter((k) => !isPileCard(k))]);
-  if (closed) for (const x of others) { const n = s.pl[x]!.hand.length; s = setPl(s, x, (p) => ({ ...p, hand: pool.splice(0, n) })); }
-
-  // Epidemics: each stays in its own pile (piles were made at setup, top first), at a fresh place in it.
+  // Epidemics: each stays in its pile (piles were made at setup, top first), at a fresh place in it, redrawn
+  // from the pool's cards not yet seen.
+  const seen = [...s.removed, ...s.playerDiscard].filter(isEpidemic);
+  const unseen = shuffle(rng, less(s.epiPool, seen));
   const total = s.piles.reduce((a, b) => a + b, 0);
   const consumed = total - deck.length;
-  const vsLeft = shuffle(rng, VS_EPIDEMICS.filter((n) => !((s.ext.virulentStrain as { seen?: string[] } | undefined)?.seen ?? []).includes(n)));
   const next: string[] = [];
   let start = 0;
   for (const size of s.piles.length ? s.piles : [total]) {
@@ -36,25 +36,33 @@ export function resample(s: State, seat: SeatId, rng: Rng): State {
     start += size;
     if (to <= 0) continue;
     const seg = deck.slice(from, to);
-    const epis = seg.filter(isPileCard).map((k) => (k.startsWith("vs:") ? `vs:${vsLeft.shift()!}` : k));
-    const slots = shuffle(rng, seg.map((_, i) => i)).slice(0, epis.length);
-    for (let i = 0; i < seg.length; i++) next.push(slots.includes(i) ? epis[slots.indexOf(i)]! : pool.shift()!);
+    const n = seg.filter(isEpidemic).length;
+    const slots = shuffle(rng, seg.map((_, i) => i)).slice(0, n);
+    for (let i = 0; i < seg.length; i++) next.push(slots.includes(i) ? unseen.shift()! : pool.shift()!);
   }
-  s = { ...s, playerDeck: next };
 
-  // Infection deck (and the Bio-Terrorist's hand, unless this seat is him); a peeked top stays for its seat.
-  const bt = s.ext.bioterrorist as unknown as Bt | undefined;
-  const btHidden = bt !== undefined && bt.seat !== seat;
-  const peek = ((s.ext.onTheBrink as { peek?: { [x: string]: string[] } } | undefined)?.peek ?? {})[seat] ?? [];
-  const keep = peek.length && peek.every((k, i) => s.infDeck[i] === k) ? peek.length : 0;
-  const inf = shuffle(rng, [...s.infDeck.slice(keep), ...(btHidden ? bt.hand : [])]);
-  s = { ...s, infDeck: [...s.infDeck.slice(0, keep), ...inf.splice(0, s.infDeck.length - keep)] };
-  if (btHidden) {
-    const seen = bt.city !== null && (bt.captured || s.players.some((x) => s.pl[x]!.city === bt.city));
-    const free = CITY_NAMES.filter((c) => !s.players.some((x) => s.pl[x]!.city === c));
-    const city = seen || bt.city === null ? bt.city : free[rng.int(free.length)]!;
-    const nb: Bt = { ...bt, hand: inf, city, sheet: bt.sheet.map(() => "(hidden)") };
-    s = { ...s, ext: { ...s.ext, bioterrorist: nb as unknown as State["ext"][string] } };
+  // Infection deck: the top cards this seat knows stay; the rest is shuffled within each known segment, or as a
+  // whole with the held cards this seat can't see when there are any.
+  const inf = s.infDeck.items.slice();
+  const known = Math.min(s.infKnown[seat] ?? 0, inf.length);
+  const heldBy = Object.keys(s.held).filter((x) => s.held[x]!.items.length && !canSee(s.held[x]!, seat));
+  const held = { ...s.held };
+  let infNext: string[];
+  if (heldBy.length) {
+    const mix = shuffle(rng, [...inf.slice(known), ...heldBy.flatMap((x) => s.held[x]!.items)]);
+    infNext = [...inf.slice(0, known), ...mix.splice(0, inf.length - known)];
+    for (const x of heldBy) held[x] = withItems(s.held[x]!, mix.splice(0, s.held[x]!.items.length));
+  } else {
+    infNext = inf.slice(0, known);
+    let at = 0;
+    for (const g of s.infSegs) {
+      const a = Math.max(at, known), b = Math.min(at + g, inf.length);
+      if (b > a) infNext.push(...shuffle(rng, inf.slice(a, b)));
+      at += g;
+    }
+    if (at < inf.length) infNext.push(...shuffle(rng, inf.slice(Math.max(at, known))));
   }
-  return s;
+  const forecast = s.forecast && !canSee(s.forecast, seat) ? withItems(s.forecast, infNext.slice(0, s.forecast.items.length)) : s.forecast;
+
+  return { ...s, pl, playerDeck: withItems(s.playerDeck, next), infDeck: withItems(s.infDeck, infNext), held, forecast };
 }

@@ -1,225 +1,64 @@
-// Pandemic base game: state, cubes and outbreaks, the player and infection decks, epidemics, the turn
-// loop and the end. Add-ons (On the Brink, Virulent Strain, Mutation, the Bio-Terrorist) reach it through
-// the extension points in POINTS and the action, role and event registries; none forks this file.
-import { shuffle, type Json, type Option, type Prompt, type Rng, type SeatId, type Step } from "@boardcore/pack-sdk";
-import { ADJ, CITIES, COLORS, OUTBREAK_LIMIT, POPULATION, RATES, SUPPLY, type Color } from "./data";
-import type { Hooks } from "./hooks";
+// Pandemic base game: state helpers, cubes and outbreaks, moving pawns, cards, cures, epidemics, infection and
+// the operations add-ons return (PDOp in points.d.ts). Add-ons reach the base only through the points declared
+// in index.ts; none edits this file. Mechanics only.
+import { shuffle, withItems, type Prompt, type Rng, type SeatId, type Option, type Zones, type QuestionInput, type Invokers } from "@boardcore/pack-sdk";
+import { ADJ, CITIES, OUTBREAK_LIMIT, RATES } from "./data";
 
-export const POINTS = {
-  /** chain(s, rng): after the base setup, before the first turn. */
-  setup: "chain",
-  /** chain(cards, s, rng): the player cards left after the hands are dealt, before the epidemics go in. */
-  playerCards: "chain",
-  /** chain(epidemics: string[], s, rng): the epidemic cards (Virulent Strain swaps them). */
-  epidemics: "chain",
-  /** collect(s): role names to draw from. */
-  roles: "collect",
-  /** collect(s): event names to draw from. */
-  events: "collect",
-  /** chain(n, s, seat): actions per turn. */
-  actionLimit: "chain",
-  /** chain(n, s, seat): hand limit. */
-  handLimit: "chain",
-  /** chain(s): at the start of a player's turn. */
-  turnStart: "chain",
-  /** chain(s, seat, city, how): a pawn just entered a city (also moved by others). */
-  onEnter: "chain",
-  /** first(s, seat, from): a reason the pawn may not leave its city, or null. */
-  blockLeave: "first",
-  /** first(s, city, color): a reason no cube goes there (prevention), or null. */
-  preventCube: "first",
-  /** chain(n, s, city, color, why): how many cubes an infection places. */
-  infectCubes: "chain",
-  /** chain(n, s, color): outbreak marker steps for one outbreak. */
-  outbreakSteps: "chain",
-  /** first(s, city, color): adjusts the outbreaking city before its neighbours are hit (the Bio-Terrorist's
-   *  purple flare-out takes 2 cubes back), or null. */
-  outbreakSource: "first",
-  /** chain(n, s, seat, color): cards needed to cure. */
-  cureCost: "chain",
-  /** chain(s, seat, color): right after a cure. */
-  onCure: "chain",
-  /** first(s, card, rng): resolves a special (non-epidemic) player card when drawn, or null. */
-  drawCard: "first",
-  /** first(s, card): whether a drawn player card is an epidemic (Virulent Strain's cards are), or null. */
-  isEpidemic: "first",
-  /** first(s, specials: string[]): true when the player picks the order of two drawn special cards. */
-  drawChoice: "first",
-  /** first(s, card, rng): resolves a special infection card, or null for the base. */
-  infectCard: "first",
-  /** chain(n, s): infection cards to draw this turn. */
-  infectionRate: "chain",
-  /** chain(n, s, drawn: string[]): extra infection cards once the rate's cards are drawn (Rate Effect). */
-  infectBonus: "chain",
-  /** collect(s, city): other colours that also get 1 cube when the city is drawn to infect (purple). */
-  infectAlso: "collect",
-  /** chain(s, step: "infected" | "intensified", rng, card): during an epidemic (after Infect; after Intensify). */
-  epidemic: "chain",
-  /** chain(discard: boolean, s, payer, card): whether a flight's city card is discarded (the Troubleshooter shows it). */
-  payCard: "chain",
-  /** chain(phases: string[], s): phases after the infection step before the next player (the Bio-Terrorist). */
-  betweenTurns: "chain",
-  /** first(s): an outcome the add-on decides, or null. */
-  outcome: "first",
-  /** chain(won: boolean, s): whether the cure goal is met. */
-  cureGoal: "chain",
-  /** collect(s, seat): seats that may act now besides the base's (event holders are the base's). */
-  actors: "collect",
-  /** collect(s, viewer): extra view fields, merged in. */
-  view: "collect",
-  /** collect(n, players, opts): reasons the seat count is not allowed. */
-  seatCheck: "collect",
-} as const;
+export type State = PDState;
+export type Op = PDOp;
+export type Pl = PDPl;
 
-export interface Pl {
-  [k: string]: Json;
-  role: string;
-  city: string;
-  hand: string[];
-  /** Contingency Planner's stored event. */
-  stored: string | null;
-  /** Per-turn flags (once-per-turn abilities). */
-  used: string[];
+/** What the base knows after compose: its invokers and the registries it read once. */
+export interface Lib {
+  pts: Invokers<"boardcore/pandemic">;
+  roles: string[];
+  events: Map<string, { id: string; inEpidemic?: boolean }>;
+  baseEvents: Set<string>;
 }
 
-export interface Interrupt { [k: string]: Json; seat: SeatId; kind: string; data: Json }
-export interface Outcome { [k: string]: Json; winners: SeatId[]; text: string }
-
-export interface State {
-  [k: string]: Json;
-  seats: SeatId[];
-  /** Seats that play the cure side, in turn order. */
-  players: SeatId[];
-  addons: string[];
-  pl: { [seat: string]: Pl };
-  cubes: { [city: string]: { [c: string]: number } };
-  supply: { [c: string]: number };
-  stations: string[];
-  cured: string[];
-  eradicated: string[];
-  outbreaks: number;
-  rateIdx: number;
-  playerDeck: string[];
-  /** Sizes of the player deck's piles at setup, top first (each held one epidemic). Kept so that
-   *  resampleHidden can redraw epidemic positions within their piles; no rule reads it. */
-  piles: number[];
-  playerDiscard: string[];
-  infDeck: string[];
-  infDiscard: string[];
-  /** Out of the game (Resilient Population, stored events played). */
-  removed: string[];
-  unusedRoles: string[];
-  current: number;
-  actionsLeft: number;
-  /** "actions" | "epidemic" | "infect" | an add-on phase | "interrupt" | "over". */
-  phase: string;
-  /** Phases still to run between this player's infection step and the next player's turn. */
-  queue: string[];
-  /** Special cards (epidemics, Mutation events) drawn this draw step and not yet resolved, in order. */
-  drawn: string[];
-  /** The epidemic waiting for its Intensify step (an event window is open), or null. */
-  epidemicCard: string | null;
-  /** The infection step under way: cards left, city cards drawn so far, and whether extras were added. */
-  inf: { left: number; drawn: string[]; bonus: boolean } | null;
-  /** Hands are face up (introductory game, or the open-hands option). */
-  openHands: boolean;
-  pending: Interrupt[];
-  /** Skip the next infection step (One Quiet Night). */
-  quiet: boolean;
-  outcome: Outcome | null;
-  log: string[];
-  logPly: number;
-  ply: number;
-  /** Bumped whenever hidden information is read: the action is a commit point (reveal). */
-  touched: number;
-  ext: { [addon: string]: Json };
-}
-
-export interface ActionDef {
-  id: string;
-  /** Actions this costs (0 for free abilities). */
-  cost: number;
-  /** null: offered; a string: shown disabled with that reason; "hide": not offered. */
-  check(s: State, seat: SeatId, ctx: Ctx): string | null;
-  label(s: State, seat: SeatId): string;
-  /** Prompts after the action id (null when complete). */
-  steps(s: State, seat: SeatId, rest: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, rest: Step[], ctx: Ctx, rng: Rng): State;
-}
-
-export interface EventDef {
-  name: string;
-  /** Also playable in the epidemic window between Infect and Intensify (Resilient Population). */
-  inEpidemic?: boolean;
-  /** True while the event's moment would pass if the turn moved on (Rapid Vaccine Deployment after a cure). */
-  holdsTurn?(s: State): boolean;
-  /** null: playable now by this seat; a string: why not; "hide": not offered. */
-  check(s: State, seat: SeatId, ctx: Ctx): string | null;
-  steps(s: State, seat: SeatId, rest: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, rest: Step[], ctx: Ctx, rng: Rng): State;
-}
-
-export interface PhaseDef {
-  actors(s: State, ctx: Ctx): SeatId[];
-  prompt(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, action: Step[], ctx: Ctx, rng: Rng): State;
-}
-
-export interface InterruptDef {
-  prompt(s: State, seat: SeatId, partial: Step[], data: Json, ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, action: Step[], data: Json, ctx: Ctx, rng: Rng): State;
-  auto(s: State, seat: SeatId, data: Json, ctx: Ctx, rng: Rng): State;
-}
-
-export interface Ctx {
-  hooks: Hooks;
-  actions: ActionDef[];
-  events: { [name: string]: EventDef };
-  phases: { [id: string]: PhaseDef };
-  interrupts: { [kind: string]: InterruptDef };
-}
+/** The effects context: the call's zone reader and its question queue (absent for an add-on phase's operations). */
+export interface Fx { zones: Zones; ask(q: QuestionInput): void; rng: Rng | null }
 
 export const opt = (id: string, label: string, disabled?: string | null): Option => (disabled ? { id, label, disabled } : { id, label });
+export const pick = (label: string, options: Option[]): Prompt | null => (options.length ? { kind: "pick", label, options } : null);
 export const cur = (s: State): SeatId => s.players[s.current]!;
-export const pawnsIn = (s: State, city: string) => s.players.filter((x) => s.pl[x]!.city === city);
 export const isCity = (card: string) => card.startsWith("city:");
 export const cityOf = (card: string) => card.slice(5);
 export const isEvent = (card: string) => card.startsWith("event:");
+export const isEpidemic = (card: string) => card === "epidemic" || card.startsWith("epidemic:");
 export const cubesIn = (s: State, city: string, c: string) => s.cubes[city]?.[c] ?? 0;
 export const onBoard = (s: State, c: string) => Object.values(s.cubes).reduce((t, m) => t + (m[c] ?? 0), 0);
 export const say = (s: State, line: string): State => ({ ...s, log: [...s.log, line] });
-export const touch = (s: State): State => ({ ...s, touched: s.touched + 1 });
 export const setPl = (s: State, seat: SeatId, f: (p: Pl) => Pl): State => ({ ...s, pl: { ...s.pl, [seat]: f(s.pl[seat]!) } });
 export const hasRole = (s: State, seat: SeatId, role: string) => s.pl[seat]?.role === role;
 export const roleIn = (s: State, role: string): SeatId | null => s.players.find((x) => s.pl[x]!.role === role) ?? null;
-export const lose = (s: State, text: string): State => (s.outcome ? s : { ...s, outcome: { winners: [], text: `lost: ${text}` }, phase: "over" });
+export const pawnsIn = (s: State, city: string) => s.players.filter((x) => s.pl[x]!.city === city);
+/** A hand's cards, unmarked: the seat's own (its prompt, its own action) or for `view`. */
+export const handOf = (s: State, seat: SeatId) => s.pl[seat]!.hand.items.slice();
+export const setHand = (s: State, seat: SeatId, items: string[]) => setPl(s, seat, (p) => ({ ...p, hand: withItems(p.hand, items) }));
+export const cardLabel = (card: string) => (isCity(card) ? `${cityOf(card)} (${CITIES[cityOf(card)]})` : isEvent(card) ? `${card.slice(6)} (event)` : card.replace(/^[a-z]+:/, ""));
+export const markUsed = (s: State, seat: SeatId, flag: string) => setPl(s, seat, (p) => ({ ...p, used: [...p.used, flag] }));
+export const used = (s: State, seat: SeatId, flag: string) => s.pl[seat]!.used.includes(flag);
+export const diseaseOf = (s: State, c: string) => s.diseases.find((d) => d.id === c);
+export const holds = (s: State, seat: SeatId, ev: string) => handOf(s, seat).includes(`event:${ev}`) || s.pl[seat]!.stored === `event:${ev}`;
+export const currentRate = (s: State, L: Lib) => L.pts.infectionRate(s, RATES[s.rateIdx]!);
+
+// ---- The end --------------------------------------------------------------------------------------------
+
+/** Ends the game with the base's result, unless an add-on's `outcome` point replaces it (a lone winner). */
+export function finish(s: State, L: Lib, result: PDOutcome): State {
+  if (s.outcome) return s;
+  const out = L.pts.outcome(s, { result }) ?? result;
+  return say({ ...s, outcome: out }, `Game over: ${out.text}.`);
+}
+export const lose = (s: State, L: Lib, text: string) => finish(s, L, { winners: [], text: `the players lose (${text})` });
+export const goalMet = (s: State, L: Lib) => L.pts.cureGoal(s, s.diseases.filter((d) => d.standard).every((d) => s.cured.includes(d.id)));
+export const checkWin = (s: State, L: Lib): State =>
+  s.outcome || !goalMet(s, L) ? s : finish(s, L, { winners: s.players.slice(), text: "the players cure the diseases and win" });
 
 // ---- Cubes and outbreaks ---------------------------------------------------------------------------------
 
-/** Why a cube can't go on a city right now (a role or a hook), or null. */
-export const prevented = (s: State, city: string, c: Color, ctx: Ctx) => ctx.hooks.first<string | null>("preventCube", basePrevent(s, city, c), s, city, c);
-
-const addCube = (s: State, city: string, c: Color): State =>
-  ({ ...s, supply: { ...s.supply, [c]: s.supply[c]! - 1 }, cubes: { ...s.cubes, [city]: { ...s.cubes[city], [c]: cubesIn(s, city, c) + 1 } } });
-
-/**
- * Puts n cubes of a colour on a city: nothing for an eradicated disease or a protected city; a 4th cube
- * means an outbreak instead (one per placement); no cube left in the supply loses. Setup placements ignore
- * the roles (the Quarantine Specialist doesn't protect during setup).
- */
-export function place(s: State, city: string, c: Color, n: number, ctx: Ctx, setup = false): State {
-  for (let i = 0; i < n && !s.outcome; i++) {
-    if (s.eradicated.includes(c)) return s;
-    const why = setup ? null : prevented(s, city, c, ctx);
-    if (why) return say(s, `${why} keeps ${c} out of ${city}.`);
-    if (cubesIn(s, city, c) >= 3) return outbreak(s, city, c, ctx);
-    if ((s.supply[c] ?? 0) <= 0) return lose(s, `no ${c} cubes left`);
-    s = addCube(s, city, c);
-  }
-  return s;
-}
-
-function basePrevent(s: State, city: string, c: Color): string | null {
+function prevented(s: State, city: string, c: string): string | null {
   for (const x of s.players) {
     const p = s.pl[x]!;
     if (p.role === "Quarantine Specialist" && (p.city === city || (ADJ[p.city] ?? []).includes(city))) return "The Quarantine Specialist";
@@ -228,40 +67,57 @@ function basePrevent(s: State, city: string, c: Color): string | null {
   return null;
 }
 
+const addCube = (s: State, city: string, c: string): State =>
+  ({ ...s, supply: { ...s.supply, [c]: s.supply[c]! - 1 }, cubes: { ...s.cubes, [city]: { ...s.cubes[city], [c]: cubesIn(s, city, c) + 1 } } });
+
 /**
- * An outbreak and its chain reactions, breadth first: every neighbour gets 1 cube; a neighbour already at 3
- * breaks out next, after this outbreak is done; a city that already broke out during this card or action
- * gets nothing more.
+ * Puts n cubes of a colour on a city: nothing for an eradicated disease or a protected city; a 4th cube means an
+ * outbreak instead; no cube left in the supply loses. Setup placements ignore the roles.
  */
-export function outbreak(s: State, city: string, c: Color, ctx: Ctx): State {
+export function place(s: State, L: Lib, city: string, c: string, n: number, setup = false): State {
+  for (let i = 0; i < n && !s.outcome; i++) {
+    if (s.eradicated.includes(c)) return s;
+    const why = setup ? null : prevented(s, city, c);
+    if (why) return say(s, `${why} keeps ${c} out of ${city}.`);
+    if (cubesIn(s, city, c) >= 3) return outbreak(s, L, city, c);
+    if ((s.supply[c] ?? 0) <= 0) return lose(s, L, `no ${c} cubes left`);
+    s = addCube(s, city, c);
+  }
+  return s;
+}
+
+/** An outbreak and its chain reactions, breadth first; a city breaks out at most once per card or action. */
+export function outbreak(s: State, L: Lib, city: string, c: string): State {
   const broke: string[] = [];
   const queue = [city];
+  const flare = diseaseOf(s, c)?.flare ?? 0;
   while (queue.length && !s.outcome) {
     const x = queue.shift()!;
     if (broke.includes(x)) continue;
     broke.push(x);
-    s = ctx.hooks.first<State | null>("outbreakSource", null, s, x, c) ?? s;
-    const steps = ctx.hooks.chain<number>("outbreakSteps", 1, s, c);
+    if (flare) s = removeCubes(s, x, c, flare);
+    const steps = L.pts.outbreakSteps(s, 1, { color: c });
     s = say({ ...s, outbreaks: s.outbreaks + steps }, `Outbreak of ${c} in ${x}!`);
-    if (s.outbreaks >= OUTBREAK_LIMIT) return lose(s, `${OUTBREAK_LIMIT} outbreaks`);
+    if (s.outbreaks >= OUTBREAK_LIMIT) return lose(s, L, `${OUTBREAK_LIMIT} outbreaks`);
     for (const n of ADJ[x] ?? []) {
       if (s.outcome) return s;
       if (broke.includes(n) || s.eradicated.includes(c)) continue;
-      const why = prevented(s, n, c, ctx);
+      const why = prevented(s, n, c);
       if (why) { s = say(s, `${why} keeps ${c} out of ${n}.`); continue; }
       if (cubesIn(s, n, c) >= 3) { if (!queue.includes(n)) queue.push(n); continue; }
-      if ((s.supply[c] ?? 0) <= 0) return lose(s, `no ${c} cubes left`);
+      if ((s.supply[c] ?? 0) <= 0) return lose(s, L, `no ${c} cubes left`);
       s = addCube(s, n, c);
     }
   }
   return s;
 }
 
-/** Removes up to n cubes of a colour from a city; a cured colour with none left is eradicated. */
-export function removeCubes(s: State, city: string, c: string, n: number): State {
+/** Removes up to n cubes of a colour from a city to the supply; a cured colour with none left is eradicated. */
+export function removeCubes(s: State, city: string, c: string, n: number, toSupply = true): State {
   const k = Math.min(n, cubesIn(s, city, c));
   if (!k) return s;
-  s = { ...s, supply: { ...s.supply, [c]: (s.supply[c] ?? 0) + k }, cubes: { ...s.cubes, [city]: { ...s.cubes[city]!, [c]: cubesIn(s, city, c) - k } } };
+  s = { ...s, cubes: { ...s.cubes, [city]: { ...s.cubes[city]!, [c]: cubesIn(s, city, c) - k } } };
+  if (toSupply) s = { ...s, supply: { ...s.supply, [c]: (s.supply[c] ?? 0) + k } };
   return checkEradicated(s, c);
 }
 
@@ -271,236 +127,242 @@ export function checkEradicated(s: State, c: string): State {
 }
 
 /**
- * Infects one city from an infection card: 1 cube of its colour (Chronic Effect may say 2), and during the
- * infection step 1 more of each colour a hook adds (purple, on a city that already has purple). An epidemic
- * puts 3 cubes of the card's colour only.
+ * Infects one city from an infection card: 1 cube of its colour (a modifier may say 2), and in the infection
+ * step 1 more of each `follows` disease already there. An epidemic puts 3 cubes of the card's colour only.
+ * A card that is no city is the add-ons' (`infectCard`).
  */
-export function infectCity(s: State, card: string, ctx: Ctx, why: "infect" | "epidemic", rng: Rng): State {
-  const special = ctx.hooks.first<State | null>("infectCard", null, s, card, rng);
-  if (special) return special;
-  const c = CITIES[card] as Color;
-  const also = why === "infect" ? ctx.hooks.collect<Color>("infectAlso", s, card) : [];
-  const n = why === "epidemic" ? 3 : ctx.hooks.chain<number>("infectCubes", 1, s, card, c, why);
+export function infectCity(s: State, L: Lib, card: string, why: "infect" | "epidemic", fx: Fx | null): State {
+  if (!CITIES[card]) {
+    const ops = L.pts.infectCard(s, { card });
+    return ops.length ? applyOps(s, L, ops, fx) : say(s, `${card} has no effect.`);
+  }
+  const c = CITIES[card]!;
+  const also = why === "infect" ? s.diseases.filter((d) => d.follows && d.id !== c && cubesIn(s, card, d.id) > 0).map((d) => d.id) : [];
+  const n = why === "epidemic" ? 3 : L.pts.infectCubes(s, 1, { city: card, color: c });
   s = say(s, `${card} is infected (${n} ${c}${also.map((x) => `, 1 ${x}`).join("")}).`);
-  s = place(s, card, c, n, ctx);
-  for (const x of also) if (!s.outcome) s = place(s, card, x, 1, ctx);
+  s = place(s, L, card, c, n);
+  for (const x of also) if (!s.outcome) s = place(s, L, card, x, 1);
   return s;
 }
 
-// ---- Moving pawns ------------------------------------------------------------------------------------------
+// ---- Moving pawns ----------------------------------------------------------------------------------------
 
-/** Moves a pawn; `how` is the kind of move ("drive", "direct", ... or "event"). */
-export function movePawn(s: State, seat: SeatId, city: string, ctx: Ctx, how = "move"): State {
+export const canLeave = (s: State, L: Lib, seat: SeatId): string | null => L.pts.blockLeave(s, null, { seat, from: s.pl[seat]!.city });
+
+/** Moves a pawn; `how` is the kind of move ("drive", "direct", ..., "event"). */
+export function movePawn(s: State, L: Lib, seat: SeatId, city: string, how: string, fx: Fx | null): State {
   s = setPl(s, seat, (p) => ({ ...p, city }));
   if (hasRole(s, seat, "Medic")) for (const c of s.cured) s = removeCubes(s, city, c, 3);
-  return ctx.hooks.chain<State>("onEnter", s, seat, city, how);
+  return applyOps(s, L, L.pts.onEnter(s, { seat, city, how }), fx);
 }
 
-export const canLeave = (s: State, seat: SeatId, ctx: Ctx) => ctx.hooks.first<string | null>("blockLeave", null, s, seat, s.pl[seat]!.city);
-
-// ---- Cards -------------------------------------------------------------------------------------------------
-
-export const handLimit = (s: State, seat: SeatId, ctx: Ctx) => ctx.hooks.chain<number>("handLimit", 7, s, seat);
-
-/** Queues a discard for every seat over its hand limit. */
-export function checkHands(s: State, ctx: Ctx): State {
-  for (const x of s.players) {
-    if (s.pl[x]!.hand.length > handLimit(s, x, ctx) && !s.pending.some((i) => i.seat === x && i.kind === "discard"))
-      s = { ...s, pending: [...s.pending, { seat: x, kind: "discard", data: null }] };
-  }
-  return s;
+/** A move paid by `payer` (the Dispatcher pays for others): the card for a direct or charter flight. */
+export function doMove(s: State, L: Lib, pawn: SeatId, payer: SeatId, kind: string, to: string, fx: Fx | null): State {
+  const from = s.pl[pawn]!.city;
+  const pay = (card: string) => (L.pts.payCard(s, true, { payer, card, kind }) ? discardFrom(s, payer, card) : say(s, `${payer} shows ${cityOf(card)}.`));
+  if (kind === "direct") s = pay(`city:${to}`);
+  if (kind === "charter") s = pay(`city:${from}`);
+  s = say(s, `${pawn} ${kind === "drive" ? "drives" : kind === "shuttle" ? "shuttles" : kind === "join" ? "is dispatched" : "flies"} from ${from} to ${to}.`);
+  return movePawn(s, L, pawn, to, kind, fx);
 }
+
+// ---- Cards -----------------------------------------------------------------------------------------------
+
+export const handLimit = (s: State, L: Lib, seat: SeatId) => L.pts.handLimit(s, 7, { seat });
 
 export function discardFrom(s: State, seat: SeatId, card: string): State {
-  const i = s.pl[seat]!.hand.indexOf(card);
+  const hand = handOf(s, seat);
+  const i = hand.indexOf(card);
   if (i < 0) throw new Error(`${seat} has no ${card}`);
-  return { ...setPl(s, seat, (p) => ({ ...p, hand: p.hand.filter((_, j) => j !== i) })), playerDiscard: [...s.playerDiscard, card] };
+  return { ...setHand(s, seat, hand.filter((_, j) => j !== i)), playerDiscard: [...s.playerDiscard, card] };
 }
 
-export const cardLabel = (card: string) => (isCity(card) ? `${cityOf(card)} (${CITIES[cityOf(card)]})` : isEvent(card) ? `${card.slice(6)} (event)` : card);
-
-// ---- The turn ----------------------------------------------------------------------------------------------
-
-export function startTurn(s: State, ctx: Ctx): State {
-  const seat = cur(s);
-  s = { ...s, phase: "actions", actionsLeft: ctx.hooks.chain<number>("actionLimit", 4, s, seat), pl: Object.fromEntries(Object.entries(s.pl).map(([k, p]) => [k, { ...p, used: [] }])) };
-  return ctx.hooks.chain<State>("turnStart", s);
-}
-
-export const isEpidemicCard = (s: State, card: string, ctx: Ctx) => card === "epidemic" || ctx.hooks.first<boolean | null>("isEpidemic", null, s, card) === true;
-
-/**
- * The Draw step begins: fewer than 2 cards left loses; both cards are drawn together; city and event cards go
- * to the hand; epidemics and other special cards wait in `drawn`, Mutation events first (a hook may let the
- * player order two of them).
- */
-export function beginDraw(s: State, ctx: Ctx): State {
-  s = touch(s);
-  if (s.playerDeck.length < 2) return lose(s, "the player deck ran out");
-  const two = s.playerDeck.slice(0, 2);
-  s = { ...s, playerDeck: s.playerDeck.slice(2), phase: "draw" };
-  const specials: string[] = [];
-  for (const card of two) {
-    if (isCity(card) || isEvent(card)) s = say(setPl(s, cur(s), (p) => ({ ...p, hand: [...p.hand, card] })), `${cur(s)} draws ${cardLabel(card)}.`);
-    else specials.push(card);
-  }
-  const rank = (k: string) => (isEpidemicCard(s, k, ctx) ? 1 : 0);
-  const drawn = specials.slice().sort((a, b) => rank(a) - rank(b));
-  s = { ...s, drawn };
-  if (drawn.length === 2 && drawn[0] !== drawn[1] && ctx.hooks.first<boolean | null>("drawChoice", null, s, drawn))
-    s = { ...s, pending: [...s.pending, { seat: cur(s), kind: "drawOrder", data: drawn }] };
+/** Asks the seat to discard while it is over its hand limit (a question per card over). */
+export function checkHand(s: State, L: Lib, seat: SeatId, fx: Fx | null): State {
+  if (!fx || !s.players.includes(seat) || s.outcome) return s;
+  if (handOf(s, seat).length > handLimit(s, L, seat)) fx.ask({ kind: "discard", seat, default: ["d:0"] });
   return s;
 }
 
-/** An epidemic: Increase and Infect, then a window for Resilient Population if anyone holds it, then Intensify. */
-export function startEpidemic(s: State, card: string, ctx: Ctx, rng: Rng): State {
-  // The bottom infection card is turned up: a reveal even when no shuffle follows in this action.
-  s = say(touch({ ...s, removed: [...s.removed, card] }), "Epidemic!");
-  s = epidemicInfect(s, card, ctx, rng);
-  if (s.outcome) return s;
-  if (rpHolders(s, ctx).length) return { ...s, phase: "epidemic", epidemicCard: card };
-  return finishEpidemic(s, card, ctx, rng);
+/** A card moves from one hand to another (a share, a take). */
+export function moveCard(s: State, from: SeatId, to: SeatId, card: string): State {
+  const h = handOf(s, from);
+  const i = h.indexOf(card);
+  if (i < 0) throw new Error(`${from} has no ${card}`);
+  return setHand(setHand(s, from, h.filter((_, j) => j !== i)), to, [...handOf(s, to), card]);
 }
 
-export const finishEpidemic = (s: State, card: string, ctx: Ctx, rng: Rng): State => ({ ...intensify(s, card, ctx, rng), epidemicCard: null, phase: "draw" });
-
-/** Epidemic steps 1 and 2: the rate goes up (it stays at the top of the track); the bottom infection card gets 3 cubes. */
-export function epidemicInfect(s: State, card: string, ctx: Ctx, rng: Rng): State {
-  s = { ...s, rateIdx: Math.min(s.rateIdx + 1, RATES.length - 1) };
-  const bottom = s.infDeck[s.infDeck.length - 1];
-  if (bottom !== undefined) {
-    s = { ...s, infDeck: s.infDeck.slice(0, -1), infDiscard: [...s.infDiscard, bottom] };
-    s = infectCity(s, bottom, ctx, "epidemic", rng);
-  }
-  return ctx.hooks.chain<State>("epidemic", s, "infected", rng, card);
+/** The event card goes: from the hand to the discards, or (stored) out of the game. */
+export function spendEvent(s: State, seat: SeatId, name: string): State {
+  const card = `event:${name}`;
+  if (handOf(s, seat).includes(card)) return say(discardFrom(s, seat, card), `${seat} plays ${name}.`);
+  if (s.pl[seat]!.stored === card) return say({ ...setPl(s, seat, (p) => ({ ...p, stored: null })), removed: [...s.removed, card] }, `${seat} plays ${name}.`);
+  throw new Error(`${seat} has no ${name}`);
 }
 
-/** Epidemic step 3: the discards are shuffled onto the top of the infection deck. */
-export function intensify(s: State, card: string, ctx: Ctx, rng: Rng): State {
-  s = { ...s, infDeck: [...shuffle(rng, s.infDiscard), ...s.infDeck], infDiscard: [] };
-  return ctx.hooks.chain<State>("epidemic", s, "intensified", rng, card);
+// ---- Cures -----------------------------------------------------------------------------------------------
+
+export const cureCost = (s: State, L: Lib, seat: SeatId, c: string) => L.pts.cureCost(s, hasRole(s, seat, "Scientist") ? 4 : 5, { seat, color: c });
+
+/** The city cards in the seat's hand that may go towards curing `c`, and the rule for "at least one". */
+export function cureCards(s: State, seat: SeatId, c: string): { cards: string[]; mustOne?: (k: string) => boolean } {
+  const cities = handOf(s, seat).filter(isCity);
+  if (diseaseOf(s, c)?.cure === "any") return { cards: cities, mustOne: (k) => cubesIn(s, cityOf(k), c) > 0 };
+  return { cards: cities.filter((k) => CITIES[cityOf(k)] === c) };
 }
 
-export const rpHolders = (s: State, ctx: Ctx) => s.players.filter((x) => holds(s, x, "Resilient Population") && ctx.events["Resilient Population"] && s.infDiscard.some((c) => CITIES[c]));
-export const holds = (s: State, seat: SeatId, ev: string) => s.pl[seat]!.hand.includes(`event:${ev}`) || s.pl[seat]!.stored === `event:${ev}`;
-
-/** The infection step begins (no cards drawn yet). */
-export const beginInfect = (s: State): State => ({ ...s, phase: "infect", inf: null });
-
-/**
- * Draws one infection card (starting the step on the first call: One Quiet Night skips it). After the rate's
- * cards, a hook may add more (once). Then the step ends and the between-turns phases run.
- */
-export function infectOne(s: State, ctx: Ctx, rng: Rng): State {
-  // Every infection card drawn is hidden until now (a reveal), not only the first of the step.
-  s = touch(s);
-  if (!s.inf) {
-    if (s.quiet) return endInfect(say({ ...s, quiet: false }, "One quiet night: no infections."), ctx);
-    s = { ...s, inf: { left: ctx.hooks.chain<number>("infectionRate", RATES[s.rateIdx]!, s), drawn: [], bonus: false } };
-  }
-  const inf = s.inf!;
-  const card = s.infDeck[0];
-  if (card === undefined || inf.left <= 0) return endInfect(s, ctx);
-  s = { ...s, infDeck: s.infDeck.slice(1), infDiscard: [...s.infDiscard, card], inf: { ...inf, left: inf.left - 1, drawn: CITIES[card] ? [...inf.drawn, card] : inf.drawn } };
-  s = infectCity(s, card, ctx, "infect", rng);
-  if (s.outcome || s.inf!.left > 0) return s;
-  if (!s.inf!.bonus) {
-    const more = ctx.hooks.chain<number>("infectBonus", 0, s, s.inf!.drawn);
-    s = { ...s, inf: { ...s.inf!, bonus: true, left: more } };
-    if (more > 0) return s;
-  }
-  return endInfect(s, ctx);
-}
-
-function endInfect(s: State, ctx: Ctx): State {
-  s = { ...s, inf: null };
-  const queue = ctx.hooks.chain<string[]>("betweenTurns", [], s);
-  return nextQueued({ ...s, queue }, ctx);
-}
-
-/** Runs the next queued between-turns phase, or the next player's turn. */
-export function nextQueued(s: State, ctx: Ctx): State {
-  if (s.queue.length) return { ...s, phase: s.queue[0]!, queue: s.queue.slice(1) };
-  return startTurn({ ...s, current: (s.current + 1) % s.players.length }, ctx);
-}
-
-/** Cards needed to cure a colour. */
-export const cureCost = (s: State, seat: SeatId, c: string, ctx: Ctx) =>
-  ctx.hooks.chain<number>("cureCost", hasRole(s, seat, "Scientist") ? 4 : 5, s, seat, c);
-
-export function cure(s: State, seat: SeatId, c: string, cards: string[], ctx: Ctx): State {
+export function cure(s: State, L: Lib, seat: SeatId, c: string, cards: string[], samples: number, fx: Fx | null): State {
   for (const k of cards) s = discardFrom(s, seat, k);
-  s = say({ ...s, cured: [...s.cured, c] }, `${seat} discovers a cure for ${c}!`);
+  if (samples) s = setPl({ ...s, supply: { ...s.supply, [c]: (s.supply[c] ?? 0) + samples } }, seat, (p) => ({ ...p, samples: { ...p.samples, [c]: (p.samples[c] ?? 0) - samples } }));
+  s = say({ ...s, cured: [...s.cured, c], justCured: c }, `${seat} discovers a cure for ${c}!`);
   const medic = roleIn(s, "Medic");
   if (medic) s = removeCubes(s, s.pl[medic]!.city, c, 3);
   s = checkEradicated(s, c);
-  return ctx.hooks.chain<State>("onCure", s, seat, c);
+  s = applyOps(s, L, L.pts.onCure(s, { seat, color: c }), fx);
+  return checkWin(s, L);
 }
 
-export function goalMet(s: State, ctx: Ctx): boolean {
-  return ctx.hooks.chain<boolean>("cureGoal", COLORS.every((c) => s.cured.includes(c)), s);
+// ---- Infection deck --------------------------------------------------------------------------------------
+
+/** Takes n top infection cards (a reveal: the reader marks it), keeping segments and known counts in step. */
+export function takeTop(s: State, n: number, fx: Fx | null): [State, string[]] {
+  const deck = fx ? fx.zones.items(s.infDeck) : s.infDeck.items.slice();
+  const k = Math.min(n, deck.length);
+  const top = deck.slice(0, k);
+  let left = k;
+  const segs: number[] = [];
+  for (const g of s.infSegs) { const d = Math.min(g, left); left -= d; if (g - d > 0) segs.push(g - d); }
+  const infKnown = Object.fromEntries(Object.entries(s.infKnown).map(([x, m]) => [x, Math.max(0, m - k)]).filter(([, m]) => (m as number) > 0));
+  return [{ ...s, infDeck: withItems(s.infDeck, deck.slice(k)), infSegs: segs, infKnown }, top];
 }
 
-export function checkWin(s: State, ctx: Ctx): State {
-  if (s.outcome || !goalMet(s, ctx)) return s;
-  return { ...s, phase: "over", outcome: { winners: s.players.slice(), text: "the players cure the diseases and win" } };
+/** Takes the bottom infection card (part of the bottom segment). */
+export function takeBottom(s: State, fx: Fx | null): [State, string | null] {
+  const deck = fx ? fx.zones.items(s.infDeck) : s.infDeck.items.slice();
+  const card = deck[deck.length - 1];
+  if (card === undefined) return [s, null];
+  const segs = s.infSegs.slice();
+  segs[segs.length - 1] = segs[segs.length - 1]! - 1;
+  const infKnown = Object.fromEntries(Object.entries(s.infKnown).map(([x, m]) => [x, Math.min(m, deck.length - 1)]));
+  return [{ ...s, infDeck: withItems(s.infDeck, deck.slice(0, -1)), infSegs: segs.filter((g) => g > 0), infKnown, infDiscard: [...s.infDiscard, card] }, card];
 }
 
-// ---- Setup -------------------------------------------------------------------------------------------------
-
-export interface Opts {
-  [k: string]: Json;
-  epidemics: number; onTheBrink: boolean; virulentStrain: boolean; mutation: boolean; bioterrorist: boolean;
-  openHands: boolean; bioterroristSeat: string;
+/** Epidemic steps 1 and 2: the rate goes up; the bottom infection card gets 3 cubes. */
+export function epidemicInfect(s: State, L: Lib, card: string, fx: Fx): State {
+  s = say({ ...s, removed: [...s.removed, card], rateIdx: Math.min(s.rateIdx + 1, RATES.length - 1), epidemicCard: card }, "Epidemic!");
+  fx.zones.reveal();
+  const [t, bottom] = takeBottom(s, fx);
+  s = t;
+  if (bottom !== null) s = infectCity(s, L, bottom, "epidemic", fx);
+  if (s.outcome) return s;
+  return applyOps(s, L, L.pts.epidemic(s, { step: "infected", card }), fx);
 }
 
-/** The seat holding the highest city population card in its starting hand (ties: the earlier seat). */
-export function firstPlayer(s: State): number {
-  let best = 0, at = 0;
-  s.players.forEach((x, i) => {
-    for (const k of s.pl[x]!.hand) if (isCity(k) && (POPULATION[cityOf(k)] ?? 0) > best) { best = POPULATION[cityOf(k)] ?? 0; at = i; }
-  });
-  return at;
+/** Epidemic step 3: the discards are shuffled onto the top of the infection deck (a segment of their own). */
+export function intensify(s: State, L: Lib, fx: Fx): State {
+  const card = s.epidemicCard!;
+  const pile = shuffle(fx.rng!, s.infDiscard);
+  const deck = fx.zones.items(s.infDeck);
+  s = { ...s, infDeck: withItems(s.infDeck, [...pile, ...deck]), infSegs: [...(pile.length ? [pile.length] : []), ...s.infSegs], infKnown: {}, infDiscard: [], epidemicCard: null };
+  return applyOps(s, L, L.pts.epidemic(s, { step: "intensified", card }), fx);
 }
 
-export function setupState(seatIds: SeatId[], opts: Opts, addons: string[], ctx: Ctx, rng: Rng): State {
-  // The Bio-Terrorist is the last seat (a volunteer) or a random one.
-  const btSeat = !opts.bioterrorist ? null : opts.bioterroristSeat === "random" ? seatIds[rng.int(seatIds.length)]! : seatIds[seatIds.length - 1]!;
-  const players = seatIds.filter((x) => x !== btSeat);
-  const reasons = ctx.hooks.collect<string>("seatCheck", seatIds.length, players.length, opts);
-  const maxP = opts.bioterrorist ? 4 : opts.onTheBrink ? 5 : 4;
-  if (players.length < 2 || players.length > maxP) reasons.push(`Pandemic needs 2 to ${maxP} players${opts.bioterrorist ? " besides the Bio-Terrorist" : opts.onTheBrink ? "" : " (5 with On the Brink)"}`);
-  if (opts.epidemics < 4 || opts.epidemics > (opts.onTheBrink ? 7 : 6)) reasons.push("epidemics: 4 to 6 (7, legendary, with On the Brink)");
-  if (reasons.length) throw new Error(reasons[0]);
-  let s: State = {
-    seats: seatIds, players, addons, pl: {}, cubes: {}, supply: { ...SUPPLY }, stations: ["Atlanta"], cured: [], eradicated: [], outbreaks: 0, rateIdx: 0,
-    playerDeck: [], piles: [], playerDiscard: [], infDeck: shuffle(rng, Object.keys(CITIES)), infDiscard: [], removed: [], unusedRoles: [],
-    current: 0, actionsLeft: 0, phase: "actions", queue: [], drawn: [], epidemicCard: null, inf: null, openHands: opts.openHands || opts.epidemics === 4,
-    pending: [], quiet: false, outcome: null, log: [], logPly: -1, ply: 0, touched: 0, ext: btSeat ? { btSeat } : {},
-  };
-  if (!opts.mutation && !opts.bioterrorist) s = { ...s, supply: { ...s.supply, purple: 0 } };
-  const roles = shuffle(rng, ctx.hooks.collect<string>("roles", s));
-  players.forEach((x, i) => { s.pl[x] = { role: roles[i]!, city: "Atlanta", hand: [], stored: null, used: [] }; });
-  s = { ...s, unusedRoles: roles.slice(players.length) };
-  // Initial infections: 3 cities with 3 cubes, 3 with 2, 3 with 1.
-  for (const n of [3, 3, 3, 2, 2, 2, 1, 1, 1]) {
-    const card = s.infDeck[0]!;
-    s = { ...s, infDeck: s.infDeck.slice(1), infDiscard: [...s.infDiscard, card] };
-    s = place(s, card, CITIES[card] as Color, n, ctx, true);
+// ---- Operations ------------------------------------------------------------------------------------------
+
+const noFx = (what: string): never => { throw new Error(`the operation ${what} needs an action's context (it asks a seat)`); };
+
+/** Applies add-on operations in order (11 §10 "What an add-on may change"). */
+export function applyOps(s: State, L: Lib, ops: readonly PDJsonOp[], fx: Fx | null): State {
+  for (const raw of ops) {
+    if (s.outcome) return s;
+    const o = raw as Op;
+    switch (o.op) {
+      case "log": s = say(s, o.text); break;
+      case "place": s = place(s, L, o.city, o.color, o.n); break;
+      case "remove": s = removeCubes(s, o.city, o.color, o.n); break;
+      case "supply": s = { ...s, supply: { ...s.supply, [o.color]: Math.max(0, (s.supply[o.color] ?? 0) + o.n) } }; break;
+      case "uneradicate": s = { ...s, eradicated: s.eradicated.filter((c) => c !== o.color) }; break;
+      case "actions": s = { ...s, actionsLeft: s.actionsLeft + o.n }; break;
+      case "move": s = doMove(s, L, o.pawn, o.payer, o.kind, o.to, fx); break;
+      case "give": s = moveCard(s, o.from, o.to, o.card); break;
+      case "handToDiscard": s = discardFrom(s, o.seat, o.card); break;
+      case "discardToHand": {
+        const i = s.playerDiscard.indexOf(o.card);
+        if (i < 0) throw new Error(`${o.card} isn't in the discards`);
+        s = setHand({ ...s, playerDiscard: s.playerDiscard.filter((_, j) => j !== i) }, o.seat, [...handOf(s, o.seat), o.card]);
+        break;
+      }
+      case "spendEvent": s = spendEvent(s, o.seat, o.name); break;
+      case "role": {
+        // The old role card's contents go: a stored event to the discards, samples to the supply.
+        const p = s.pl[o.seat]!;
+        if (p.stored) s = { ...s, playerDiscard: [...s.playerDiscard, p.stored] };
+        for (const [c, n] of Object.entries(p.samples)) s = { ...s, supply: { ...s.supply, [c]: (s.supply[c] ?? 0) + n } };
+        const old = p.role;
+        s = setPl({ ...s, unusedRoles: [...s.unusedRoles.filter((r) => r !== o.role), old] }, o.seat, (q) => ({ ...q, role: o.role, stored: null, samples: {} }));
+        // The current player becoming the Generalist (or leaving it) mid-turn: the action limit's difference.
+        if (o.seat === cur(s) && s.step === "actions") {
+          const before = L.pts.actionLimit({ ...s, pl: { ...s.pl, [o.seat]: { ...s.pl[o.seat]!, role: old } } }, 4, { seat: o.seat });
+          s = { ...s, actionsLeft: Math.max(0, s.actionsLeft + Math.max(0, L.pts.actionLimit(s, 4, { seat: o.seat }) - before)) };
+        }
+        s = say(s, `${o.seat} becomes the ${o.role}.`);
+        break;
+      }
+      case "sample": {
+        s = { ...s, cubes: { ...s.cubes, [o.city]: { ...s.cubes[o.city]!, [o.color]: cubesIn(s, o.city, o.color) - 1 } } };
+        s = checkEradicated(setPl(s, o.seat, (p) => ({ ...p, samples: { ...p.samples, [o.color]: (p.samples[o.color] ?? 0) + 1 } })), o.color);
+        break;
+      }
+      case "unsample":
+        s = setPl({ ...s, supply: { ...s.supply, [o.color]: (s.supply[o.color] ?? 0) + o.n } }, o.seat, (p) => ({ ...p, samples: { ...p.samples, [o.color]: (p.samples[o.color] ?? 0) - o.n } }));
+        break;
+      case "cure": s = cure(s, L, o.seat, o.color, o.cards, o.samples, fx); break;
+      case "unstation": s = { ...s, stations: s.stations.filter((c) => c !== o.city) }; break;
+      case "hold": {
+        const [t, top] = takeTop(s, o.n, null);
+        s = { ...t, held: { ...t.held, [o.seat]: withItems(t.held[o.seat]!, [...t.held[o.seat]!.items, ...top]) } };
+        break;
+      }
+      case "unhold": {
+        const h = s.held[o.seat]!.items.slice();
+        const out = o.cards ?? h;
+        const rest = h.slice();
+        for (const k of out) { const i = rest.indexOf(k); if (i < 0) throw new Error(`${o.seat} holds no ${k}`); rest.splice(i, 1); }
+        s = { ...s, held: { ...s.held, [o.seat]: withItems(s.held[o.seat]!, rest) }, infDiscard: [...s.infDiscard, ...out] };
+        break;
+      }
+      case "infectBottom": {
+        const [t, card] = takeBottom(s, fx);
+        if (fx) fx.zones.reveal();
+        s = t;
+        if (card !== null && CITIES[card]) s = place(say(s, `${card} gets ${o.n} ${o.color}.`), L, card, o.color, o.n);
+        break;
+      }
+      case "peek": {
+        const n = Math.min(currentRate(s, L), s.infDeck.items.length);
+        if (fx) fx.zones.items(s.infDeck); else noFx("peek");
+        s = say({ ...s, infKnown: { ...s.infKnown, [o.seat]: Math.max(n, s.infKnown[o.seat] ?? 0) } }, `${o.seat} looks at the top ${n} infection cards.`);
+        break;
+      }
+      case "grant": s = say({ ...s, grant: o.pawn }, `${cur(s)} may move ${o.pawn} this turn.`); break;
+      case "use": s = markUsed(s, o.seat, o.flag); break;
+      case "reveal": if (fx) fx.zones.reveal(); break;
+      case "handLimit": s = checkHand(s, L, o.seat, fx); break;
+      case "ask":
+        if (!fx) noFx("ask");
+        fx!.ask({ kind: "choose", seat: o.seat, args: { label: o.label, choices: o.choices }, default: [o.choices[0]!.id] });
+        break;
+      case "askCard":
+        if (!fx) noFx("askCard");
+        fx!.ask({ kind: "give", seat: o.from, args: { to: o.to, city: o.city, cost: o.cost, flag: o.flag }, default: ["refuse"] });
+        break;
+      case "consent":
+        if (!fx) noFx("consent");
+        fx!.ask({ kind: "consent", seat: o.seat, args: { from: o.from, text: o.text, ops: o.ops, cost: o.cost }, default: ["no"] });
+        break;
+      default: throw new Error(`unknown operation ${JSON.stringify(raw)}`);
+    }
   }
-  // Player deck: cities and events (On the Brink: 2 per player, the Bio-Terrorist counted), deal hands, then
-  // split into piles as equal as possible with one epidemic each, the bigger piles on top.
-  const events = shuffle(rng, ctx.hooks.collect<string>("events", s));
-  const nEvents = opts.onTheBrink ? Math.min(events.length, 2 * seatIds.length) : events.length;
-  let cards = shuffle(rng, [...Object.keys(CITIES).map((c) => `city:${c}`), ...events.slice(0, nEvents).map((e) => `event:${e}`)]);
-  const hand = players.length === 2 ? 4 : players.length === 3 ? 3 : 2;
-  for (const x of players) { s = setPl(s, x, (p) => ({ ...p, hand: cards.slice(0, hand) })); cards = cards.slice(hand); }
-  cards = shuffle(rng, ctx.hooks.chain<string[]>("playerCards", cards, s, rng));
-  const epis = ctx.hooks.chain<string[]>("epidemics", Array.from({ length: opts.epidemics }, () => "epidemic"), s, rng);
-  const piles: string[][] = epis.map(() => []);
-  cards.forEach((c, i) => piles[i % piles.length]!.push(c));
-  const deck = piles.flatMap((pile, i) => shuffle(rng, [...pile, epis[i]!]));
-  s = { ...s, playerDeck: deck, piles: piles.map((p) => p.length + 1), current: firstPlayer(s) };
-  s = startTurn(s, ctx);
-  return ctx.hooks.chain<State>("setup", s, rng);
+  return s;
 }
+type PDJsonOp = import("@boardcore/pack-sdk").Json;

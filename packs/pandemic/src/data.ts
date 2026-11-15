@@ -1,8 +1,10 @@
 // The world map (48 cities, 4 colours) and card names. Mechanics only.
 // Cities, colours and connections checked against the board in the base rulebook's setup pictures (pp. 2-3);
 // names, colours and populations also against the supplied card list.
-export type Color = "blue" | "yellow" | "black" | "red" | "purple";
+export type Color = "blue" | "yellow" | "black" | "red";
 export const COLORS: readonly Color[] = ["blue", "yellow", "black", "red"];
+/** The four diseases the base game cures. */
+export const STANDARD: readonly string[] = COLORS;
 
 export const CITIES: { readonly [name: string]: Color } = {
   "Atlanta": "blue", "Chicago": "blue", "Essen": "blue", "London": "blue", "Madrid": "blue", "Milan": "blue",
@@ -60,15 +62,9 @@ export const POPULATION: { readonly [city: string]: number } = {
 };
 
 export const BASE_ROLES = ["Contingency Planner", "Dispatcher", "Medic", "Operations Expert", "Quarantine Specialist", "Researcher", "Scientist"] as const;
-export const OTB_ROLES = ["Archivist", "Containment Specialist", "Epidemiologist", "Field Operative", "Generalist", "Troubleshooter"] as const;
 export const BASE_EVENTS = ["Airlift", "Forecast", "Government Grant", "One Quiet Night", "Resilient Population"] as const;
-export const OTB_EVENTS = ["Borrowed Time", "Commercial Travel Ban", "Mobile Hospital", "New Assignment", "Rapid Vaccine Deployment", "Re-examined Research", "Remote Treatment", "Special Orders"] as const;
-export const VS_EPIDEMICS = ["Chronic Effect", "Complex Molecular Structure", "Government Interference", "Hidden Pocket", "Rate Effect", "Slippery Slope", "Unacceptable Loss", "Uncounted Populations"] as const;
-export const MUTATION_EVENTS = ["Mutation Threatens", "Mutation Spreads", "Mutation Intensifies"] as const;
 
 /** Infection rate track. */
 export const RATES = [2, 2, 2, 3, 3, 4, 4] as const;
-/** Cubes per colour in the supply (the Petri dish holds the purple ones). */
-export const SUPPLY: { readonly [c in Color]: number } = { blue: 24, yellow: 24, black: 24, red: 24, purple: 12 };
 export const OUTBREAK_LIMIT = 8;
 export const MAX_STATIONS = 6;

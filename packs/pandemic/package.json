@@ -1,7 +1,7 @@
 {
   "name": "@boardcore-packs/pandemic",
-  "version": "0.1.0",
-  "description": "Pandemic with On the Brink (roles, events, Virulent Strain, Mutation, the Bio-Terrorist) as switchable add-ons.",
+  "version": "1.0.0",
+  "description": "Pandemic base on the phase runner, with typed points for its On the Brink add-ons.",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
