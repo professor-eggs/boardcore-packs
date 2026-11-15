@@ -1,57 +1,67 @@
-# Pandemic (`boardcore/pandemic`)
+# Pandemic (`boardcore/pandemic`) and its On the Brink add-ons
 
-A cooperative game for 2 to 4 players (up to 5 with On the Brink), plus the Bio-Terrorist seat when that challenge is on.
-The base game is always on. Each expansion module is an add-on that you switch on in the game options.
+A cooperative game for 2 to 4 players (5 with the roles add-on), on Boardcore's phase runner, hidden zones and
+interrupt queue (S11 part 7). The base is version 1.0.0; each On the Brink module is its own add-on pack in this
+repository, type-checked against the base's published points (`src/points.d.ts`). Every rule is checked, with
+its rulebook page, in [RULES-AUDIT.md](RULES-AUDIT.md); contract gaps are in [CONTRACT-GAPS.md](CONTRACT-GAPS.md).
 
-| Option | Type | What it does |
+| Pack | What it adds | Options and presets |
 |---|---|---|
-| `epidemics` | integer 4–7 | Epidemic cards: 4 introductory, 5 standard, 6 heroic, 7 legendary (7 needs `onTheBrink`) |
-| `onTheBrink` | boolean | 6 more roles (Archivist, Containment Specialist, Epidemiologist, Field Operative, Generalist, Troubleshooter), 8 more events, 2 events per player, a 5th player |
-| `virulentStrain` | boolean | The 8 Virulent Strain epidemic cards replace the normal ones. The strain is the colour with the most cubes after the first one. |
-| `mutation` | boolean | A purple disease with the Mutation! infection cards and the 3 mutation events |
-| `bioterrorist` | boolean | One seat is the hidden Bio-Terrorist (3–5 seats in all). Can't be combined with `mutation`. |
-| `bioterroristSeat` | `last` / `random` | Who is the Bio-Terrorist: the last seat (a volunteer) or a random seat |
-| `openHands` | boolean | Everyone sees every hand. Hands are always open with 4 epidemics (introductory); otherwise private |
+| `boardcore/pandemic` | The base game | `epidemics` 4–7 (7 needs the roles add-on), `openHands` |
+| `boardcore/pandemic-roles` | 6 roles, a 5th player, the legendary game | — |
+| `boardcore/pandemic-events` | 8 events; 2 events per seat | — |
+| `boardcore/pandemic-virulent-strain` | Its 8 epidemic cards replace the normal ones | presets `epidemics: 5` |
+| `boardcore/pandemic-mutation` | A purple disease, Mutation cards | presets `epidemics: 5`; after VS; conflicts with the Bio-Terrorist |
+| `boardcore/pandemic-bioterrorist` | One seat plays against the others | `seat`: `last` or `random`; presets `epidemics: 5`; after VS; conflicts with Mutation |
 
-The Lab challenge is a stub; see the gaps below. Every rule is checked, with its rulebook page, in
-[RULES-AUDIT.md](RULES-AUDIT.md).
+Hands are open with 4 epidemics (introductory) or with `openHands`, private otherwise.
 
-## Code map: what's yours and what plugs in
+## The base
 
-- `data.ts` holds the map (48 cities with their colours and links), the roles, the events and the infection rates.
-- `engine.ts` holds the base rules and `POINTS`, the declared extension points. Each point's signature and combine rule is commented where it's declared.
-  - Setup: `setup`, `playerCards`, `epidemics`, `roles`, `events`.
-  - The turn: `actionLimit`, `handLimit`, `turnStart`, `betweenTurns`.
-  - Movement: `onEnter`, `blockLeave`.
-  - Infection: `preventCube`, `infectCubes`, `infectAlso`, `outbreakSteps`, `outbreakSource`, `infectCard`, `infectionRate`, `infectBonus`, `epidemic`.
-  - Cards and cures: `drawCard`, `isEpidemic`, `drawChoice`, `payCard`, `cureCost`, `onCure`.
-  - The end: `cureGoal`, `outcome`.
-  - Other: `actors`, `view`, `seatCheck`.
-- `hooks.ts` is the add-on kernel. The state holds only the ids of the add-ons that are switched on. Handlers are code in static tables, so the state stays plain JSON and replays cleanly.
-- `addon.ts` defines what an add-on can supply:
-  - `handlers`, a table of handlers or a function that takes the game context and returns one
-  - `actions`, `events`, `phases`, `interrupts`
-- `actions.ts` holds the base actions, the events, the turn loop (actors, prompt, act, settle) and the out-of-turn event window.
-- `purple.ts` holds the purple disease, which Mutation and the Bio-Terrorist share.
-- `addons/` has one file per expansion module. None of them edits the base. New behaviour goes only through points, registries, phases or interrupts.
-- `index.ts` puts the context together from the options. It also holds the view, the status, the text and the timeout.
+- `src/data.ts`: the map (48 cities, colours, links, populations), the base roles and events, the rate track.
+- `src/engine.ts`: state helpers, cubes and outbreaks, moves, cards, cures, the infection deck, and `applyOps`,
+  the operations an add-on's handler may return (`PDOp` in `points.d.ts`).
+- `src/actions.ts`: the base actions, the base roles' abilities and the base events.
+- `src/index.ts`: the points, the phases, the questions, the view, the text, setup and the contract functions.
+- `src/resample.ts`: `resampleHidden` for the base's zones.
 
-## How hidden information works
+**Phases** (one round is one player's turn): `actions` (turns) → `beforeDraw` (window) → `draw` → `special1`,
+`epidemic1` (a window inside an epidemic, Resilient Population only), `intensify1` → `between` (window between two
+special cards) → `special2`, `epidemic2`, `intensify2` → `hands` → `infect` → `w1`/`i1` … `w5`/`i5` (a window, then
+one infection card) → `next`. Once the game is over every phase is empty.
 
-- **Hands:** private from 5 epidemics up (each view shows the others' hand sizes only), open with 4 epidemics or the `openHands` option. Discard piles are public; the order of both decks is hidden.
-- **Bio-Terrorist view:** only his view shows his city, his hand and his location sheet (every action, by turn). Everyone sees his hand size, the cards he discards, purple cubes, sabotage and airport sightings, never which kind of flight or a drive.
-- **Spotted and captured:** he's on the board while he shares a city with a player; a player there may capture him.
-- **Replay:** `reveal` is set whenever a hidden card is read.
+**Response windows (G1).** Each window phase's actors are the seats that may hold a playable event by public
+information: with open hands, the holders; with closed hands, every player with cards while an event card is
+unaccounted for (not in the discards, out of the game or stored), plus any seat with a stored event. Every actor
+gets the same prompt shape and the runner's Pass, with a 30-second phase deadline. During his actions the
+current player may wait for the others' events (`call`): each other player is asked in seat order.
 
-## The turn loop
+**Questions to a seat (G2).** A take (Share Knowledge, the Epidemiologist) asks the other seat for a card from
+its own hand, or to refuse; a give, a Dispatcher or Airlift move of another pawn, Special Orders and New
+Assignment on another player ask for consent. The asker's prompt never lists the other hand; the action is paid
+when the other seat agrees.
 
-Actions (events playable by anyone) → Draw: both cards at once, city and event cards to the hand, then the special cards in order (Mutation events before epidemics; two Mutation events in the player's order), with an event window between two of them; inside an epidemic only Resilient Population may be played between Infect and Intensify → hand limits → Infect: one card at a time, with an event window before each when anyone holds a playable event → between-turn phases (the Bio-Terrorist) → the next player.
+**Hidden zones.** Both decks are face-down zones, hands are zones seen by their owner (or by all with open
+hands), a Forecast is a zone seen by its player, and the Bio-Terrorist's infection cards are a `held` zone seen by
+him. The infection deck keeps the segments the table knows as sets (`infSegs`) and the top cards each seat has
+looked at (`infKnown`), so `resampleHidden` keeps both.
 
-## Stubbed, simplified or blocked
+## The add-ons
 
-- **Lab challenge:** a stub in `addons/lab.ts`. It comes from *Pandemic: In the Lab*, not On the Brink, and none of the supplied books covers it. The stub refuses to start and is not in the options.
-- **Agreement:** sharing cards, the Epidemiologist's take, Dispatcher, Airlift and Special Orders moves need the other player's agreement. The pack can't ask a second seat mid-action, so the acting player decides; players agree at the table.
-- **Solo rules** (a separate Z-Man download): not built. One seat would control 3 roles with one shared hand and an archive; the pack's turn loop is one pawn per seat.
-- **Survival rules, scenarios and puzzles** (separate downloads): tournament and preset formats, not built.
+Each add-on hooks in only through the base's points: registries (`roles`, `events`, `diseases`), modifiers,
+events, scoring points, and phases. See the head comment of each `packs/pandemic-*/src/index.ts`. The events,
+Virulent Strain and Bio-Terrorist add-ons carry a copy of the map (`src/map.ts`), checked against the base's by a
+test, since an add-on imports nothing but the SDK.
 
-The full list, with sources, is in RULES-AUDIT.md.
+**The Bio-Terrorist is an add-on**, not a derived pack (11 §10 "one against all"): the base declares
+`hiddenInformation`, an `outcome` point whose first answer may replace the base's result with a lone winner, the
+seats that get a pawn (`pawnSeats`, which draws), the `held` zones and their operations, `onEnter`, `cureGoal`
+and the `diseases` registry with flare-outs. The add-on's phases (`start` before round 1's actions, `bt1` … `bt6`
+before `next`) carry his secret turn; his location is in its slice, redrawn by its `resampleHidden`.
+
+## Not built
+
+- **The Lab challenge** comes from *Pandemic: In the Lab*, not On the Brink; no supplied book covers it.
+- **Solo, Survival, scenarios and puzzles** (separate downloads): not built.
+- **Teams** for the Bio-Terrorist mode: the room's teams are fixed before setup draws his seat (Q68 (d)); the
+  outcome names the winners only.

@@ -13,7 +13,9 @@ Status:
 - **added**: the pack didn't do it before.
 - **blocked**: the engine or the scope stops it; the reason is given.
 
-Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemic.test.ts`.
+Tests: `test/base.test.ts` and `test/addons.test.ts` (the rules a random game rarely reaches), and the kit games in `test/kit-games.test.ts`.
+
+S11 part 7c moved the pack onto the phase runner and split On the Brink into add-on packs (README.md). The rules below were re-checked against the new code; rows changed by the port say so ("7c").
 
 ## Components and map
 
@@ -44,7 +46,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | OTB: 2 events per player chosen at random, the rest unseen | O p2 | matching |
 | Legendary: the rate stays at 4 when the 7th epidemic comes | O p2 | matching |
 | "Try a challenge with 1 fewer epidemic" | O p2 | advice only, not a rule. Left to the player. |
-| Combining: VS with Mutation or with the BT, never Mutation with the BT | O p2, O p5 | matching (setup refuses Mutation + BT) |
+| Combining: VS with Mutation or with the BT, never Mutation with the BT | O p2, O p5 | matching. 7c: the two add-ons' manifests conflict, so a room can't hold both. |
 
 ## Actions (B p4-5)
 
@@ -53,7 +55,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Drive/Ferry, Direct, Charter, Shuttle | matching |
 | Build (card, or the Operations Expert without one; moving a station when all 6 are out) | matching |
 | Treat (1 cube, or all of a cured colour; Medic all) | matching |
-| Share Knowledge (the card of the city you're in; the Researcher any card; hand limit at once) | matching. "Both agree" is left to the table, see blocked. |
+| Share Knowledge (the card of the city you're in; the Researcher any card; hand limit at once; both players agree) | 7c added: a give asks the receiver to accept; a take asks the other player to give one of his matching cards or refuse, from his own prompt. |
 | Discover a Cure (5 cards of a colour at a station; eradication when none are left) | fixed: cards are picked one at a time. Before, it offered only the first 10 sets of 5. |
 
 ## Roles
@@ -61,7 +63,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Role | Source | Status |
 |---|---|---|
 | Contingency Planner: take a discarded event as an action; 1 at a time; removed from the game when played | B p8, C | matching |
-| Dispatcher: other pawns as his own (he pays); any pawn, his own too, to a city with a pawn; never the Operations Expert's move | B p8, C | fixed: he can now move his own pawn to another pawn |
+| Dispatcher: other pawns as his own (he pays); any pawn, his own too, to a city with a pawn; never the Operations Expert's move | B p8, C | fixed: he can now move his own pawn to another pawn. 7c: another player's pawn moves only if he agrees. |
 | Medic | B p8, C | matching |
 | Operations Expert | B p8, C | matching |
 | Quarantine Specialist (no cubes and no outbreaks in her city and next to it) | B p8, C | matching |
@@ -69,7 +71,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Scientist (4 cards; with Complex Molecular Structure, 5) | B p8, O p3 | matching |
 | Archivist (hand limit 8; once a turn, the card of her city from the discards) | O p8, C | fixed: the hand limit is checked after the take |
 | Containment Specialist (on entering, 1 of each colour with 2 or more; also when moved by others) | O p8, C | matching |
-| Epidemiologist (once a turn, free, take a city card from a player there) | O p8, C | fixed: the hand limit is checked after the take |
+| Epidemiologist (once a turn, free, take a city card from a player there) | O p8, C | fixed: the hand limit is checked after the take. 7c: the other player chooses the card from his own hand, or refuses. |
 | Field Operative (once a turn, a cube onto the card; 3 samples stand in for 2 cards; samples may go back at any time) | O p8, C | fixed: sampling can eradicate; cards are picked; a purple cure with samples is allowed. Added: "return samples". |
 | Generalist (5 actions) | O p8, C | matching |
 | Troubleshooter (look at "rate" cards at turn start; a Direct Flight shows the card and keeps it, also with Special Orders, not when others move her) | O p8, C | fixed: there was a once-a-turn limit, now removed. The peek uses the current rate (1 under the Travel Ban), with no extra card for Rate Effect. |
@@ -78,8 +80,8 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 
 | Event | Source | Status |
 |---|---|---|
-| Any time, not an action, any player, never between drawing and resolving a card; between two epidemics drawn together | B p7 | fixed: there are now windows between infection cards and between two drawn epidemics |
-| Airlift (with permission) | B p7, C | fixed: respects Government Interference |
+| Any time, not an action, any player, never between drawing and resolving a card; between two epidemics drawn together | B p7 | fixed: there are now windows between infection cards and between two drawn epidemics. 7c: each is a `window` phase; during his actions the current player may also wait for the others' events. |
+| Airlift (with permission) | B p7, C | fixed: respects Government Interference. 7c added: another player's pawn moves only if he agrees. |
 | Forecast, Government Grant, One Quiet Night | C | matching. The card text isn't legible in B. |
 | Resilient Population (any time, also between Infect and Intensify) | C, O p4 | fixed: only this event may be played inside an epidemic, and it can't take a Mutation card |
 | Borrowed Time (+2 actions; not right after drawing it) | O p2, C | matching. C says "the current player"; the card says "take", so it is played on your own turn. |
@@ -89,7 +91,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Rapid Vaccine Deployment (straight after a cure, 1-5 cubes, every affected city next to another one, ≥1 cube from each) | O p2, C | fixed: you now pick the cubes, with the exact connection rule, and the turn waits for it after a last-action cure. It used to remove cubes greedily. |
 | Re-examined Research (a chosen player takes a city card from the discards, then the hand limit) | O p1 card, C | fixed: you now choose the player, and the hand limit is applied |
 | Remote Treatment (2 cubes anywhere) | O p1 card, C | matching |
-| Special Orders (the current player moves 1 other pawn as his own, paying like the Dispatcher; movement powers apply) | O p2, C | fixed: anyone may play it for the current player; it respects Government Interference |
+| Special Orders (the current player moves 1 other pawn as his own, paying like the Dispatcher; movement powers apply) | O p2, C | fixed: anyone may play it for the current player; it respects Government Interference. 7c: the pawn's player agrees first. |
 
 ## Turn, draws, infections
 
@@ -144,7 +146,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Item | Status |
 |---|---|
 | 3 or 4 seats; 5 (BT + 4) allowed, not recommended | fixed: 6 seats are refused |
-| Chosen randomly, by role card, or by volunteer | added: `bioterroristSeat` = `last` (volunteer) or `random`. Dealing the role card is the same as random. |
+| Chosen randomly, by role card, or by volunteer | added: the add-on's `seat` option = `last` (volunteer) or `random`. Dealing the role card is the same as random. |
 | 2 events per seat, counting him | fixed: he wasn't counted |
 | 2 infection cards after the 9 infections; first player among the others; then his secret start | matching |
 | His turn after each player's Infect step: 2 actions + 1 Drive/Ferry, each action at most twice (Drive 3) | matching |
@@ -154,7 +156,7 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 | Hidden actions once a turn, only unspotted: Infect Locally, Infect Remotely (purple only, may be his city), Sabotage (card of the city's colour) | matching |
 | Spotted when sharing a city; capture as an action; whole hand discarded | matching |
 | Captured: only Draw or Escape. Escape: discard, move, sighting, then the turn goes on (the extra move too) | matching; now tested |
-| Purple flare-out: 2 back, 1 to each neighbour, chain rule | matching, now through `outbreakSource` |
+| Purple flare-out: 2 back, 1 to each neighbour, chain rule | matching. 7c: the purple disease entry's `flare: 2`. |
 | Infections on purple cities place both; epidemics their colour only | matching |
 | Hand size public, cards hidden; location sheet | added: a per-turn location sheet in his view only |
 | He wins if the players lose with purple on the board; everyone loses with none; he's out if purple is eradicated | matching |
@@ -163,8 +165,8 @@ Tests: `test/rules.test.ts` (one test per fixed or added rule) and `test/pandemi
 
 | Item | Source | Why |
 |---|---|---|
-| Lab challenge | brief | Not in O. It belongs to *In the Lab*, which none of the supplied books covers. Stub in `addons/lab.ts`, refuses to start. |
-| "With permission" (Share, Epidemiologist, Dispatcher, Airlift, Special Orders, New Assignment) | B p4/p8, O p8 | The engine's moves are single-seat paths, with no consent prompt to a second seat mid-action. The acting player decides; agreement is social. |
+| Lab challenge | brief | Not in O. It belongs to *In the Lab*, which none of the supplied books covers. Not built (7c: the old stub is gone). |
+| "With permission" (Share, Epidemiologist, Dispatcher, Airlift, Special Orders, New Assignment) | B p4/p8, O p8 | 7c: built. The other player is asked through the interrupt queue (a card from his own hand, or consent) and the action is paid only when he agrees. |
 | Solo rules | Z (download) | Not built: one seat leading 3 roles with a shared hand and an archive. The pack's loop is one pawn per seat. That's a pack refactor, not an engine block. |
 | Survival rules, scenarios, puzzles | Z (downloads) | Tournament and preset-deck formats (a Game Master, multiple teams), out of scope |
 | In the Lab, State of Emergency content in C | C | Out of scope |

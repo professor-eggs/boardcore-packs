@@ -1,47 +1,118 @@
-# Pandemic: contract gaps (S11 part 4, first pass)
+# Pandemic: contract gaps (S11 part 7c)
 
-Where pack contract v1 (`boardcore/docs/11-engine-contract.md`) and the SDK as pinned (S11 part 1, `c1d7e54`) were awkward for this pack or couldn't express the game. Each finding says what the pack does instead, how bad it is, and a suggested change. Mechanics are described generically, with no rulebook text. Severity: **high** (a leak, a fault, or a rule that can't be played), **medium** (works, but the pack carries machinery the engine or SDK should own), **low** (cosmetic, or one line of pack code).
+Where pack contract v1 (`boardcore/docs/11-engine-contract.md`) and the SDK were awkward for this pack and its
+add-ons, as pinned at `e0c5d98` (S11 part 7b review fixes). First pass: S11 part 4 (`c1d7e54`); the old texts of
+the closed gaps are in git history. Mechanics are described generically, with no rulebook text. Severity:
+**high** (a leak, a fault, or a rule that can't be played), **medium** (works, but the pack carries machinery the
+engine or SDK should own), **low** (cosmetic, or one line of pack code). The new generic gaps are also written up
+in `GAPS-FOR-PUBLIC.md`, for the public docs.
 
-## Findings
+## Closed by parts 7a and 7b
 
-**G1. Cards any seat may play at any moment, from a hidden hand (high).** Any player holding a certain kind of card may play it out of turn, between almost any two steps, and the table must give them the chance. In v1 the only way to let a seat act is to make it an actor, and actors are public (every view's `waitingFor`). So with closed hands everyone learns who holds a playable card of that kind, and since the table pauses while such a holder exists and moves on by itself when none does, whether an action ends a window (and so draws the next hidden card) also depends on other seats' hidden hands. The two-worlds check reports both on every closed-hand game (the kit tests count them and excuse them as this gap: about 1,250 actor differences and 4 commit-point differences in 21 games). With open hands there is no finding. *Suggest:* a "may respond" role distinct from actors: a seat offered an optional prompt that isn't published in `waitingFor`, with the window closed by the engine (every eligible seat passes, or a short timer) and every seat of the game offered the window, holder or not, so being offered reveals nothing. A window kind in the S11.7 phase runner would carry it.
+| Gap | Closed by | What the pack does now |
+| --- | --- | --- |
+| **G1** (high) out-of-turn cards from a hidden hand | the `window` phase kind, Q65's interim shape | Each response window is a `window` phase; its actors come from public information only (with closed hands, every player with cards while an event card is unaccounted for), every actor gets Pass and the phase's 30-second deadline. The leak check finds nothing; the old excuse is gone. |
+| **G2** (high) an action that needs another seat's answer | the interrupt queue | A take asks the other seat for a card from its own hand or a refusal (`give`); a give, a move of another pawn and an event on another player ask for consent. The asker's prompt names only what it can see; the leak check finds nothing; the old excuse is gone. |
+| **G3** (medium, in part) no history for `resampleHidden` | — (pack state) | The infection deck keeps its segments known as sets (`infSegs`) and each seat's known top cards (`infKnown`), so the resampler shuffles only within what a seat doesn't know. The piles of the player deck are still kept for the resampler only. |
+| **G6** (medium) reveal bookkeeping by hand | hidden zones and the zone reader | Decks, hands, a Forecast and the Bio-Terrorist's cards are zones; a read through the reader marks the reveal. The `touched` counter is gone. Two reveals the reader can't see are explicit (an add-on's `reveal` operation, below N6). |
+| **G9** (low) display fields | manifest fields | `complexity`, `tags`, `playtime` filled on the base; `tags` on each add-on. |
+| Switchable modules inside one bundle | add-ons as their own packs (D41, D81) | Five add-on packs with `addon: { base, range }`, their own options and presets, `after` and `conflictsWith`, type-checked against `src/points.d.ts`. |
 
-**G2. An action that needs another seat's answer (high).** Some actions give or take a card between two players, or move another player's pawn, and need the other player's agreement; the card taken comes from a hand the taker can't see. v1 can't ask a second seat in the middle of an action, so the acting seat decides alone, and its prompt lists the other player's matching cards, which leaks that closed hand (the leak check reports it as "prompt depends on hidden information"; excused in the tests as this gap). *Suggest:* the interrupt queue for questions to other seats (D81, SP1 C3) usable from a base pack: "ask a seat" turns into a prompt for that seat ("give one of these, or refuse"), and the asker's prompt names only what it can see.
+## Still open
 
-**G3. `resampleHidden` has no history to work from (medium).** Players know which cards a reshuffle put back on top of the infection deck (they were face up a moment before) and the order a forecast set; the state keeps neither, so `resampleHidden` redraws the whole infection deck. It also needs each remaining epidemic to stay within its own pile of the player deck, which no rule needs once the deck is built: the pack now keeps the pile sizes in the state (`piles`) only for the resampler, which changes every state hash. *Suggest:* as 7 Wonders G2: let `resampleHidden` take what the seat has seen, or a per-seat knowledge value kept outside the hashed state.
+**G4. Teams for the one-against-all mode (medium).** Unchanged: the room's teams are fixed before setup draws
+the Bio-Terrorist's seat, and Q68 is still (d). The outcome names the winners only (him alone, or the players).
 
-**G4. A hidden-loyalty or one-against-all seat (medium).** With the Bio-Terrorist on, one seat (the last, or a random one drawn at setup) plays against the others. The room's teams are fixed in the header when the room is made, before setup draws the seat, so the header can't say who is on which side, and D79's teammates-share-a-place check can't apply. The outcome uses `winners` alone: the lone seat (place 1, the rest 2), or all the others (place 1, the lone seat last). *Suggest:* let `setup` (or the first `status`) declare teams, recorded in the BGN like an engine entry, when the manifest says teams are drawn in play.
+**G5. Everyone loses together (low).** Unchanged: `winners: []` is shown as a shared first place.
 
-**G5. Everyone loses together (low).** When the lone opponent is out of the game and the players then lose, nobody wins. The only outcome for that is `winners: []`, which D79 treats as every seat at place 1 (a draw), and a surface that shows placings would call it a shared 1st. The same holds for a plain cooperative loss, where the heading and the text carry it. *Suggest:* an outcome flag (or a rule that `winners: []` with a non-draw text shows "everyone lost") so a surface can say "no one won" rather than "everyone 1st".
+**G7. Many plies for windows that are almost always passed (medium, was low).** Worse with the interim window:
+with closed hands every player with cards is an actor of every window and must pass it (or wait out the
+30-second deadline), up to 7 windows a turn (before the draw, inside two epidemics, between two special cards,
+before each infection card). A 4-seat closed-hand game is about 200 to 270 plies, most of them passes. Q65's full
+shape (an engine-run "may respond" offer, closed by the engine when nobody plays) would remove them.
 
-**G6. Reveal bookkeeping by hand (medium).** v1 asks the pack to flag `reveal` whenever an action's result depends on hidden information. The pack counts reads of hidden cards in a `touched` field and flags a reveal when it changes; the two-worlds check found three places it forgot (see Bugs fixed). Nothing but the leak check catches a missed flag. *Suggest:* an SDK hidden-zone helper (a deck or hand whose reads go through accessors that mark the call as a reveal), so a pack can't read hidden data without flagging it.
+**G8. One seat, several roles (low).** Unchanged: the solo rules aren't built.
 
-**G7. Many tiny plies for a window that is almost always passed (low).** While anyone holds a card from G1, each infection card is its own action (the current player presses "draw the next card"), so a turn with such a card in play costs up to six plies, each with a `decide`'s full set of pack calls. G1's engine-run window would remove these.
+## New in part 7c
 
-**G8. One seat, several roles (low).** The official solo rules have one person play three roles with one shared hand. Seats map one-to-one to players in the pack's turn loop; nothing in v1 stops a pack from giving a seat several pawns, but the shared parser, prompts and views have no notion of "which of your pawns", so it isn't built.
+**N1. Every point call copies the whole state (medium, performance).** As 7 Wonders N1. Every prompt of the
+actions phase calls `actions` and `eventCheck` (and `steps` on each step), every move `onEnter` and `blockLeave`,
+every infection `infectCubes`: each a deep, frozen copy of the base's state per add-on. Sandboxed play costs 40
+to 100 ms a ply with add-ons. *Suggest:* a lazily copied or structurally shared input, or a documented budget per
+point.
 
-**G9. Display fields can't be filled yet (low).** As 7 Wonders G9: the pinned Boardcore has no `complexity`, `tags` or `playtime` in the manifest.
+**N2. A base can't end the runner early (medium).** When the players win or lose, the runner still walks every
+remaining round (rounds are fixed at `start`: here the player deck's length over two, plus a margin), entering
+every phase and calling every add-on's `seats` and `begin`, though each returns nothing. A game lost in round 1
+costs one call 8 interrupt checks with no add-ons and about 600 to 850 of 2,000 with the Bio-Terrorist (measured
+in the sandbox); the costliest call of the kit games (827) is such an end. *Suggest:* `ctx.end()` (or the
+runner stopping when `status` has an outcome), so a base with an early end needn't keep its record by hand.
+
+**N3. A window can't be opened inside a phase (low).** "Wait for the others' events" in the middle of a player's
+actions would be a window; a window is a phase, so the base asks each other player in seat order through the
+queue instead (`respond`, Pass by default), one at a time.
+
+**N4. The kit's random player walks picks only (medium, tooling).** `legalActions` (so `playRandom`, `playBoth`
+and `leakCheck`) returns nothing for an `order`, `subset` or `amounts` step, and the game then stops silently,
+with no outcome and no suspension. Forecast was first an `order` step and every game that played it stopped
+there. It is now a series of picks. Repro: a pack whose only prompt is `{ kind: "order", options: [a, b] }`;
+`playRandom` returns after ply 0 with `outcome: null` and `suspended: null`. *Suggest:* walk every step kind
+with `someSteps`, as `choicesReadsHidden` already does, or suspend with a reason.
+
+**N5. A point can't return a prompt (low).** A scoring point's result must be `Json`, and `Prompt`'s types have no
+index signature, so the `steps` point (an add-on action's next prompt) is declared `prompt: Json` and both sides
+cast. *Suggest:* make `Prompt` (and `Option`) assignable to `Json`.
+
+**N6. An event effect can't mark a reveal (low).** A phase effect may carry `reveal`; an event effect may not.
+The Bio-Terrorist's `onEnter` (a pawn entering a city tells everyone whether he is there) and capture (his
+hand goes to the discards) need one, so the base declares a `reveal` operation. *Suggest:* `reveal` on event
+and menu effects, as on phase effects.
+
+**N7. A one-against-all add-on needs the base designed for it (note).** 11 §10's test (an add-on only if the base
+declares hidden information, an end point that may name a lone winner and every other point the mode needs) was
+met because the base was written with the Bio-Terrorist in mind: the seats that get a pawn (`pawnSeats`, a
+drawing modifier), held infection cards (`held` zones and `hold`/`unhold`), an `outcome` point, flare-outs in the
+`diseases` registry, `onEnter`. A base author decides up front which such variants can be add-ons. *Suggest:* say
+so in the authoring guide, with this list as the example.
+
+**N8. The first phase of round 1 begins inside setup (low).** As 7 Wonders N7: the Bio-Terrorist's `start` phase
+begins before his slice exists, so its `begin` makes the slice and deals his two cards, and `setup` keeps the
+slice it is handed.
 
 ## Test-kit numbers
 
-Run 2026-11-13 on the pinned Boardcore, Node 22, through `tools/kit` (see the 7 Wonders file for what it adds to `@boardcore/testkit`). Random play loses fast (outbreaks or the cube supply), so the games are short.
+Run 2026-11-15 at `e0c5d98`, Node 22, through `tools/kit` and the published kit (`@boardcore/testkit`:
+`playRandom`, `verifyReplay`, `interleaved`, `leakCheck`). Random play loses fast (outbreaks or the cube supply).
 
-| Configuration | Plies (2 games) | Trusted s (ms/ply) | Sandboxed s (ms/ply) | Costliest call |
+| Room | Plies | Trusted s (ms/ply) | Sandboxed s (ms/ply) | Costliest call (checks of 2,000) |
 | --- | --- | --- | --- | --- |
-| 2 seats, introductory (open hands) | 40, 49 | 0.26, 0.19 (4.0–6.5) | 2.58, 2.98 (61–64) | 4 |
-| 3 seats, 5 epidemics | 31, 29 | 0.28, 0.26 (9.0) | 3.82, 3.74 (123–129) | 4 |
-| 4 seats, 6 epidemics, open hands | 35, 47 | 0.13, 0.17 (3.5) | 1.75, 2.07 (44–50) | 4 |
-| 5 seats, 7 epidemics, On the Brink + Virulent Strain | 29, 27 | 0.36, 0.38 (12–14) | 3.87, 5.96 (133–221) | 4 |
-| 4 seats, On the Brink + Mutation | 58, 52 | 0.31, 0.32 (5.4–6.2) | 4.53, 4.06 (78) | 5 |
-| 4 seats, Bio-Terrorist (random seat) | 30, 19 | 0.10, 0.06 (3.0–3.2) | 1.28, 0.76 (40–43) | 4 |
-| 5 seats, On the Brink + Bio-Terrorist | 48, 48 | 0.26, 0.29 (5.5–6.1) | 3.18, 4.63 (66–97) | 5 |
+| 2 seats, base, introductory (open hands) | 49 | 0.32 (6.6) | 3.05 (62) | 7 |
+| 4 seats, base, 6 epidemics | 220 | 0.66 (3.0) | 9.01 (41) | 8 |
+| 5 seats, roles | 31 | 0.28 (9.0) | 3.08 (99) | 22 |
+| 3 seats, events | 24 | 0.12 (4.8) | 1.67 (70) | 10 |
+| 4 seats, Virulent Strain | 203 | 0.82 (4.0) | 13.1 (65) | 19 |
+| 3 seats, Mutation | 249 | 0.91 (3.7) | 12.6 (51) | 7 |
+| 4 seats, Bio-Terrorist | 201 | 1.54 (7.7) | 13.0 (65) | 539 |
+| 5 seats, roles + events + VS + Mutation, 7 epidemics | 175 | 0.88 (5.0) | 12.2 (70) | 42 |
+| 5 seats, roles + events + VS + Bio-Terrorist | 133 | 0.69 (5.2) | 10.7 (80) | 827 |
 
-- **Games:** 14 games in both adapters with equal state hashes every ply, each BGN verified in both; 35 more random games in the trusted adapter (5 per configuration); interleaving: two trusted runs of 3 rooms and one sandboxed run of 2 rooms, all equal to the same games played alone. Every outcome followed 11 §2 (cooperative: every player at place 1, winning or losing together; the Bio-Terrorist alone at place 1 when he wins); none suspended.
-- **Leak and D82 checks:** 21 trusted games (3 per configuration), 466 sampled states, 1,868 resampled worlds, 808 quiet actions. D82 (`view(world, seat) = view(state, seat)`) held in every world once the public actors list is set aside (G1). Open-hand configurations: no findings at all. Closed-hand configurations: only G1 and G2 findings, counted and excused; three real missing reveals were found and fixed. One game also ran in the sandbox, with the same report as trusted.
-- **Faults:** none. No budget or memory fault in QuickJS; the costliest call used 5 interrupt checks of 2,000. Sandboxed play costs about 40 to 220 ms a ply including the kit's own work (every legal action walked through `choices`, including 47-city destination lists and multi-step card choices), about 10 to 15 times the trusted adapter.
+- **Games:** the 9 rooms above in both adapters with equal state hashes every ply, each BGN verified in both; 52
+  more random games in the trusted adapter (every seat count, two each: 2 to 4 for the base, events, Virulent
+  Strain and Mutation, 2 to 5 for the roles and for roles + events + VS + Mutation, 3 to 5 for the Bio-Terrorist
+  alone and with roles, events and VS); interleaving: 3 trusted rooms of roles + events + VS + Mutation, 3 trusted
+  rooms of the Bio-Terrorist, 2 sandboxed rooms of the base, each equal to the same game played alone. Every
+  outcome is cooperative (every player wins or loses together) or the Bio-Terrorist's alone; none suspended.
+- **Leak check** (the published kit: two worlds, D82's resampled view, public clocks, choices that read a hidden
+  zone, quiet actions), closed hands, **no kind excused**: 11 trusted games (the base at 2, 3 and 4 seats, each
+  add-on alone, the Bio-Terrorist at 3 and 5 seats, all four with Mutation and with the Bio-Terrorist at 5),
+  1,032 sampled states, 4,177 worlds, 2,330 quiet actions, **no findings**; plus one game run identically in the
+  sandbox (same report as trusted). While porting it found three Bio-Terrorist actions that name the city he was
+  in (a local infection, a sabotage, a charter's sighting) and weren't marked reveals; they are now.
+- **A87:** the 0.1.0 game in `test/fixtures` (4 seats, On the Brink and Virulent Strain as options) replays on
+  0.1.0 and fails at ply 0 on 1.0.0, a different pack.
+- **Faults:** none. The costliest sandboxed calls are game ends in Bio-Terrorist rooms (N2).
+- `pnpm check` (both games, every test) takes about 3 min 45 s.
 
-## Bugs fixed in this pass
+## Engine bugs
 
-- **Infection cards drawn one by one in a window weren't reveals.** Only the first card of an infection step marked the action as a reveal; when someone could play a card between infection cards, each later "draw the next card" read the hidden deck with no reveal (a missed commit point, so the step could have been drafted and undone). Every card drawn now marks it.
-- **An epidemic's bottom card wasn't a reveal when a response window followed.** If someone held a card playable mid-epidemic, the epidemic paused before its shuffle, so the action that turned up the bottom infection card drew no randomness and wasn't flagged. It is now.
-- **Moving a pawn didn't count as a reveal with the Bio-Terrorist hidden.** Entering a city tells everyone whether he is there, but only a successful sighting was announced and nothing was flagged, so a move that found him (and one that didn't) were quiet actions. While he is unseen, every pawn entering a city is now a reveal.
+None found in the engine. N4 is a test-kit limitation with a repro above.
