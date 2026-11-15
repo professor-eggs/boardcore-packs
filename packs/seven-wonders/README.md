@@ -1,64 +1,68 @@
-# 7 Wonders (pack `boardcore/seven-wonders`)
+# 7 Wonders (pack `boardcore/seven-wonders` 1.0.0) and its add-ons
 
-Private, local-only build of 7 Wonders (1st edition) with **Leaders**, **Cities** and the **Wonder Pack** as
-switchable add-ons. Mechanics only: card names and numbers, no rulebook text or art. Not for distribution.
+Private, local-only build of 7 Wonders (1st edition). Since 1.0.0 the expansions are separate add-on packs of
+this base, each chosen per room: **Leaders** (`boardcore/seven-wonders-leaders`), **Cities**
+(`boardcore/seven-wonders-cities`) and the **Wonder Pack** (`boardcore/seven-wonders-wonder-pack`), each
+`addon: { base: "boardcore/seven-wonders", range: "^1.0.0" }`. Mechanics only: card names and numbers, no rulebook
+text or art. Not for distribution.
 
 ## Options
 
-| option | effect |
-| --- | --- |
-| `leaders` | Leader draft (4 each, passed right), a recruitment phase at the start of each age, 6 starting coins, Rome, 4 guilds, 6-value coins (coins are just numbers here). |
-| `cities` | 1 black card per player per age (8-card hands), debt tokens, diplomacy, masks, docks, Petra, Byzantium, 3 guilds, 6 leaders (with `leaders`). Allows 8 players: set up like 7 (9 guilds, 7 black cards), deal 7, play 6. |
-| `teamPlay` | Cities team play for 4, 6 or 8 seats (needs `cities`). Adjacent pairs in seat order; teammates do not fight; conflict tokens are doubled; diplomacy still fights but both sides take one fewer token. |
-| `leaderPromos` | The Leaders goodies Louis, Stevie and Esteban join the leader pool (needs `leaders`). |
-| `wonderPack` | The Great Wall, Stonehenge, Manneken Pis; Abu Simbel only when `leaders` is on. |
-| `sideB` / `randomSides` | Wonder sides (default A). |
+| pack | option | effect |
+| --- | --- | --- |
+| base | `sideB` / `randomSides` | Wonder sides (default A). |
+| base | `teamPlay` | Team play for 4, 6 or 8 seats: adjacent pairs in seat order, teammates do not fight, conflict tokens doubled. A base option (Q68 is still (d)); it no longer needs Cities. With Cities, a diplomacy seat still fights and both sides take one fewer token. |
+| base | `startCoins` | Starting coins (default 3; Leaders presets 6). |
+| Leaders | `promos` | Louis, Stevie and Esteban join the leaders. |
 
-Seats: 3 to 7 (8 needs `cities`). Seat order is the table: a seat's left is the previous seat, its right the next.
+Seats: 3 to 7, 8 with Cities in the room (set up like 7: 9 guilds, 7 black cards). Seat order is the table: a
+seat's left is the previous seat, its right the next. Abu Simbel is dealt only when Leaders is in the room too.
 
 ## How a game runs
 
-- **Turn**: every seat picks at once (hidden until all have picked): a card, then *build* / *wonder stage* /
-  *discard for 3 coins*, then a payment plan when coins go to neighbours or the bank. Plans are every cheapest
-  split between the left neighbour, the right neighbour and the bank (Bilkis).
-- **Resolution**: payments, then cards, then immediate effects; then interrupts (one seat at a time:
-  Halicarnassus/Solomon/Great Wall discard builds, the Courtesans' Guild, Rome's extra leaders, Abu Simbel),
-  then coin losses (Cities: each seat chooses how much to pay and takes the rest as debt), then hands pass.
-- **Age end**: the last card is discarded (Babylon B plays it first), diplomacy and the Great Wall B take seats
-  out, then military (1/3/5 per win, -1 per loss).
-- **Scoring**: military, coins/3, debt, wonder, civic, commerce, guilds, science (squares + 7 per set, wilds and
-  masks chosen for the best score), leaders, black cards. Ties: most coins, then shared.
+Each age is a round of the phase runner: `deal`, `ready`, `turn1`/`end1` ... `turn7`/`end7`, `last`, `war`.
 
-## Code map and hooks
+- **turnN** (a simultaneous hidden pick): a card, then *build* / *wonder stage* / *discard for 3 coins*, then a
+  payment plan when coins go to neighbours or the bank. Picks stay hidden until the last seat picks; then
+  payments, cards and immediate effects resolve together.
+- **Questions to one seat** go through the interrupt queue: the base's discard-pile build (boards, Solomon),
+  and the add-ons' questions (Cities' debt, the Courtesans' Guild, Roma's extra leader, Abu Simbel's entomb),
+  which each add-on asks from its own auto phases anchored before `turn1`, each `endN` and `war`.
+- **endN**: coin losses settle (the `lossRule` slot: the base pays what it can; Cities asks), the `endTurn`
+  event, then the hands pass (unless the `passes` point says not: Esteban).
+- **war**: the last cards are discarded, the `ageEnd` event (diplomacy, the Great Wall B), then the conflicts.
+- **Leaders** adds `draft1`..`draft3` (hidden picks before Age I's deal) and `recruit` (a hidden pick after
+  each deal), and `freezeN` before each turn for Esteban.
+- **Scoring**: military, coins/3, wonder, civic, commerce, guilds, science (best choice of wilds and masks),
+  black cards, plus the add-ons' lines (debt, leaders, Stonehenge, entombed leaders). The outcome (D79): places
+  by points, then coins, ties shared; scores are the points.
 
-- `src/hooks.ts`: the add-on kernel (`chain`, `collect`, `first` points; D41/SP1).
-- `src/engine.ts`: state, payments, military, scoring, and `POINTS` (the declared extension points, also in the
-  pack's `extensionPoints`): `decks`, `setup`, `ageStart`, `ageEnd`, `effects`, `stageEffects`, `payment`,
-  `freeBuild`, `onBuild`, `endTurn`, `settleLoss`, `conflictSeats`, `shields`, `conflict`, `science`, `score`,
-  `seatCheck`.
-- `src/flow.ts`: the phase loop. Phases and interrupts are registries; add-ons add their own.
-- `src/data.ts`: every card, wonder and leader as data (effects are tagged values interpreted by the base or by the
-  add-on that owns the tag).
-- `src/addons/leaders.ts`: phases `draft`, `recruit`; interrupts `extraLeader`, `courtesan`; hooks `setup`,
-  `decks`, `ageStart`, `effects`, `payment` (discounts, Bilkis), `freeBuild` (Ramses), `onBuild`, `endTurn`
-  (Hatshepsut), `conflict` (Tomyris, Nero), `score`.
-- `src/addons/cities.ts`: interrupt `debt`; hooks `decks`, `payment` (docks, Architect Cabinet), `freeBuild`
-  (Caligula), `onBuild` (losses, diplomacy, neighbour coins, Diocletian), `settleLoss`, `endTurn` (Berenice),
-  `ageEnd` + `conflictSeats` (diplomacy), `shields` (Semiramis), `score` (debt, Mourners).
-- `src/addons/wonder-pack.ts`: interrupt `entomb`; hooks `stageEffects` (Manneken Pis copies), `onBuild`,
-  `ageEnd` + `conflictSeats` (Great Wall B), `shields`, `score` (Stonehenge, Abu Simbel).
+## Code map
+
+- `src/points.d.ts`: the published point declarations (`BoardcorePoints["boardcore/seven-wonders"]`) and the
+  shapes add-ons use (effects, cards, wonders, extras, operations). A global script: add-ons are type-checked
+  against it.
+- `src/index.ts`: the base on `defineBase` and `phaseRunner`; `buildDecks` (setup and `resampleHidden` draw alike
+  with `sample`); `outcomeOf`.
+- `src/engine.ts`: effects, payments, building, operations (`applyOps`), military, scoring.
+- `src/resample.ts`: `resampleBase` (other hands, the discard pile, stage cards, later decks).
+- `../seven-wonders-leaders/src/`, `../seven-wonders-cities/src/`, `../seven-wonders-wonder-pack/src/`: the add-ons.
+  Effects the base reads use the base's kinds; each add-on's own kinds are `leaders:*`, `cities:*`, `wp:*`. A
+  recruited leader is a public extra on its seat (`grant`), so Cities can read the Cities leaders' kinds.
+
+## Tests
+
+`test/base.test.ts` (rules of the base), `test/addons.test.ts` (rules of the add-ons), `test/kit-games.test.ts`
+and `test/kit-checks.test.ts` (the test kit: both adapters, replays, every seat count with and without each
+add-on, the leak check, interleaved rooms), `test/fixtures.test.ts` (A87: a game recorded by 0.1.0).
 
 ## Gaps and stubs
 
-- **Rules audit**: `RULES-AUDIT.md` checks every rule, card, wonder stage and leader against the player aid,
-  the concise reference, and the later references Xavier supplied (leaders lists, the Cities parts list,
-  the 10-page card/wonder tables, the Cities+Leaders cheatsheet, and Wonder Pack board photos). Player-count
-  copies and some wonder stage costs are still unverified there.
-- **Cities team play** is built (`teamPlay`): adjacent pairs, no teammate fights, doubled tokens, diplomacy
-  still fights with one fewer token. Combined team scores are not used (the cheatsheet says most points wins;
-  seats stay individual). The host still cannot pick arbitrary seat pairings at room time (C7); the option
-  always pairs neighbours in seat order.
-- **2-player variant** (the Free City): not built (seat minimum 3). The concise sheet only says "see rules".
+- `RULES-AUDIT.md` checks every rule, card, wonder stage and leader against the references Xavier supplied;
+  player-count copies and some stage costs are still unverified. Its "1.0.0" section lists what changed.
+- `CONTRACT-GAPS.md`: where the contract was awkward, with the test-kit numbers; `GAPS-FOR-PUBLIC.md`: the
+  generic gaps in words, to carry into the public docs.
+- Team play keeps seats individual in the result (G4). The 2-player variant is not built.
 - Simplifications: the Courtesans' Guild copies a leader's lasting and scoring effects, not one-off coins;
   Olympia B's copied guild, masks and wild science symbols are chosen at the end for the best score; Manneken
   Pis A copies the neighbour's stage effects even if that neighbour hasn't built that stage.

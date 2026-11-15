@@ -354,7 +354,7 @@ Each effect was checked against its aid entry:
 
 Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander 3, Amytis 4, Archimedes 4, Aristotle 3, Caesar 5, Cleopatra 4, Croesus 1, Euclid 5, Hammurabi 2 (7w-2 says 3; 7w-3, 7w-4 and 7w-5 say 2), Hannibal 2, Hatshepsut 2, Hiram 3, Hypatia 4, Imhotep 3, Justinian 3, Leonidas 2, Maecenas 1, Midas 3, Nebuchadnezzar 4, Nefertiti 3 (7w-4 says 4; 7w-2, 7w-3 and 7w-5 say 3), Nero 1, Pericles 6, Phidias 3, Plato 4, Praxiteles 3, Ptolemy 5, Pythagoras 5, Ramses 5, Sappho 1, Solomon 3, Varro 3, Vitruvius 1, Xenophon 2, Zenobia 2, Darius 4, Louis 4. Stevie's printed cost is X: he is recruited for 0 and paid as 1 coin per resource when used (7w-3, aid p2).
 
-7w-1 also lists later promo leaders (Aganice, Agrippina, Arsinoe, Cornelia, Cynisca, Enheduanna, Eurypyle, Gorgo, Makeda, Nitocris, Octavia, Phryne, Roxana, Telesilla, Theano, Wil, and the Babel-only Nimrod). They are not in the `leaderPromos` pool, which stays the three Leaders goodies named on aid p2 (Louis, Stevie, Esteban). Several of those extra promos need new effect kinds (a cost equal to the current age, and so on).
+7w-1 also lists later promo leaders (Aganice, Agrippina, Arsinoe, Cornelia, Cynisca, Enheduanna, Eurypyle, Gorgo, Makeda, Nitocris, Octavia, Phryne, Roxana, Telesilla, Theano, Wil, and the Babel-only Nimrod). They are not in the Leaders add-on's `promos` pool, which stays the three Leaders goodies named on aid p2 (Louis, Stevie, Esteban). Several of those extra promos need new effect kinds (a cost equal to the current age, and so on).
 
 ## Still unverified or blocked
 
@@ -366,3 +366,31 @@ Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander
 - 2-player expert variant: still blocked (concise only says "see rules"; seat minimum is 3).
 - Catan goodie board: still blocked (no stage costs).
 - Extra 7w-1 promo leaders listed above: not implemented.
+
+## 1.0.0: what the port changed
+
+The rules above are unchanged; the code references in the tables (`addons/*.ts`, `flow.ts`, the option names)
+are 0.1.0's. In 1.0.0 the expansions are add-on packs and the base runs on the phase runner. What a player can
+see differently:
+
+- **Choosing the expansions.** Leaders, Cities and the Wonder Pack are add-ons chosen per room, no longer
+  options of the base. `leaderPromos` is the Leaders add-on's `promos` option. `teamPlay` stays a base option
+  (Q68 is still (d)) and no longer needs Cities. Starting coins are a base option (`startCoins`, 3) that the
+  Leaders add-on presets to 6 (0.1.0 added 3 coins in its setup).
+- **When questions are asked.** Questions an add-on's effect raises (debt, the Courtesans' Guild, Roma's extra
+  leader, Abu Simbel's entomb) are asked from the add-on's own phases before the end of the turn, after the
+  base's own discard-pile builds; as in 0.1.0, before the hands pass. A question raised while the end of a turn
+  runs (a card built from the discard pile whose effect asks) waits for the next end of turn or the war.
+- **Esteban** is a hidden yes/no pick before each turn while he can be used (once a game, 3 or more cards in
+  hand), no longer an extra option on his owner's card prompt; the effect is the same.
+- **Leaders used for a stage or discarded** stay out of the game, face down. In 0.1.0 they went back to the box
+  Roma B draws from.
+- **The Courtesans' Guild** puts a copy of the leader into play as the seat's extra ("<name> (copy)"): its
+  lasting and scoring effects, never its one-off coins, discard-pile build or diplomacy token, as before.
+  Abu Simbel can't entomb a copy.
+- **Effects read by the base.** Caligula and Ramses are the base's free-colour effect (black once an age, purple
+  always); Bilkis is the base's bank purchase; Aristotle is the base's science-set bonus; the Great Wall B's
+  neighbour coins and the Cities cards' are the base's `nbrCoins`.
+- **The decks.** Guilds are chosen with `sample` (11 §3) and the Cities black cards are drawn by the Cities
+  add-on, so the same seed deals different cards than 0.1.0: old games replay only on 0.1.0 (A87,
+  `test/fixtures.test.ts`).

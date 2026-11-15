@@ -1,45 +1,115 @@
-# 7 Wonders: contract gaps (S11 part 4, first pass)
+# 7 Wonders: contract gaps (S11 part 7c)
 
-Where pack contract v1 (`boardcore/docs/11-engine-contract.md`) and the SDK as pinned (S11 part 1, `c1d7e54`) were awkward for this pack or couldn't express the game. Each finding says what the pack does instead, how bad it is, and a suggested change. Mechanics are described generically, with no rulebook text. Severity: **high** (a leak, a fault, or a rule that can't be played), **medium** (works, but the pack carries machinery the engine or SDK should own), **low** (cosmetic, or one line of pack code).
+Where pack contract v1 (`boardcore/docs/11-engine-contract.md`) and the SDK were awkward for this pack and its
+add-ons, as pinned at `e0c5d98` (S11 part 7b review fixes). First pass: S11 part 4 (`c1d7e54`); the old texts of
+the closed gaps are in git history. Mechanics are described generically, with no rulebook text. Severity:
+**high** (a leak, a fault, or a rule that can't be played), **medium** (works, but the pack carries machinery the
+engine or SDK should own), **low** (cosmetic, or one line of pack code). The new generic gaps are also written up
+in `GAPS-FOR-PUBLIC.md`, for the public docs.
 
-## Findings
+## Closed by parts 7a and 7b
 
-**G1. A simultaneous pick, resolved together, then per-seat interrupts one at a time (medium).** Every seat picks at once and the picks stay hidden until the last one arrives. Resolving them may queue questions to single seats (build from the discard pile, copy a neighbour's leader, take a coin loss as debt), asked in turn, and only then do the hands pass. v1 has no phase or interrupt primitive, so the pack writes its own phase registry, pick store (`picks` in the state), resolution loop and interrupt queue (`src/flow.ts`, about 250 lines), and add-ons plug into that private machinery. *Suggest:* ship SDK11.7's phase runner and interrupt queue with a "simultaneous hidden pick" phase kind (each seat's pick held hidden until every actor has picked, then one resolve callback), so a pack declares the phase instead of writing the loop.
+| Gap | Closed by | What the pack does now |
+| --- | --- | --- |
+| **G1** (O7) simultaneous pick, then per-seat questions | the phase runner's pick phase and interrupt queue | Each turn is a `pick` phase; `src/flow.ts` (about 250 lines) is gone. Questions go through the queue, the add-ons' with their own kinds. |
+| **G3** (O4) resampling repeats setup's draws | `sample` (11 §3) | `buildDecks` draws the guilds with `sample`; Cities draws its black cards with `sample` in the `decks` point, which `draws`. |
+| **G6** (O8) every answer a reveal | the zone reader | Only a call that reads a zone some seat can't see is a reveal (a discard-pile build); a debt answer is quiet unless it ends the turn (N5). |
+| **G7** (O9) points were names only | typed points, add-ons as their own packs | `src/points.d.ts` declares 15 points; the three add-ons are packs type-checked against it. |
+| **G8** (O10) leaving a game of three or more | the default `concede` | No `onLeave`: a seat that leaves is played by a stand-in bot, which is what this game wants. |
+| **G9** (O13) display fields | manifest fields | `complexity`, `tags`, `playtime` filled. |
 
-**G2. `resampleHidden` has no history to work from (medium for tutors, low for the leak check).** A seat knows which cards it passed to its neighbour, and so most of that neighbour's next hand. The state keeps no record of that (no rule needs it), so `resampleHidden` redraws every other hand from the pooled unseen cards of their age. The worlds it makes are a superset of the worlds the seat thinks possible: fine for D52's leak check, but a D82 tutor or a search bot sampling them reasons with less than the player knows. Keeping per-seat knowledge in the state only for the test kit would change every state hash and every replay. *Suggest:* let `resampleHidden` take what the seat has seen (its own event stream or committed views since the start, which Match already has), or add an optional pack function that folds each view into a per-seat "knowledge" value kept outside the hashed state.
+## Still open
 
-**G3. `resampleHidden` must repeat setup's random choices (low).** Which guilds and which black cards go into later ages' decks is drawn at setup and hidden. To redraw it the pack had to lift deck building out of `setupState` into `buildDecks` so both can call it (same draw order, so no game changed). *Suggest:* an SDK "deck from a pool" helper (choose k of a pool, then shuffle) that a pack calls in both places; or document the pattern in the authoring guide.
+**G2 (O3). `resampleHidden` has no history to work from (medium for tutors, low for the leak check).** Unchanged:
+a seat knows what it passed on, the state doesn't. The Leaders draft adds the same case (the leaders a seat
+passed on are redrawn like any other).
 
-**G4. Teams are a room fact, but this game's team play is an option (medium).** The room header carries each seat's `team`, and D79 checks that teammates share a place. The pack's team mode is an option that pairs neighbours in seat order itself and ignores `SeatInfo.team`, and its result stays individual (each seat placed by its own points). A room that sets header teams for a team game would get an outcome that splits teammates, which is a `PackFault`; a room that sets no teams can't show the pairs as teams. *Suggest:* let a pack say in its manifest which options imply teams and how they are formed (or let `setup` refuse a seat list whose teams don't match its options), so the header and the pack can't disagree; and let an outcome name places per team.
+**G4. Teams are a room fact, but this game's team play is an option (medium).** Unchanged; Q68 is still (d), so
+team play stays a base option that pairs neighbours itself, and the result stays individual.
 
-**G5. A tie broken by a second number doesn't show (low).** Places use points, then coins; `scores` is one number per seat and is the points, so a surface can print "1st Ann (42), 2nd Bo (42)" with no reason given. *Suggest:* allow `scores` to hold a short list (primary, then tie-breakers) or add an optional `tiebreak` per seat for display.
+**G5. A tie broken by a second number doesn't show (low).** Unchanged.
 
-**G6. Interrupt answers are flagged as reveals wholesale (low).** The pack marks every interrupt answer `reveal` (some do read hidden cards, such as building from the face-down discard), so none of them can be drafted or undone, including ones that reveal nothing (choosing how much of a coin loss becomes debt). Telling them apart needs per-interrupt bookkeeping the pack doesn't keep. *Suggest:* G7 in the Pandemic findings (an SDK hidden-zone accessor that marks a reveal when hidden data is read) would make this exact for free.
+## New in part 7c
 
-**G7. Extension points are names only (low, S11.7).** The pack declares 17 points in `extensionPoints` (name and combine), but signatures live in comments and add-ons are in the same bundle, switched by options; nothing checks a handler against its point. This is the shape S11 part 7 replaces; listed so the pack is ported then.
+**N1. Every point call copies the whole state (medium, performance).** Each handler gets a deep, frozen copy of
+the base's state. A point called on every build or every pricing check would copy eight cities each time, so
+the hot-path rules stay in the base: payment discounts, free builds, a bank purchase, masks and neighbour coins
+are base effect kinds that add-ons put on cards or leaders, and the base reads them itself. *Suggest:* a lazily
+copied or structurally shared input, or a documented budget per point.
 
-**G8. Leaving a game of three or more (low, S11.6).** The pack has no `onLeave`, so with 3 to 8 seats a resign is refused until S11.6 decides what a resign does. A simultaneous-pick game can simply continue with a bot picking for the seat; the pack has no way to say it prefers that.
+**N2. An event can't ask a question (medium).** `onBuild` returns operations and a slice, never a question, so an
+add-on whose effect needs a seat's choice records it in its slice and asks from an auto phase of its own
+anchored before every base phase where the event can fire: 8 such phases for Cities, 9 for the Wonder Pack, 9
+for Leaders (plus 7 for Esteban). *Suggest:* let an event's effect carry `ask`, queued when the base's current
+phase call returns.
 
-**G9. Display fields can't be filled yet (low).** S11 part 4 asks for `complexity`, `tags` and `playtime`, but the pinned Boardcore (part 1) has no such manifest fields, so the manifest leaves them out until the submodule moves past part 2.
+**N3. Add-ons can't read each other (low).** An add-on sees the base's state and its own slice only. The Cities
+leaders live in the Leaders add-on's data but carry `cities:*` kinds that Cities reads from the seat's public
+extras; this works only because the base publishes recruited leaders as extras. *Suggest:* name this pattern in
+the authoring guide (a base exposes cross-add-on facts as public state).
+
+**N4. Registries aren't visible to an add-on's handlers (low).** A handler gets the state, which holds card ids,
+not the composed card registry; the base passes each city's cards with their effects in the `onBuild` and
+`score` arguments so add-ons can count, for example, symbols on cards of one colour. *Suggest:* the composed
+registries (frozen, loaded once) in every handler's input.
+
+**N5. An add-on's question can make the base's next phase run inside an answer (high until fixed; fixed in the
+base).** The base passed the hands in the auto phase after each turn, reading them directly: harmless after a
+pick (whose resolve is a reveal), but with Cities a debt answer comes between, and that answer then ran the
+pass, so a quiet action changed what each seat sees. The kit's leak check found it (`quietView`, 6 seats, Cities
+with team play). The base now reads the passed hands through `ctx.zones.items`, which marks the action a reveal.
+*Suggest:* the authoring guide says to read every hidden zone through the reader in a `begin`, since any phase
+may come to run inside another member's answer.
+
+**N6. An empty pick phase resolves at once and marks a reveal (low).** Esteban's phases (one before each turn)
+are pick phases with no seats almost always; each resolves at once as a reveal, which costs a handler call per
+turn and makes the action before it a reveal, so the leak check sees fewer quiet actions. *Suggest:* a pick
+phase with no seats is skipped without a reveal.
+
+**N7. The first add-on phase begins before its slice exists (low).** The draft is the first phase of round 1, so
+it begins inside the base's setup, before the add-on's setup has made its slice: its `seats` handler gets
+`null` and returns `null` (every seat). *Suggest:* document it next to the `slice` handed to `setup`.
+
+**N8. A question's default is computed twice (low).** An add-on builds a question's `default` from the state in a
+`begin`, and the prompt from the base's view in `choices`; the two must agree or the composer faults. Abu
+Simbel and the Courtesans' Guild list a seat's leaders both ways. *Suggest:* let a question's default be "the
+first enabled option" when none is given.
+
+**N9. An add-on's prompt sees only the base's view (low).** Recruiting can build a wonder stage with a leader,
+priced like a card's stage build; the base had to publish each seat's stage-building ways (with payment plans)
+in its view so the Leaders add-on could offer them. A base must foresee every such need. *Suggest:* nothing in
+the contract; the authoring guide could say a base with a "build with another card" rule publishes its ways.
 
 ## Test-kit numbers
 
-Run 2026-11-13 on the pinned Boardcore, Node 22, through `tools/kit` (which wraps `@boardcore/testkit`). The kit has no published two-worlds or D82 check yet (S11.9 publishes them), so `tools/kit` adds both: for every sampled state it resamples each seat's world and compares the seat's view, prompt and the public actors; for every sampled action that draws nothing and isn't a reveal it replays the action in each observer's world and compares that observer's view, `describe` text and actors.
+Run 2026-11-15 at `e0c5d98`, Node 22, through `tools/kit` and the published kit (`@boardcore/testkit`:
+`playRandom`, `verifyReplay`, `interleaved`, `leakCheck`).
 
-| Configuration | Plies | Trusted s (ms/ply) | Sandboxed s (ms/ply) | Costliest call (checks of 2,000) |
+| Room | Plies | Trusted s (ms/ply) | Sandboxed s (ms/ply) | Costliest call (checks of 2,000) |
 | --- | --- | --- | --- | --- |
-| 3 seats, base | 54 | 0.28 (5.2) | 2.83 (52) | 9 |
-| 4 seats, B sides | 72 | 0.37 (5.1) | 4.47 (62) | 10 |
-| 5 seats, Leaders + Cities + Wonder Pack | 143 | 1.11 (7.8) | 12.6 (88) | 20 |
-| 6 seats, Cities team play, random sides | 131 | 0.98 (7.5) | 14.2 (108) | 24 |
-| 7 seats, Leaders + promos + Wonder Pack | 168 | 1.27 (7.5) | 17.1 (102) | 16 |
-| 8 seats, Cities team play + Leaders | 200 | 1.56 (7.8) | 22.9 (114) | 23 |
+| 3 seats, base | 54 | 0.27 (4.9) | 3.89 (72) | 4 |
+| 4 seats, base, B sides | 75 | 1.17 (15.5) | 6.80 (91) | 5 |
+| 7 seats, base, random sides | 127 | 1.25 (9.8) | 15.2 (119) | 8 |
+| 4 seats, Leaders + promos | 96 | 0.76 (7.9) | 9.58 (100) | 34 |
+| 6 seats, Cities, team play | 131 | 1.02 (7.8) | 13.2 (101) | 40 |
+| 5 seats, Wonder Pack | 90 | 0.56 (6.2) | 9.74 (108) | 29 |
+| 3 seats, all three + promos | 83 | 0.78 (9.4) | 6.81 (82) | 54 |
+| 8 seats, all three + promos, team play, B sides | 199 | 2.46 (12.4) | 35.1 (176) | 167 |
 
-- **Games:** 6 games in both adapters with equal state hashes every ply, each BGN verified in both; 18 more random games in the trusted adapter (3 per configuration); interleaving: two trusted runs of 3 rooms and one sandboxed run of 2 rooms (each room its own QuickJS runtime), all equal to the same games played alone. Every game ended with an outcome carrying `places` and `scores` for every seat; none suspended.
-- **Leak and D82 checks:** 6 trusted games (one per configuration), 196 sampled states, 1,125 resampled worlds, 2,454 quiet actions, **no findings**; plus one game run identically in the sandbox (same report as trusted).
-- **Faults:** none. No budget or memory fault in QuickJS; the costliest call used 24 interrupt checks of the 2,000 budget. The ms/ply figures include the kit's own work per ply (walking every legal action through `choices` to pick one, and `view` and `describe` for every seat); the sandboxed figure is about 13 times the trusted one, mostly copying the state (the full card lists of eight cities) across the QuickJS boundary on each of the many calls a `decide` makes.
-- `pnpm check` (both packs, all tests) takes about 2 min 45 s, nearly all of it these sandboxed games.
+- **Games:** the 8 rooms above in both adapters with equal state hashes every ply, each BGN verified in both; 54
+  more random games in the trusted adapter (every seat count from 3 to 7, or 8 with Cities, two each, for the
+  base alone, each add-on alone and all three); interleaving: 3 trusted rooms of all three add-ons, 3 trusted
+  rooms of the base, 2 sandboxed rooms of all three, each equal to the same game played alone. Every game ended
+  with `places` and `scores` for every seat; none suspended.
+- **Leak check** (the published kit: two worlds, D82's resampled view, public clocks, choices that read a hidden
+  zone, quiet actions): 7 trusted games (base at 3 and 5 seats, Leaders, Cities with team play, Wonder Pack with
+  Leaders, all three at 7 and at 8), 231 sampled states, 1,270 worlds, 2,660 quiet actions, **no findings**
+  after N5's fix; plus one game run identically in the sandbox (same report as trusted).
+- **Faults:** none; the costliest sandboxed call used 167 interrupt checks of 2,000 (8 seats, all add-ons).
+  Composing costs: the sandboxed figure is now 10 to 15 times the trusted one, and the 8-seat all-add-ons room
+  is about 1.5 times the base's per ply (N1).
+- `pnpm check` (both games, every test) takes about 3 min 45 s.
 
-## Bugs fixed in this pass
+## Engine bugs
 
-- None in the rules. The outcome now gives D79's `places` (points, then coins, ties shared) and `scores` (points); the old text-only ranking ignored the coin tie-break when listing the order.
+None found. N5 was the base's own bug, found by the kit.
