@@ -188,11 +188,13 @@ export default defineBase<"boardcore/seven-wonders">({
         s = applyOps(lib, s, pts.endTurn(s, { turn: n }));
         if (!s.seats.some((x) => s.players[x]!.hand.items.length > 1)) return s;
         if (!pts.passes(s, true, { turn: n })) return say(s, "The hands don't pass this turn.");
-        // Hands move left in Ages I and III, right in Age II.
+        // Hands move left in Ages I and III, right in Age II. Each seat now sees the hand it gets, so the hands
+        // are read through the zone reader: the action that ends the turn is a reveal (it can be an add-on's
+        // answer to a question asked before this phase, not only the last pick).
         const players = { ...s.players };
         for (const seat of s.seats) {
           const from = s.age === 2 ? leftOf(s, seat) : rightOf(s, seat);
-          players[seat] = { ...players[seat]!, hand: withItems(players[seat]!.hand, s.players[from]!.hand.items) };
+          players[seat] = { ...players[seat]!, hand: withItems(players[seat]!.hand, ctx.zones.items(s.players[from]!.hand)) };
         }
         return { ...s, players };
       },

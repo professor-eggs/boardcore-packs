@@ -43,7 +43,7 @@ const entombPhase = (name: string, anchor: { before: string; rounds?: number[] }
     const s = state!, sl = sliceOf(slice);
     if (!sl.pending.length) return {};
     const ask = sl.pending.flatMap((seat) => {
-      const ls = active(s, seat);
+      const ls = active(s, seat).filter((x) => x.from === "leaders");
       return ls.length ? [{ kind: "entomb", seat, args: null, default: [`e:${ls[0]!.name}`] }] : [];
     });
     return { slice: { ...sl, pending: [] }, ask };
@@ -106,7 +106,7 @@ export default defineAddon<"boardcore/seven-wonders">({
     entomb: {
       choices: ({ view, seat, partial }) => {
         if (partial.length) return null;
-        const ls = (view.players[seat]?.extras ?? []).filter((x) => x.off === null);
+        const ls = (view.players[seat]?.extras ?? []).filter((x) => x.off === null && x.from === "leaders");
         return { kind: "pick", label: "Abu Simbel: entomb one of your leaders", options: ls.map((l) => ({ id: `e:${l.name}`, label: `${l.name} (worth ${2 * l.cost} VP, loses its effect)` })) };
       },
       answer: ({ seat, action }) => {
@@ -116,4 +116,5 @@ export default defineAddon<"boardcore/seven-wonders">({
     },
   },
   setup: () => ({ skip: {}, absent: [], pending: [] }),
+  describe: ({ view, seat }) => (view.log.length ? view.log.join(" ") : `${seat} entombs a leader.`),
 });
