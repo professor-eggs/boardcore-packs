@@ -9,7 +9,9 @@ import type { Json, SeatInfo } from "@boardcore/pack-sdk";
 import type { ComposeWith, PackHandle, VerifiedPack } from "@boardcore/core/rules-runtime";
 import { optionsOf, resolveOptions } from "@boardcore/pack-library";
 import { defaultLoader } from "@boardcore/runtime-quickjs/default-loader";
-import { interleaved, makeKit, playRandom, soloGame, verifyReplay, type PlayOptions } from "@boardcore/testkit";
+import { interleaved, makeKit, playRandom, soloGame, verifyReplay, type PlayOptions, type SelfplayRecord } from "@boardcore/testkit";
+import type { VerifiedPersona } from "@boardcore/core/rules-runtime";
+import { Effect } from "effect";
 
 export type { PlayOptions };
 export { leakCheck as kitLeakCheck, LEAK_KINDS, type LeakReport as KitLeakReport } from "@boardcore/testkit";
@@ -132,3 +134,20 @@ export async function interleave(h: Handles, trust: "trusted" | "sandboxed", roo
 export const runLine = (label: string, r: GameRun) =>
   `${label}: ${r.plies} plies; trusted ${(r.ms.trusted / 1000).toFixed(2)} s (${(r.ms.trusted / r.plies).toFixed(1)} ms/ply), ` +
   `sandboxed ${(r.ms.sandboxed / 1000).toFixed(2)} s (${(r.ms.sandboxed / r.plies).toFixed(1)} ms/ply); costliest call ${r.maxCost} checks`;
+
+/** A room's base and add-ons verified and composed as Rooms composes them, for the kit's self-play (S11 part 8b). */
+export async function composed(base: Dist, addons: Dist[] = [], given: { [k: string]: Json } = {}, addonGiven: { [id: string]: { [k: string]: Json } } = {}): Promise<{ pack: VerifiedPack; with: ComposeWith }> {
+  const b = await kit.verify(base.manifest, base.bundle);
+  const as: VerifiedPack[] = [];
+  for (const a of addons) as.push(await kit.verify(a.manifest, a.bundle));
+  return { pack: b, with: filled(b, as, given, addonGiven) };
+}
+
+/** A built persona file (its dist folder), through install's checks (13 §6). */
+export const verifyPersonaDist = (dir: URL): Promise<VerifiedPersona> => {
+  const d = readDist(dir);
+  return Effect.runPromise(kit.runtime.verifyPersona(d.manifest, d.bundle));
+};
+
+/** A self-play record without its timings, which differ between runs and adapters. */
+export const bare = (r: SelfplayRecord) => ({ ...r, seats: r.seats.map(({ searchMs: _m, ...s }) => s) });
