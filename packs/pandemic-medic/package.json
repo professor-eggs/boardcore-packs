@@ -1,0 +1,26 @@
+{
+  "name": "@boardcore-packs/pandemic-medic",
+  "version": "1.0.0",
+  "description": "Medic: a persona for boardcore/pandemic (13 \u00a76), a cooperative evaluation of the board and a prior on treating and curing.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./dist/manifest.json": "./dist/manifest.json",
+    "./dist/bundle.mjs": "./dist/bundle.mjs"
+  },
+  "scripts": {
+    "build": "node ../../boardcore/tools/pack-build/cli.mjs ."
+  },
+  "dependencies": {
+    "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk"
+  },
+  "devDependencies": {
+    "@boardcore/testkit": "link:../../boardcore/packages/testkit",
+    "@boardcore/core": "link:../../boardcore/packages/core",
+    "@boardcore/bots": "link:../../boardcore/packages/bots",
+    "@boardcore-packs/kit": "workspace:*"
+  }
+}

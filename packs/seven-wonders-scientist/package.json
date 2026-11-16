@@ -1,0 +1,28 @@
+{
+  "name": "@boardcore-packs/seven-wonders-scientist",
+  "version": "1.0.0",
+  "description": "Scientist: a persona for boardcore/seven-wonders (13 \u00a76), a prior on science cards and an evaluation of each city's points.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./dist/manifest.json": "./dist/manifest.json",
+    "./dist/bundle.mjs": "./dist/bundle.mjs"
+  },
+  "scripts": {
+    "build": "node ../../boardcore/tools/pack-build/cli.mjs ."
+  },
+  "dependencies": {
+    "@boardcore/pack-sdk": "link:../../boardcore/packages/pack-sdk"
+  },
+  "devDependencies": {
+    "@boardcore/testkit": "link:../../boardcore/packages/testkit",
+    "@boardcore/core": "link:../../boardcore/packages/core",
+    "@boardcore/bots": "link:../../boardcore/packages/bots",
+    "@boardcore-packs/kit": "workspace:*",
+    "@boardcore/rooms": "link:../../boardcore/packages/rooms",
+    "@boardcore/runtime-quickjs": "link:../../boardcore/packages/runtime-quickjs"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "format": "persona/1",
+  "id": "boardcore/scientist",
+  "version": "1.0.0",
+  "name": "Scientist",
+  "character": "Builds science first and counts every city's points as it goes.",
+  "band": "medium",
+  "persona": { "pack": "boardcore/seven-wonders", "range": "^1.0.0" },
+  "settings": { "cutoff": 2, "playouts": 50, "worlds": 2 }
+}
