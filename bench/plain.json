@@ -1,0 +1,112 @@
+[
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats: Plain at 50 playouts, one search (trusted)",
+  "lineup": [
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   }
+  ],
+  "trust": "trusted",
+  "baseSeed": "8b-plain",
+  "games": [
+   0
+  ],
+  "maxPlies": 1
+ },
+ {
+  "pack": "../packs/pandemic/dist",
+  "addons": [
+   "../packs/pandemic-roles/dist",
+   "../packs/pandemic-events/dist",
+   "../packs/pandemic-virulent-strain/dist",
+   "../packs/pandemic-mutation/dist"
+  ],
+  "options": {
+   "epidemics": 5
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow"
+  ],
+  "label": "co-op game 4 seats: Plain at 50 playouts, one search (trusted)",
+  "lineup": [
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   },
+   {
+    "persona": null,
+    "playouts": 50
+   }
+  ],
+  "trust": "trusted",
+  "baseSeed": "8b-plain",
+  "games": [
+   0
+  ],
+  "maxPlies": 1
+ }
+]

@@ -1,0 +1,136 @@
+[
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats (phone)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-phone",
+  "games": [
+   0
+  ],
+  "maxPlies": 1
+ },
+ {
+  "pack": "../packs/pandemic/dist",
+  "addons": [
+   "../packs/pandemic-roles/dist",
+   "../packs/pandemic-events/dist",
+   "../packs/pandemic-virulent-strain/dist",
+   "../packs/pandemic-mutation/dist"
+  ],
+  "options": {
+   "epidemics": 5
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow"
+  ],
+  "label": "co-op game 4 seats (phone)",
+  "lineup": [
+   {
+    "persona": "../packs/pandemic-medic",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/pandemic-medic",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/pandemic-medic",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/pandemic-medic",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-phone",
+  "games": [
+   0
+  ],
+  "maxPlies": 2
+ }
+]

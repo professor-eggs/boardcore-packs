@@ -1,0 +1,4874 @@
+[
+ {
+  "label": "FD Builder v Plain",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-samples",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/builder",
+       "version": "1.0.0",
+       "hash": "sha256:c19553531c7f452962792736f57f4e9c35c942819d9c1beec6f86b6524efb57c"
+      },
+      "playouts": 200,
+      "searchMs": 36348.02452300004,
+      "searches": 15
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 57022.09665800003,
+      "searches": 14
+     }
+    ],
+    "winners": [
+     "red"
+    ],
+    "places": {
+     "red": 1,
+     "blue": 2
+    },
+    "scores": null,
+    "plies": 29,
+    "stopped": null
+   },
+   {
+    "baseSeed": "8b-samples",
+    "game": 1,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 40996.47784899997,
+      "searches": 10
+     },
+     {
+      "seat": "blue",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/builder",
+       "version": "1.0.0",
+       "hash": "sha256:c19553531c7f452962792736f57f4e9c35c942819d9c1beec6f86b6524efb57c"
+      },
+      "playouts": 200,
+      "searchMs": 24323.276849,
+      "searches": 10
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 20,
+    "stopped": null
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2774.291792,
+    "ply": 0,
+    "packCalls": 7583,
+    "personaCalls": {
+     "evaluate": 392,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 20.700646000000006,
+    "longestSliceMs": 85.26439199999999,
+    "peakHeap": 2517937,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5852.315000999999,
+    "ply": 1,
+    "packCalls": 16201,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.730893999999807,
+    "longestSliceMs": 73.10337000000027,
+    "peakHeap": 862760,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2748.4369270000007,
+    "ply": 2,
+    "packCalls": 7493,
+    "personaCalls": {
+     "evaluate": 368,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 16.93940300000031,
+    "longestSliceMs": 66.57619199999863,
+    "peakHeap": 1535088,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 198,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5466.343410999998,
+    "ply": 3,
+    "packCalls": 14879,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.959206000001359,
+    "longestSliceMs": 157.00214500000038,
+    "peakHeap": 1831497,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2593.9257880000005,
+    "ply": 4,
+    "packCalls": 7418,
+    "personaCalls": {
+     "evaluate": 356,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.237572000001819,
+    "longestSliceMs": 47.08987799999886,
+    "peakHeap": 1718404,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4573.216559,
+    "ply": 5,
+    "packCalls": 14745,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.634190000000672,
+    "longestSliceMs": 74.28477600000042,
+    "peakHeap": 1895860,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2308.008278999998,
+    "ply": 6,
+    "packCalls": 7527,
+    "personaCalls": {
+     "evaluate": 364,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.639157000001433,
+    "longestSliceMs": 44.55382899999677,
+    "peakHeap": 3074984,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4491.067500000001,
+    "ply": 7,
+    "packCalls": 14313,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.041291999998066,
+    "longestSliceMs": 60.81291599999895,
+    "peakHeap": 2724152,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2497.3986989999976,
+    "ply": 8,
+    "packCalls": 7582,
+    "personaCalls": {
+     "evaluate": 386,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.302708000002895,
+    "longestSliceMs": 50.21821700000146,
+    "peakHeap": 1043124,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5304.068798,
+    "ply": 9,
+    "packCalls": 14681,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.664850000001024,
+    "longestSliceMs": 107.71231000000262,
+    "peakHeap": 159332,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2629.7583809999996,
+    "ply": 10,
+    "packCalls": 7179,
+    "personaCalls": {
+     "evaluate": 334,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.450976000000082,
+    "longestSliceMs": 51.54049999999552,
+    "peakHeap": 4752256,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 189,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4422.46559,
+    "ply": 11,
+    "packCalls": 12410,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.718586000002688,
+    "longestSliceMs": 131.78017399999953,
+    "peakHeap": 1446035,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 192,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2691.808057000002,
+    "ply": 12,
+    "packCalls": 6977,
+    "personaCalls": {
+     "evaluate": 322,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.814662999997381,
+    "longestSliceMs": 51.5816180000038,
+    "peakHeap": 5420588,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 182,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4459.412243999999,
+    "ply": 13,
+    "packCalls": 11386,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.058822999999393,
+    "longestSliceMs": 93.66047599999729,
+    "peakHeap": 1360887,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2977.627867999996,
+    "ply": 14,
+    "packCalls": 7156,
+    "personaCalls": {
+     "evaluate": 336,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.506312999998045,
+    "longestSliceMs": 67.71132400000351,
+    "peakHeap": 3150696,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 189,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4756.611755999998,
+    "ply": 15,
+    "packCalls": 11266,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 16.90566899999976,
+    "longestSliceMs": 148.0673120000065,
+    "peakHeap": 4070620,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2813.472501000004,
+    "ply": 16,
+    "packCalls": 7040,
+    "personaCalls": {
+     "evaluate": 368,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.135437000004458,
+    "longestSliceMs": 42.905290999995486,
+    "peakHeap": 4113112,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4725.235822000002,
+    "ply": 17,
+    "packCalls": 12093,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.108938000004855,
+    "longestSliceMs": 78.13889899999776,
+    "peakHeap": 5673252,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3016.0335329999943,
+    "ply": 18,
+    "packCalls": 6819,
+    "personaCalls": {
+     "evaluate": 336,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.545793999990565,
+    "longestSliceMs": 62.036439000003156,
+    "peakHeap": 2062848,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4550.169586000004,
+    "ply": 19,
+    "packCalls": 10070,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 16.03533199999947,
+    "longestSliceMs": 149.5629889999982,
+    "peakHeap": 4442312,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 198,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2916.083348,
+    "ply": 20,
+    "packCalls": 6465,
+    "personaCalls": {
+     "evaluate": 282,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.513261000000057,
+    "longestSliceMs": 59.07244799999171,
+    "peakHeap": 970848,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 198,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3147.8570499999914,
+    "ply": 21,
+    "packCalls": 8253,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.624786000000313,
+    "longestSliceMs": 66.01352100000076,
+    "peakHeap": 4702220,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2727.2256370000105,
+    "ply": 22,
+    "packCalls": 6223,
+    "personaCalls": {
+     "evaluate": 256,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.611409999997704,
+    "longestSliceMs": 63.98039700000663,
+    "peakHeap": 1921372,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 188,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2921.362743999998,
+    "ply": 23,
+    "packCalls": 6787,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.40152400000079,
+    "longestSliceMs": 69.60991899999499,
+    "peakHeap": 6208755,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 167,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1970.2133869999961,
+    "ply": 24,
+    "packCalls": 4223,
+    "personaCalls": {
+     "evaluate": 124,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.07760399999097,
+    "longestSliceMs": 49.66635600000154,
+    "peakHeap": 2801236,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 112,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1348.756362,
+    "ply": 25,
+    "packCalls": 3171,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.592015000001993,
+    "longestSliceMs": 64.76854299999832,
+    "peakHeap": 4282084,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 122,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1352.9071829999884,
+    "ply": 26,
+    "packCalls": 3099,
+    "personaCalls": {
+     "evaluate": 90,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.441518999999971,
+    "longestSliceMs": 54.2645760000014,
+    "peakHeap": 4320280,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 69,
+    "timedOut": false,
+    "capped": null,
+    "ms": 972.9910649999947,
+    "ply": 27,
+    "packCalls": 2151,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.410525999992387,
+    "longestSliceMs": 70.817796000003,
+    "peakHeap": 4225148,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 19,
+    "timedOut": false,
+    "capped": null,
+    "ms": 293.86128699999244,
+    "ply": 28,
+    "packCalls": 589,
+    "personaCalls": {
+     "evaluate": 8,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.991443000006257,
+    "longestSliceMs": 53.02310299999954,
+    "peakHeap": 3974775,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6135.281362000009,
+    "ply": 0,
+    "packCalls": 18559,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.825582000004943,
+    "longestSliceMs": 103.5482420000044,
+    "peakHeap": 5349479,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2383.5489430000016,
+    "ply": 1,
+    "packCalls": 7556,
+    "personaCalls": {
+     "evaluate": 390,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.139027999990503,
+    "longestSliceMs": 37.75167800000054,
+    "peakHeap": 4352468,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5296.8999119999935,
+    "ply": 2,
+    "packCalls": 15899,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.859111999991,
+    "longestSliceMs": 172.25800299999537,
+    "peakHeap": 1995628,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2296.199974999996,
+    "ply": 3,
+    "packCalls": 7225,
+    "personaCalls": {
+     "evaluate": 328,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.550870000006398,
+    "longestSliceMs": 60.18220999999903,
+    "peakHeap": 454552,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 184,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5181.800927999997,
+    "ply": 4,
+    "packCalls": 13756,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.237882000001264,
+    "longestSliceMs": 113.51731199999631,
+    "peakHeap": 752668,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 191,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2923.027642999994,
+    "ply": 5,
+    "packCalls": 7056,
+    "personaCalls": {
+     "evaluate": 340,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.893423999994411,
+    "longestSliceMs": 58.25982200000726,
+    "peakHeap": 1438468,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5427.166553000003,
+    "ply": 6,
+    "packCalls": 15462,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 16.26619500000379,
+    "longestSliceMs": 134.50552599999355,
+    "peakHeap": 423948,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2633.224816999995,
+    "ply": 7,
+    "packCalls": 7571,
+    "personaCalls": {
+     "evaluate": 382,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.022748000003048,
+    "longestSliceMs": 62.02130500000203,
+    "peakHeap": 3125476,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4619.335963999998,
+    "ply": 8,
+    "packCalls": 12873,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.627712999994401,
+    "longestSliceMs": 82.93195600000035,
+    "peakHeap": 2141756,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2918.586381000001,
+    "ply": 9,
+    "packCalls": 7505,
+    "personaCalls": {
+     "evaluate": 354,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.806051000006846,
+    "longestSliceMs": 65.48448400000052,
+    "peakHeap": 2660316,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4002.150558000023,
+    "ply": 10,
+    "packCalls": 12079,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.796013999992283,
+    "longestSliceMs": 97.60124600000563,
+    "peakHeap": 935740,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2877.450990000012,
+    "ply": 11,
+    "packCalls": 7248,
+    "personaCalls": {
+     "evaluate": 320,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.11134000000311,
+    "longestSliceMs": 46.53368700001738,
+    "peakHeap": 443668,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 193,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3957.27760999999,
+    "ply": 12,
+    "packCalls": 10313,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.31763899998623,
+    "longestSliceMs": 121.92315799999051,
+    "peakHeap": 2909552,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 190,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2904.6955339999986,
+    "ply": 13,
+    "packCalls": 6664,
+    "personaCalls": {
+     "evaluate": 294,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.584661000000779,
+    "longestSliceMs": 64.67067900000256,
+    "peakHeap": 1635976,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 183,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3112.230079000001,
+    "ply": 14,
+    "packCalls": 8786,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.554341000010027,
+    "longestSliceMs": 103.52672200000961,
+    "peakHeap": 2357164,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 189,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2614.475416000001,
+    "ply": 15,
+    "packCalls": 6499,
+    "personaCalls": {
+     "evaluate": 242,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.066825000016252,
+    "longestSliceMs": 50.69470900000306,
+    "peakHeap": 986696,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 153,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2116.6292860000103,
+    "ply": 16,
+    "packCalls": 5854,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.93939699998009,
+    "longestSliceMs": 70.67994899998303,
+    "peakHeap": 2189472,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 167,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2309.1184579999826,
+    "ply": 17,
+    "packCalls": 5023,
+    "personaCalls": {
+     "evaluate": 170,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.134159000008367,
+    "longestSliceMs": 62.511762000009185,
+    "peakHeap": 2019804,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 97,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1127.2691639999975,
+    "ply": 18,
+    "packCalls": 3438,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.457334999984596,
+    "longestSliceMs": 71.82619999998133,
+    "peakHeap": 3921948,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 31,
+    "timedOut": false,
+    "capped": null,
+    "ms": 439.0481049999944,
+    "ply": 19,
+    "packCalls": 877,
+    "personaCalls": {
+     "evaluate": 24,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.072191999992356,
+    "longestSliceMs": 46.03181200000108,
+    "peakHeap": 5808812,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Builder ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 25,
+    "ms": {
+     "median": 2633.224816999995,
+     "p90": 2923.027642999994,
+     "max": 3016.0335329999943
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 7583,
+    "evaluate": 392,
+    "prior": 0,
+    "peakHeapMB": 5.8,
+    "longestSliceMs": 85.26439199999999
+   },
+   {
+    "lineup": 1,
+    "persona": "Plain",
+    "searches": 24,
+    "ms": {
+     "median": 4550.169586000004,
+     "p90": 5466.343410999998,
+     "max": 6135.281362000009
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 18559,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 6.2,
+    "longestSliceMs": 172.25800299999537
+   }
+  ],
+  "wallMs": 158953.617415
+ },
+ {
+  "label": "FD Wall v Plain",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-samples",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/wall",
+       "version": "1.0.0",
+       "hash": "sha256:4189234a37f0e55ce307a6f5b3002fd043b961ec079cd5bb2ee1bf6b19c5ffc8"
+      },
+      "playouts": 200,
+      "searchMs": 48129.49502299997,
+      "searches": 17
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 64530.40863800017,
+      "searches": 17
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 34,
+    "stopped": null
+   },
+   {
+    "baseSeed": "8b-samples",
+    "game": 1,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 34198.92566499999,
+      "searches": 7
+     },
+     {
+      "seat": "blue",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/wall",
+       "version": "1.0.0",
+       "hash": "sha256:4189234a37f0e55ce307a6f5b3002fd043b961ec079cd5bb2ee1bf6b19c5ffc8"
+      },
+      "playouts": 200,
+      "searchMs": 17084.325765000016,
+      "searches": 7
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 14,
+    "stopped": null
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3152.3019510000013,
+    "ply": 0,
+    "packCalls": 7784,
+    "personaCalls": {
+     "evaluate": 394,
+     "prior": 1407
+    },
+    "worldsMs": 0,
+    "loadMs": 15.412000000011176,
+    "longestSliceMs": 62.74102800001856,
+    "peakHeap": 0,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5150.424527000025,
+    "ply": 1,
+    "packCalls": 16201,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.085729000013089,
+    "longestSliceMs": 97.12016199997743,
+    "peakHeap": 5418756,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3208.400213999994,
+    "ply": 2,
+    "packCalls": 7614,
+    "personaCalls": {
+     "evaluate": 346,
+     "prior": 1406
+    },
+    "worldsMs": 0,
+    "loadMs": 12.118144000007305,
+    "longestSliceMs": 52.510908000025665,
+    "peakHeap": 4822348,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 198,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4928.247169999988,
+    "ply": 3,
+    "packCalls": 14879,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.705037000006996,
+    "longestSliceMs": 116.38624700001674,
+    "peakHeap": 3581360,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 178,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3058.9250729999912,
+    "ply": 4,
+    "packCalls": 6712,
+    "personaCalls": {
+     "evaluate": 316,
+     "prior": 1204
+    },
+    "worldsMs": 0,
+    "loadMs": 15.964607000001706,
+    "longestSliceMs": 70.07311600001412,
+    "peakHeap": 984809,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5078.503284000006,
+    "ply": 5,
+    "packCalls": 14657,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.995824000012362,
+    "longestSliceMs": 116.95268099999521,
+    "peakHeap": 3683324,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3361.603979000007,
+    "ply": 6,
+    "packCalls": 7759,
+    "personaCalls": {
+     "evaluate": 384,
+     "prior": 1406
+    },
+    "worldsMs": 0,
+    "loadMs": 10.628503999992972,
+    "longestSliceMs": 46.43585899999016,
+    "peakHeap": 6684756,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5395.545422000025,
+    "ply": 7,
+    "packCalls": 13878,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.430403000005754,
+    "longestSliceMs": 154.7318169999926,
+    "peakHeap": 3663772,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3072.152911000012,
+    "ply": 8,
+    "packCalls": 7696,
+    "personaCalls": {
+     "evaluate": 358,
+     "prior": 1405
+    },
+    "worldsMs": 0,
+    "loadMs": 11.013403999997536,
+    "longestSliceMs": 51.27685900000506,
+    "peakHeap": 2909548,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 195,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4551.167416000011,
+    "ply": 9,
+    "packCalls": 12216,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.930145999998786,
+    "longestSliceMs": 76.7504149999877,
+    "peakHeap": 6469968,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 195,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2870.2641699999804,
+    "ply": 10,
+    "packCalls": 7024,
+    "personaCalls": {
+     "evaluate": 304,
+     "prior": 1291
+    },
+    "worldsMs": 0,
+    "loadMs": 15.809917000005953,
+    "longestSliceMs": 73.08365700001013,
+    "peakHeap": 4232584,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4311.116009999998,
+    "ply": 11,
+    "packCalls": 11461,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.262927000003401,
+    "longestSliceMs": 74.31810999999288,
+    "peakHeap": 3909432,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 186,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3493.1627119999903,
+    "ply": 12,
+    "packCalls": 6736,
+    "personaCalls": {
+     "evaluate": 284,
+     "prior": 1207
+    },
+    "worldsMs": 0,
+    "loadMs": 15.595236000022851,
+    "longestSliceMs": 72.98759800000698,
+    "peakHeap": 3602376,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 196,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4090.6759790000215,
+    "ply": 13,
+    "packCalls": 11497,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.381338000006508,
+    "longestSliceMs": 99.46189100001357,
+    "peakHeap": 4757160,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 182,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2941.8218789999955,
+    "ply": 14,
+    "packCalls": 6693,
+    "personaCalls": {
+     "evaluate": 308,
+     "prior": 1150
+    },
+    "worldsMs": 0,
+    "loadMs": 10.556902999989688,
+    "longestSliceMs": 61.828229000006104,
+    "peakHeap": 4483040,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 196,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4512.930691999994,
+    "ply": 15,
+    "packCalls": 11008,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.610560000000987,
+    "longestSliceMs": 66.89083399999072,
+    "peakHeap": 5229428,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 196,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3155.2596270000213,
+    "ply": 16,
+    "packCalls": 6993,
+    "personaCalls": {
+     "evaluate": 328,
+     "prior": 1184
+    },
+    "worldsMs": 0,
+    "loadMs": 15.473568000015803,
+    "longestSliceMs": 76.07547800001339,
+    "peakHeap": 5492092,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4967.927473999996,
+    "ply": 17,
+    "packCalls": 11503,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.118264999997336,
+    "longestSliceMs": 99.55134099998395,
+    "peakHeap": 4111204,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 195,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3139.911525000003,
+    "ply": 18,
+    "packCalls": 6654,
+    "personaCalls": {
+     "evaluate": 314,
+     "prior": 1105
+    },
+    "worldsMs": 0,
+    "loadMs": 11.037768000009237,
+    "longestSliceMs": 57.505781000014395,
+    "peakHeap": 1726008,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4103.525361999986,
+    "ply": 19,
+    "packCalls": 10671,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.372875000000931,
+    "longestSliceMs": 75.44905200001085,
+    "peakHeap": 2649716,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 195,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3256.173114999983,
+    "ply": 20,
+    "packCalls": 6455,
+    "personaCalls": {
+     "evaluate": 310,
+     "prior": 927
+    },
+    "worldsMs": 0,
+    "loadMs": 11.459167000022717,
+    "longestSliceMs": 60.47453300000052,
+    "peakHeap": 6667859,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 197,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4362.58449400001,
+    "ply": 21,
+    "packCalls": 9721,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.239070000010543,
+    "longestSliceMs": 94.83695799999987,
+    "peakHeap": 6159396,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 181,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3125.3311619999877,
+    "ply": 22,
+    "packCalls": 5567,
+    "personaCalls": {
+     "evaluate": 254,
+     "prior": 676
+    },
+    "worldsMs": 0,
+    "loadMs": 15.50458599999547,
+    "longestSliceMs": 68.82266899998649,
+    "peakHeap": 10978360,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 200,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3737.4076899999927,
+    "ply": 23,
+    "packCalls": 8500,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.2121679999982,
+    "longestSliceMs": 105.85144199998467,
+    "peakHeap": 3529823,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 179,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3058.1103960000037,
+    "ply": 24,
+    "packCalls": 5247,
+    "personaCalls": {
+     "evaluate": 208,
+     "prior": 616
+    },
+    "worldsMs": 0,
+    "loadMs": 15.429310000006808,
+    "longestSliceMs": 71.14098500000546,
+    "peakHeap": 13272855,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 185,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2823.911804000003,
+    "ply": 25,
+    "packCalls": 6226,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.052567000006093,
+    "longestSliceMs": 73.41123299999163,
+    "peakHeap": 7133516,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 161,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2163.2141640000045,
+    "ply": 26,
+    "packCalls": 4531,
+    "personaCalls": {
+     "evaluate": 158,
+     "prior": 516
+    },
+    "worldsMs": 0,
+    "loadMs": 14.044043000001693,
+    "longestSliceMs": 59.5290489999752,
+    "peakHeap": 12668740,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 180,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2591.0293249999813,
+    "ply": 27,
+    "packCalls": 6018,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.908456999983173,
+    "longestSliceMs": 70.20306800000253,
+    "peakHeap": 9861388,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 170,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2494.6126480000094,
+    "ply": 28,
+    "packCalls": 4601,
+    "personaCalls": {
+     "evaluate": 138,
+     "prior": 494
+    },
+    "worldsMs": 0,
+    "loadMs": 15.27773500001058,
+    "longestSliceMs": 72.78034300002037,
+    "peakHeap": 1899596,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 169,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2581.2734189999755,
+    "ply": 29,
+    "packCalls": 4762,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.565225999976974,
+    "longestSliceMs": 76.53283999999985,
+    "peakHeap": 11817464,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 135,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2020.5549530000426,
+    "ply": 30,
+    "packCalls": 3259,
+    "personaCalls": {
+     "evaluate": 62,
+     "prior": 305
+    },
+    "worldsMs": 0,
+    "loadMs": 16.56255000003148,
+    "longestSliceMs": 74.03011300001526,
+    "peakHeap": 9596512,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 83,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1048.3467940000119,
+    "ply": 31,
+    "packCalls": 2166,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.10995000001276,
+    "longestSliceMs": 61.63292099995306,
+    "peakHeap": 13206231,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 34,
+    "timedOut": false,
+    "capped": null,
+    "ms": 515.5104139999603,
+    "ply": 32,
+    "packCalls": 1008,
+    "personaCalls": {
+     "evaluate": 8,
+     "prior": 48
+    },
+    "worldsMs": 0,
+    "loadMs": 14.367436000029556,
+    "longestSliceMs": 51.18272199999774,
+    "peakHeap": 9366791,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 13,
+    "timedOut": false,
+    "capped": null,
+    "ms": 255.5070410000044,
+    "ply": 33,
+    "packCalls": 426,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.863228000001982,
+    "longestSliceMs": 29.020304000005126,
+    "peakHeap": 5567371,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6381.333837000013,
+    "ply": 0,
+    "packCalls": 18559,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.90291599999182,
+    "longestSliceMs": 91.63477400003467,
+    "peakHeap": 7018076,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2736.982810000016,
+    "ply": 1,
+    "packCalls": 7768,
+    "personaCalls": {
+     "evaluate": 394,
+     "prior": 1407
+    },
+    "worldsMs": 0,
+    "loadMs": 12.966144000005443,
+    "longestSliceMs": 46.83660300000338,
+    "peakHeap": 10981076,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5165.617809999967,
+    "ply": 2,
+    "packCalls": 15899,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.76071999996202,
+    "longestSliceMs": 171.39975599996978,
+    "peakHeap": 9287960,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3087.919394000026,
+    "ply": 3,
+    "packCalls": 7557,
+    "personaCalls": {
+     "evaluate": 340,
+     "prior": 1407
+    },
+    "worldsMs": 0,
+    "loadMs": 16.121990000014193,
+    "longestSliceMs": 67.56299099995522,
+    "peakHeap": 8964320,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 184,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4996.378084999975,
+    "ply": 4,
+    "packCalls": 13756,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.912175999954343,
+    "longestSliceMs": 131.6016590000363,
+    "peakHeap": 7297828,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 153,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2167.633620000037,
+    "ply": 5,
+    "packCalls": 5754,
+    "personaCalls": {
+     "evaluate": 268,
+     "prior": 1029
+    },
+    "worldsMs": 0,
+    "loadMs": 10.98306199995568,
+    "longestSliceMs": 104.04717800003709,
+    "peakHeap": 1320706,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5793.928844999988,
+    "ply": 6,
+    "packCalls": 15462,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.691420999995898,
+    "longestSliceMs": 147.40224399999715,
+    "peakHeap": 9039996,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 201,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3094.1231109999935,
+    "ply": 7,
+    "packCalls": 7747,
+    "personaCalls": {
+     "evaluate": 382,
+     "prior": 1404
+    },
+    "worldsMs": 0,
+    "loadMs": 15.215821999998298,
+    "longestSliceMs": 65.41840800002683,
+    "peakHeap": 8939034,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 199,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4951.798150999995,
+    "ply": 8,
+    "packCalls": 12873,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.957226999977138,
+    "longestSliceMs": 78.40374699997483,
+    "peakHeap": 5120772,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 195,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3169.317877000023,
+    "ply": 9,
+    "packCalls": 7150,
+    "personaCalls": {
+     "evaluate": 304,
+     "prior": 1305
+    },
+    "worldsMs": 0,
+    "loadMs": 15.391514000017196,
+    "longestSliceMs": 68.70936800003983,
+    "peakHeap": 13301670,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 185,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3805.546860000002,
+    "ply": 10,
+    "packCalls": 9669,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.745843999960925,
+    "longestSliceMs": 93.03047800000058,
+    "peakHeap": 11880750,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 163,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2306.920151999977,
+    "ply": 11,
+    "packCalls": 5699,
+    "personaCalls": {
+     "evaluate": 204,
+     "prior": 1041
+    },
+    "worldsMs": 0,
+    "loadMs": 10.673210999986622,
+    "longestSliceMs": 56.143365999974776,
+    "peakHeap": 6219896,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 169,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3090.070319999999,
+    "ply": 12,
+    "packCalls": 8046,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.568955000024289,
+    "longestSliceMs": 80.62663600000087,
+    "peakHeap": 12504540,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 29,
+    "timedOut": false,
+    "capped": null,
+    "ms": 507.13465500000166,
+    "ply": 13,
+    "packCalls": 1109,
+    "personaCalls": {
+     "evaluate": 30,
+     "prior": 195
+    },
+    "worldsMs": 0,
+    "loadMs": 14.464982000004966,
+    "longestSliceMs": 69.42224200000055,
+    "peakHeap": 8265236,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Wall ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 24,
+    "ms": {
+     "median": 3072.152911000012,
+     "p90": 3256.173114999983,
+     "max": 3493.1627119999903
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 7784,
+    "evaluate": 394,
+    "prior": 1407,
+    "peakHeapMB": 13.3,
+    "longestSliceMs": 104.04717800003709
+   },
+   {
+    "lineup": 1,
+    "persona": "Plain",
+    "searches": 24,
+    "ms": {
+     "median": 4512.930691999994,
+     "p90": 5395.545422000025,
+     "max": 6381.333837000013
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 18559,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 13.2,
+    "longestSliceMs": 171.39975599996978
+   }
+  ],
+  "wallMs": 164157.393396
+ },
+ {
+  "label": "HF Careful v Plain",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-samples",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/careful",
+       "version": "1.0.0",
+       "hash": "sha256:fc4f0fd9a8ae60a02adb76ee35694dd5d3ecf82446d9b1fa5c2125b6a8c40fe8"
+      },
+      "playouts": 200,
+      "searchMs": 8274.445940000005,
+      "searches": 7
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 53870.97434100002,
+      "searches": 14
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 33,
+    "stopped": null
+   },
+   {
+    "baseSeed": "8b-samples",
+    "game": 1,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 48363.143182999745,
+      "searches": 12
+     },
+     {
+      "seat": "blue",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/careful",
+       "version": "1.0.0",
+       "hash": "sha256:fc4f0fd9a8ae60a02adb76ee35694dd5d3ecf82446d9b1fa5c2125b6a8c40fe8"
+      },
+      "playouts": 200,
+      "searchMs": 12978.644976000127,
+      "searches": 12
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 42,
+    "stopped": null
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 81,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1506.5078010000288,
+    "ply": 1,
+    "packCalls": 5503,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 124
+    },
+    "worldsMs": 0,
+    "loadMs": 10.45899900002405,
+    "longestSliceMs": 37.28106899996055,
+    "peakHeap": 537069,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 63,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6813.177384000039,
+    "ply": 3,
+    "packCalls": 33676,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.503560999990441,
+    "longestSliceMs": 148.23389699996915,
+    "peakHeap": 18315572,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 81,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7696.559501999989,
+    "ply": 4,
+    "packCalls": 31966,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.969267999986187,
+    "longestSliceMs": 134.9967600000091,
+    "peakHeap": 2516241,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 59,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6482.0340720000095,
+    "ply": 5,
+    "packCalls": 29820,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.099688999995124,
+    "longestSliceMs": 171.52432900003623,
+    "peakHeap": 4752328,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 75,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1245.447187999962,
+    "ply": 7,
+    "packCalls": 5528,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 113
+    },
+    "worldsMs": 0,
+    "loadMs": 12.64932000002591,
+    "longestSliceMs": 31.939140999980737,
+    "peakHeap": 8039304,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 19,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4905.063036999956,
+    "ply": 9,
+    "packCalls": 25210,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.528074000030756,
+    "longestSliceMs": 92.12171999999555,
+    "peakHeap": 9602044,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 58,
+    "timedOut": false,
+    "capped": null,
+    "ms": 932.8458550000214,
+    "ply": 11,
+    "packCalls": 4468,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 89
+    },
+    "worldsMs": 0,
+    "loadMs": 10.609297000046354,
+    "longestSliceMs": 30.280834000033792,
+    "peakHeap": 2662020,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 81,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1251.8787360000424,
+    "ply": 12,
+    "packCalls": 5699,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 127
+    },
+    "worldsMs": 0,
+    "loadMs": 12.559245000011288,
+    "longestSliceMs": 45.29108500003349,
+    "peakHeap": 6536468,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 36,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4385.756329999946,
+    "ply": 14,
+    "packCalls": 21122,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.523860999965109,
+    "longestSliceMs": 57.405101000040304,
+    "peakHeap": 3319703,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 53,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4378.160845000006,
+    "ply": 15,
+    "packCalls": 20724,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.21715799998492,
+    "longestSliceMs": 61.79049500002293,
+    "peakHeap": 12895900,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 94,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1279.0619219999644,
+    "ply": 17,
+    "packCalls": 5851,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 143
+    },
+    "worldsMs": 0,
+    "loadMs": 10.367216999991797,
+    "longestSliceMs": 39.247662999958266,
+    "peakHeap": 7800416,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 42,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3899.0469869999797,
+    "ply": 19,
+    "packCalls": 18844,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.797588000015821,
+    "longestSliceMs": 70.16156300000148,
+    "peakHeap": 5127172,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 59,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3595.374979999964,
+    "ply": 20,
+    "packCalls": 18062,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.427986000024248,
+    "longestSliceMs": 67.55350300000282,
+    "peakHeap": 12713808,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 75,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3131.0687560000224,
+    "ply": 21,
+    "packCalls": 16252,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.42922200000612,
+    "longestSliceMs": 46.605039999994915,
+    "peakHeap": 5675208,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 57,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2802.5666349999956,
+    "ply": 22,
+    "packCalls": 14092,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.109189999988303,
+    "longestSliceMs": 59.936355000012554,
+    "peakHeap": 3016476,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 44,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2506.9440879999893,
+    "ply": 23,
+    "packCalls": 12688,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.495324999967124,
+    "longestSliceMs": 54.134474999969825,
+    "peakHeap": 7122992,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 74,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1219.9500479999697,
+    "ply": 25,
+    "packCalls": 5333,
+    "personaCalls": {
+     "evaluate": 378,
+     "prior": 113
+    },
+    "worldsMs": 0,
+    "loadMs": 10.407780000008643,
+    "longestSliceMs": 40.43319700000575,
+    "peakHeap": 6840760,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 69,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1717.7767800000147,
+    "ply": 27,
+    "packCalls": 9153,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 13.108263999980409,
+    "longestSliceMs": 65.10507900000084,
+    "peakHeap": 6670984,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 43,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1208.1179099999717,
+    "ply": 28,
+    "packCalls": 5585,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.5959959999891,
+    "longestSliceMs": 36.70156999997562,
+    "peakHeap": 5983664,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 31,
+    "timedOut": false,
+    "capped": null,
+    "ms": 823.6482679999899,
+    "ply": 30,
+    "packCalls": 3235,
+    "personaCalls": {
+     "evaluate": 178,
+     "prior": 40
+    },
+    "worldsMs": 0,
+    "loadMs": 15.43941900000209,
+    "longestSliceMs": 32.52713000000222,
+    "peakHeap": 5623759,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 11,
+    "timedOut": false,
+    "capped": null,
+    "ms": 323.35690399998566,
+    "ply": 32,
+    "packCalls": 1422,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.720688999979757,
+    "longestSliceMs": 38.541895999980625,
+    "peakHeap": 1194967,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 83,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6736.548606999975,
+    "ply": 1,
+    "packCalls": 34322,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.312455000006594,
+    "longestSliceMs": 134.9959599999711,
+    "peakHeap": 6631484,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6935.210868999944,
+    "ply": 2,
+    "packCalls": 32852,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.475101999996696,
+    "longestSliceMs": 108.0420569999842,
+    "peakHeap": 9475788,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 35,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6247.146858000022,
+    "ply": 3,
+    "packCalls": 31396,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.665463999961503,
+    "longestSliceMs": 157.64237899996806,
+    "peakHeap": 17384492,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1074.6376259999815,
+    "ply": 5,
+    "packCalls": 4516,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 79
+    },
+    "worldsMs": 0,
+    "loadMs": 10.443507999996655,
+    "longestSliceMs": 34.67164099996444,
+    "peakHeap": 811332,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 102,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1385.7133589999867,
+    "ply": 6,
+    "packCalls": 6032,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 155
+    },
+    "worldsMs": 0,
+    "loadMs": 10.291119000001345,
+    "longestSliceMs": 40.69261200004257,
+    "peakHeap": 4630264,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 71,
+    "timedOut": false,
+    "capped": null,
+    "ms": 5777.224718999991,
+    "ply": 8,
+    "packCalls": 30385,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.41895600000862,
+    "longestSliceMs": 118.06445000000531,
+    "peakHeap": 17221044,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1487.0883620000095,
+    "ply": 10,
+    "packCalls": 5683,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 113
+    },
+    "worldsMs": 0,
+    "loadMs": 10.598998000030406,
+    "longestSliceMs": 35.09358400001656,
+    "peakHeap": 1279900,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 54,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1007.671817000024,
+    "ply": 11,
+    "packCalls": 5096,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 81
+    },
+    "worldsMs": 0,
+    "loadMs": 11.561753000016324,
+    "longestSliceMs": 29.438744999992196,
+    "peakHeap": 11949448,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 63,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4683.281895999971,
+    "ply": 13,
+    "packCalls": 23951,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.415863999980502,
+    "longestSliceMs": 103.57319700001972,
+    "peakHeap": 13272608,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 79,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4592.111353999993,
+    "ply": 14,
+    "packCalls": 23107,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.478929000033531,
+    "longestSliceMs": 86.11636400001589,
+    "peakHeap": 16005992,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 97,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1279.1623499999987,
+    "ply": 16,
+    "packCalls": 6009,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 151
+    },
+    "worldsMs": 0,
+    "loadMs": 11.701697999960743,
+    "longestSliceMs": 40.97380899998825,
+    "peakHeap": 1392692,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 87,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1308.8035960000125,
+    "ply": 17,
+    "packCalls": 5954,
+    "personaCalls": {
+     "evaluate": 398,
+     "prior": 130
+    },
+    "worldsMs": 0,
+    "loadMs": 10.335785000002943,
+    "longestSliceMs": 40.59280000004219,
+    "peakHeap": 10614072,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 55,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3434.494578999991,
+    "ply": 19,
+    "packCalls": 17723,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.281501999998,
+    "longestSliceMs": 82.01641100004781,
+    "peakHeap": 5812478,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 56,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3121.927167000016,
+    "ply": 20,
+    "packCalls": 16767,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 9.986753000004683,
+    "longestSliceMs": 45.383663000015076,
+    "peakHeap": 10165460,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 85,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3377.08031499997,
+    "ply": 21,
+    "packCalls": 16866,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.645691999990959,
+    "longestSliceMs": 79.1506240000017,
+    "peakHeap": 9490952,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 53,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1168.1826460000011,
+    "ply": 23,
+    "packCalls": 4816,
+    "personaCalls": {
+     "evaluate": 390,
+     "prior": 82
+    },
+    "worldsMs": 0,
+    "loadMs": 11.403147000004537,
+    "longestSliceMs": 32.434081999992486,
+    "peakHeap": 4295824,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1157.943459000031,
+    "ply": 24,
+    "packCalls": 5344,
+    "personaCalls": {
+     "evaluate": 388,
+     "prior": 117
+    },
+    "worldsMs": 0,
+    "loadMs": 10.673335999948904,
+    "longestSliceMs": 36.976038999971934,
+    "peakHeap": 3186736,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 75,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1038.68532400002,
+    "ply": 27,
+    "packCalls": 5269,
+    "personaCalls": {
+     "evaluate": 324,
+     "prior": 112
+    },
+    "worldsMs": 0,
+    "loadMs": 10.44250900001498,
+    "longestSliceMs": 30.147034999972675,
+    "peakHeap": 2315860,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 973.8693809999968,
+    "ply": 30,
+    "packCalls": 4280,
+    "personaCalls": {
+     "evaluate": 296,
+     "prior": 76
+    },
+    "worldsMs": 0,
+    "loadMs": 10.72430699999677,
+    "longestSliceMs": 36.21792100003222,
+    "peakHeap": 1913068,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 35,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1546.3624710000004,
+    "ply": 32,
+    "packCalls": 6890,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.526836999983061,
+    "longestSliceMs": 49.92302600003313,
+    "peakHeap": 6250144,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 32,
+    "timedOut": false,
+    "capped": null,
+    "ms": 874.4332730000024,
+    "ply": 34,
+    "packCalls": 3200,
+    "personaCalls": {
+     "evaluate": 142,
+     "prior": 40
+    },
+    "worldsMs": 0,
+    "loadMs": 14.88103200000478,
+    "longestSliceMs": 39.04214700002922,
+    "peakHeap": 1720576,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 36,
+    "timedOut": false,
+    "capped": null,
+    "ms": 940.8330449999776,
+    "ply": 36,
+    "packCalls": 4006,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 9.903574000054505,
+    "longestSliceMs": 42.39227499999106,
+    "peakHeap": 10615422,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 36,
+    "timedOut": false,
+    "capped": null,
+    "ms": 947.8486660000053,
+    "ply": 39,
+    "packCalls": 4222,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.171899000008125,
+    "longestSliceMs": 40.697343999985605,
+    "peakHeap": 3643124,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 8,
+    "timedOut": false,
+    "capped": null,
+    "ms": 196.00341900001513,
+    "ply": 41,
+    "packCalls": 875,
+    "personaCalls": {
+     "evaluate": 42,
+     "prior": 8
+    },
+    "worldsMs": 0,
+    "loadMs": 10.108114000002388,
+    "longestSliceMs": 15.86865299998317,
+    "peakHeap": 6328020,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Careful ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 19,
+    "ms": {
+     "median": 1168.1826460000011,
+     "p90": 1487.0883620000095,
+     "max": 1506.5078010000288
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 6032,
+    "evaluate": 400,
+    "prior": 155,
+    "peakHeapMB": 11.9,
+    "longestSliceMs": 45.29108500003349
+   },
+   {
+    "lineup": 1,
+    "persona": "Plain",
+    "searches": 26,
+    "ms": {
+     "median": 3899.0469869999797,
+     "p90": 6813.177384000039,
+     "max": 7696.559501999989
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 34322,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 18.3,
+    "longestSliceMs": 171.52432900003623
+   }
+  ],
+  "wallMs": 123672.89322199998
+ },
+ {
+  "label": "HF Bold v Plain",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-samples",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/bold",
+       "version": "1.0.0",
+       "hash": "sha256:bdabf93e36d35b4cfd168b56abb84546790b8e0955c30d1b50dd37775c181980"
+      },
+      "playouts": 200,
+      "searchMs": 12378.692693000019,
+      "searches": 12
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 11723.062516000064,
+      "searches": 4
+     }
+    ],
+    "winners": [
+     "red"
+    ],
+    "places": {
+     "red": 1,
+     "blue": 2
+    },
+    "scores": null,
+    "plies": 25,
+    "stopped": null
+   },
+   {
+    "baseSeed": "8b-samples",
+    "game": 1,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 1,
+      "persona": null,
+      "playouts": 200,
+      "searchMs": 88155.07213100011,
+      "searches": 26
+     },
+     {
+      "seat": "blue",
+      "lineup": 0,
+      "persona": {
+       "id": "sample/bold",
+       "version": "1.0.0",
+       "hash": "sha256:bdabf93e36d35b4cfd168b56abb84546790b8e0955c30d1b50dd37775c181980"
+      },
+      "playouts": 200,
+      "searchMs": 17175.962182999763,
+      "searches": 16
+     }
+    ],
+    "winners": [
+     "blue"
+    ],
+    "places": {
+     "red": 2,
+     "blue": 1
+    },
+    "scores": null,
+    "plies": 62,
+    "stopped": null
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 47,
+    "timedOut": false,
+    "capped": null,
+    "ms": 952.4972359999665,
+    "ply": 1,
+    "packCalls": 4506,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.054518999997526,
+    "longestSliceMs": 33.966729999985546,
+    "peakHeap": 461577,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 96,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1151.087222000002,
+    "ply": 2,
+    "packCalls": 5612,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.599647999973968,
+    "longestSliceMs": 38.570278999977745,
+    "peakHeap": 5508632,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 74,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1365.7560890000314,
+    "ply": 3,
+    "packCalls": 5069,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.435198999999557,
+    "longestSliceMs": 36.855212999973446,
+    "peakHeap": 4135936,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 891.115129999991,
+    "ply": 4,
+    "packCalls": 4314,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.851806999999098,
+    "longestSliceMs": 31.24897100002272,
+    "peakHeap": 5892556,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 78,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1161.536076999968,
+    "ply": 5,
+    "packCalls": 5319,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.397839999990538,
+    "longestSliceMs": 34.57024500000989,
+    "peakHeap": 11092748,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 42,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4828.061706000008,
+    "ply": 7,
+    "packCalls": 24536,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.796909999975469,
+    "longestSliceMs": 97.43592300004093,
+    "peakHeap": 13522852,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 79,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1148.0519450000138,
+    "ply": 9,
+    "packCalls": 5269,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.65050299995346,
+    "longestSliceMs": 30.92982199997641,
+    "peakHeap": 12143648,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 71,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1063.467529000016,
+    "ply": 10,
+    "packCalls": 4962,
+    "personaCalls": {
+     "evaluate": 392,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.348171999969054,
+    "longestSliceMs": 28.370014999993145,
+    "peakHeap": 12040160,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 70,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1245.925213999988,
+    "ply": 11,
+    "packCalls": 5193,
+    "personaCalls": {
+     "evaluate": 394,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.953211000014562,
+    "longestSliceMs": 35.87304400000721,
+    "peakHeap": 13607900,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 48,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3449.085089,
+    "ply": 13,
+    "packCalls": 16646,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.368687999958638,
+    "longestSliceMs": 75.10741499997675,
+    "peakHeap": 15199100,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 60,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1123.6440179999918,
+    "ply": 15,
+    "packCalls": 4750,
+    "personaCalls": {
+     "evaluate": 356,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.566715999972075,
+    "longestSliceMs": 32.16316699999152,
+    "peakHeap": 12246755,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 62,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1084.231568999996,
+    "ply": 16,
+    "packCalls": 4582,
+    "personaCalls": {
+     "evaluate": 308,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.152038000000175,
+    "longestSliceMs": 29.57896700000856,
+    "peakHeap": 1180492,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2331.448588999978,
+    "ply": 18,
+    "packCalls": 10150,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.251500000013039,
+    "longestSliceMs": 69.59534100000747,
+    "peakHeap": 4725156,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 39,
+    "timedOut": false,
+    "capped": null,
+    "ms": 929.5054619999719,
+    "ply": 20,
+    "packCalls": 3489,
+    "personaCalls": {
+     "evaluate": 192,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.211760000034701,
+    "longestSliceMs": 36.710980999981984,
+    "peakHeap": 7016079,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 36,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1104.2339499999653,
+    "ply": 22,
+    "packCalls": 4671,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.27284700004384,
+    "longestSliceMs": 56.92417700000806,
+    "peakHeap": 1717692,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 12,
+    "timedOut": false,
+    "capped": null,
+    "ms": 240.6087660000194,
+    "ply": 24,
+    "packCalls": 1098,
+    "personaCalls": {
+     "evaluate": 44,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.545944000012241,
+    "longestSliceMs": 19.682293999998365,
+    "peakHeap": 5342063,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 83,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6942.1334289999795,
+    "ply": 1,
+    "packCalls": 34322,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.330107000016142,
+    "longestSliceMs": 150.77533600002062,
+    "peakHeap": 17011615,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6509.442661000008,
+    "ply": 2,
+    "packCalls": 32852,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.849715999967884,
+    "longestSliceMs": 138.43010400002822,
+    "peakHeap": 12700280,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 35,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6007.585082000005,
+    "ply": 3,
+    "packCalls": 31396,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.138541000022087,
+    "longestSliceMs": 165.52907400002005,
+    "peakHeap": 9109124,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 83,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1235.3467290000408,
+    "ply": 5,
+    "packCalls": 5502,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.983055000018794,
+    "longestSliceMs": 32.875743000011425,
+    "peakHeap": 7114496,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 97,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1231.429885999998,
+    "ply": 6,
+    "packCalls": 5582,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.406185000028927,
+    "longestSliceMs": 33.728647999989334,
+    "peakHeap": 5956952,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 62,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1080.5601399999578,
+    "ply": 7,
+    "packCalls": 4542,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.204748999967705,
+    "longestSliceMs": 33.03108500002418,
+    "peakHeap": 4682208,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 42,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6495.435302000027,
+    "ply": 9,
+    "packCalls": 33393,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.260678999999072,
+    "longestSliceMs": 106.10453900002176,
+    "peakHeap": 12636536,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 78,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1120.4760469999746,
+    "ply": 11,
+    "packCalls": 5205,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.931168999988586,
+    "longestSliceMs": 34.238114000007045,
+    "peakHeap": 1156612,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 93,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1195.1154879999813,
+    "ply": 12,
+    "packCalls": 5577,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.083889000001363,
+    "longestSliceMs": 35.279151000024285,
+    "peakHeap": 1761148,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 46,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1113.0152220000164,
+    "ply": 13,
+    "packCalls": 4580,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.671665999980178,
+    "longestSliceMs": 33.61887200002093,
+    "peakHeap": 12935307,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 96,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1249.8199870000244,
+    "ply": 14,
+    "packCalls": 5741,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.032966000027955,
+    "longestSliceMs": 41.637314999999944,
+    "peakHeap": 3457152,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 34,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1039.123420000018,
+    "ply": 15,
+    "packCalls": 3606,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.810264000028837,
+    "longestSliceMs": 34.13305899995612,
+    "peakHeap": 430216,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 80,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4521.181668000005,
+    "ply": 17,
+    "packCalls": 21946,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.778873000002932,
+    "longestSliceMs": 104.24095499998657,
+    "peakHeap": 11661080,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 65,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4064.93329299998,
+    "ply": 18,
+    "packCalls": 20353,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.59320200001821,
+    "longestSliceMs": 86.62904000002891,
+    "peakHeap": 6981100,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 40,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3866.415743999998,
+    "ply": 19,
+    "packCalls": 19577,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.17160399997374,
+    "longestSliceMs": 59.57916599995224,
+    "peakHeap": 3724484,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 67,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4079.510277000023,
+    "ply": 22,
+    "packCalls": 18770,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.118179000040982,
+    "longestSliceMs": 106.74327099998482,
+    "peakHeap": 4110116,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 79,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3867.166370999941,
+    "ply": 23,
+    "packCalls": 18214,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.11488399998052,
+    "longestSliceMs": 83.5691630000365,
+    "peakHeap": 14393500,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 70,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1210.2903689999366,
+    "ply": 25,
+    "packCalls": 5214,
+    "personaCalls": {
+     "evaluate": 396,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.884984000003897,
+    "longestSliceMs": 35.96010399993975,
+    "peakHeap": 4101920,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 49,
+    "timedOut": false,
+    "capped": null,
+    "ms": 4290.988111000042,
+    "ply": 27,
+    "packCalls": 18587,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.231253999983892,
+    "longestSliceMs": 79.7721179999644,
+    "peakHeap": 6062092,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 74,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3592.488898999989,
+    "ply": 28,
+    "packCalls": 17524,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.750413000001572,
+    "longestSliceMs": 62.490930999978445,
+    "peakHeap": 8762710,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 72,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3616.020888000028,
+    "ply": 29,
+    "packCalls": 15951,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.189962000004016,
+    "longestSliceMs": 54.288857999956235,
+    "peakHeap": 8524564,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 71,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3676.509051000001,
+    "ply": 30,
+    "packCalls": 15890,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.233094000024721,
+    "longestSliceMs": 55.06703299994115,
+    "peakHeap": 10263880,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 39,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1155.8526040000143,
+    "ply": 32,
+    "packCalls": 4233,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.921882000053301,
+    "longestSliceMs": 32.05087999999523,
+    "peakHeap": 9366088,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 98,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1460.153237999999,
+    "ply": 33,
+    "packCalls": 5593,
+    "personaCalls": {
+     "evaluate": 386,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.13064599991776,
+    "longestSliceMs": 45.5811789999716,
+    "peakHeap": 13828100,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1275.5303319999948,
+    "ply": 34,
+    "packCalls": 5135,
+    "personaCalls": {
+     "evaluate": 386,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.270167000009678,
+    "longestSliceMs": 34.44208900001831,
+    "peakHeap": 11968900,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 17,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3228.5771990000503,
+    "ply": 36,
+    "packCalls": 14055,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 14.974447000073269,
+    "longestSliceMs": 54.41101999999955,
+    "peakHeap": 13595924,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 82,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2561.0208000000566,
+    "ply": 37,
+    "packCalls": 12840,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.301279000006616,
+    "longestSliceMs": 45.822524000075646,
+    "peakHeap": 11289232,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 65,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2914.192427000031,
+    "ply": 40,
+    "packCalls": 13053,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 12.289684999966994,
+    "longestSliceMs": 81.57056599995121,
+    "peakHeap": 9720240,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 71,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2940.3963859999785,
+    "ply": 41,
+    "packCalls": 13653,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.2353979999898,
+    "longestSliceMs": 67.84680500009563,
+    "peakHeap": 12666628,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 35,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2485.334024999989,
+    "ply": 42,
+    "packCalls": 12253,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.7912639999995,
+    "longestSliceMs": 55.2027399999788,
+    "peakHeap": 8784608,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 60,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2366.19319000002,
+    "ply": 43,
+    "packCalls": 10968,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.497570000006817,
+    "longestSliceMs": 54.69812399998773,
+    "peakHeap": 11892556,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 77,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1112.2979220000561,
+    "ply": 45,
+    "packCalls": 5042,
+    "personaCalls": {
+     "evaluate": 346,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.553674999973737,
+    "longestSliceMs": 44.10146699997131,
+    "peakHeap": 4882592,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 46,
+    "timedOut": false,
+    "capped": null,
+    "ms": 828.8153480000328,
+    "ply": 46,
+    "packCalls": 3838,
+    "personaCalls": {
+     "evaluate": 264,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.139704999979585,
+    "longestSliceMs": 33.362068000016734,
+    "peakHeap": 5833296,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 40,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1461.136204999988,
+    "ply": 50,
+    "packCalls": 6750,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 19.70384800003376,
+    "longestSliceMs": 56.444742000079714,
+    "peakHeap": 11930886,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 41,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1587.6343300000299,
+    "ply": 51,
+    "packCalls": 6961,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.510890999925323,
+    "longestSliceMs": 48.75311299995519,
+    "peakHeap": 13693314,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 32,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1714.3689539999468,
+    "ply": 54,
+    "packCalls": 7210,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 15.057310999953188,
+    "longestSliceMs": 55.384018999990076,
+    "peakHeap": 9015564,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1317.9831649999833,
+    "ply": 55,
+    "packCalls": 6711,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.102302999934182,
+    "longestSliceMs": 48.27710800000932,
+    "peakHeap": 5205180,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 56,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1429.560720999958,
+    "ply": 56,
+    "packCalls": 6949,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.73422300000675,
+    "longestSliceMs": 47.817029000027105,
+    "peakHeap": 927580,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 19,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1363.7884290000657,
+    "ply": 57,
+    "packCalls": 6130,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.252971999929287,
+    "longestSliceMs": 39.27770999993663,
+    "peakHeap": 9773256,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "red",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 47,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1207.4066929999972,
+    "ply": 58,
+    "packCalls": 5386,
+    "personaCalls": {
+     "evaluate": 0,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 11.093075000098906,
+    "longestSliceMs": 38.877992000081576,
+    "peakHeap": 9902900,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Plain"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 31,
+    "timedOut": false,
+    "capped": null,
+    "ms": 618.1012620000402,
+    "ply": 60,
+    "packCalls": 2898,
+    "personaCalls": {
+     "evaluate": 146,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.841388000058942,
+    "longestSliceMs": 33.24240400001872,
+    "peakHeap": 10248116,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 200,
+    "nodes": 7,
+    "timedOut": false,
+    "capped": null,
+    "ms": 214.51169000007212,
+    "ply": 61,
+    "packCalls": 899,
+    "personaCalls": {
+     "evaluate": 50,
+     "prior": 0
+    },
+    "worldsMs": 0,
+    "loadMs": 10.341622999985702,
+    "longestSliceMs": 19.214877999969758,
+    "peakHeap": 6469732,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Bold ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 28,
+    "ms": {
+     "median": 1123.6440179999918,
+     "p90": 1275.5303319999948,
+     "max": 1460.153237999999
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 5741,
+    "evaluate": 400,
+    "prior": 0,
+    "peakHeapMB": 13.8,
+    "longestSliceMs": 45.5811789999716
+   },
+   {
+    "lineup": 1,
+    "persona": "Plain",
+    "searches": 30,
+    "ms": {
+     "median": 3449.085089,
+     "p90": 6495.435302000027,
+     "max": 6942.1334289999795
+    },
+    "playouts": 200,
+    "worlds": 1,
+    "packCalls": 34322,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 17,
+    "longestSliceMs": 165.52907400002005
+   }
+  ],
+  "wallMs": 129653.02094899997
+ }
+]

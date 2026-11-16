@@ -1,0 +1,196 @@
+[
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats, all add-ons, team play: Scientist at every seat, a whole game (trusted)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   }
+  ],
+  "trust": "trusted",
+  "baseSeed": "8b-game",
+  "games": [
+   0
+  ]
+ },
+ {
+  "pack": "../packs/pandemic/dist",
+  "addons": [
+   "../packs/pandemic-roles/dist",
+   "../packs/pandemic-events/dist",
+   "../packs/pandemic-virulent-strain/dist",
+   "../packs/pandemic-mutation/dist"
+  ],
+  "options": {
+   "epidemics": 5
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow"
+  ],
+  "label": "co-op game 4 seats, four add-ons, closed hands: Medic at every seat, the first 100 plies (trusted)",
+  "lineup": [
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   }
+  ],
+  "trust": "trusted",
+  "baseSeed": "8b-game",
+  "games": [
+   0
+  ],
+  "maxPlies": 100
+ },
+ {
+  "pack": "../packs/pandemic/dist",
+  "addons": [
+   "../packs/pandemic-roles/dist",
+   "../packs/pandemic-events/dist",
+   "../packs/pandemic-virulent-strain/dist",
+   "../packs/pandemic-mutation/dist"
+  ],
+  "options": {
+   "epidemics": 5
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow"
+  ],
+  "label": "co-op game 4 seats, four add-ons, closed hands: Medic at every seat, the first 100 plies (sandboxed)",
+  "lineup": [
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   },
+   {
+    "persona": "../packs/pandemic-medic"
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-game",
+  "games": [
+   0
+  ],
+  "maxPlies": 100
+ },
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats, all add-ons, team play: Scientist at every seat, a whole game (sandboxed)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-game",
+  "games": [
+   0
+  ]
+ }
+]

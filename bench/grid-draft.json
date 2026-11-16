@@ -1,0 +1,162 @@
+[
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats, all add-ons, team play: one search per setting (sandboxed)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 2,
+    "cutoff": 2
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 4,
+    "cutoff": 4
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 100,
+    "worlds": 4,
+    "cutoff": 4
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 100,
+    "worlds": 2,
+    "cutoff": 8
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 200,
+    "worlds": 4,
+    "cutoff": 2
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 8,
+    "cutoff": 8
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-grid",
+  "games": [
+   0
+  ],
+  "maxPlies": 8
+ },
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats, all add-ons, team play: one search per setting (trusted)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 1,
+    "cutoff": 1
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 2,
+    "cutoff": 2
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 4,
+    "cutoff": 4
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 100,
+    "worlds": 4,
+    "cutoff": 4
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 100,
+    "worlds": 2,
+    "cutoff": 8
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 200,
+    "worlds": 4,
+    "cutoff": 2
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 50,
+    "worlds": 8,
+    "cutoff": 8
+   }
+  ],
+  "trust": "trusted",
+  "baseSeed": "8b-grid",
+  "games": [
+   0
+  ],
+  "maxPlies": 8
+ }
+]

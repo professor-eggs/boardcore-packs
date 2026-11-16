@@ -1,0 +1,864 @@
+[
+ {
+  "label": "draft game 8 seats, all add-ons, team play: one search per setting (sandboxed)",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-grid",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f848a29480e861a2260667e1466917636ab1a5d603c0ab5d2e1156701e24f0db"
+      },
+      "playouts": 200,
+      "searchMs": 72651.401523,
+      "searches": 1
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f7a73de09f1c3bdf915c48f2689ffd8659a260bf1cd084131494e690e983ad80"
+      },
+      "playouts": 50,
+      "searchMs": 9301.980726000009,
+      "searches": 1
+     },
+     {
+      "seat": "green",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:822cea9736d7f746b25b9a6dd29cdc3f8067ee024eb5aa6be04a7e295cac7614"
+      },
+      "playouts": 50,
+      "searchMs": 11464.493019000001,
+      "searches": 1
+     },
+     {
+      "seat": "yellow",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:c1bd6866fa4ee1b39a7b561448a6c922b37218e5f2c9b726e29abbfa6236fa8b"
+      },
+      "playouts": 50,
+      "searchMs": 12714.498341999992,
+      "searches": 1
+     },
+     {
+      "seat": "purple",
+      "lineup": 4,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:c1bd6866fa4ee1b39a7b561448a6c922b37218e5f2c9b726e29abbfa6236fa8b"
+      },
+      "playouts": 100,
+      "searchMs": 26514.842980000016,
+      "searches": 1
+     },
+     {
+      "seat": "orange",
+      "lineup": 5,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:8628ebf22f82af3aea881e8adbbd41759709036925457c28840f428bc88d2fa0"
+      },
+      "playouts": 100,
+      "searchMs": 34022.398349000025,
+      "searches": 1
+     },
+     {
+      "seat": "teal",
+      "lineup": 6,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:fb5f3254f1981e6d987e63d3f0baa0bdfb7d27c13e5b2f73bf1d5663ccd66b8c"
+      },
+      "playouts": 200,
+      "searchMs": 43570.6293,
+      "searches": 1
+     },
+     {
+      "seat": "pink",
+      "lineup": 7,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f848a29480e861a2260667e1466917636ab1a5d603c0ab5d2e1156701e24f0db"
+      },
+      "playouts": 50,
+      "searchMs": 18486.580842000025,
+      "searches": 1
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 8,
+    "stopped": "stopped at 8 plies"
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "ms": 72621.702015,
+    "ply": 0,
+    "packCalls": 10952,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 832
+    },
+    "worldsMs": 176.094809,
+    "loadMs": 53.092682999999965,
+    "longestSliceMs": 1451.724276,
+    "peakHeap": 36213228,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9281.125345000008,
+    "ply": 1,
+    "packCalls": 1337,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 204
+    },
+    "worldsMs": 66.36331300000893,
+    "loadMs": 51.09239299999899,
+    "longestSliceMs": 708.9001629999984,
+    "peakHeap": 15614528,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":1})"
+   },
+   {
+    "seat": "green",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 11438.840112999998,
+    "ply": 2,
+    "packCalls": 1524,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 208
+    },
+    "worldsMs": 84.07066200001282,
+    "loadMs": 52.57301599999482,
+    "longestSliceMs": 1013.1467910000065,
+    "peakHeap": 3021824,
+    "game": 0,
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 4,
+    "playouts": 50,
+    "nodes": 54,
+    "timedOut": false,
+    "capped": null,
+    "ms": 12693.247418999992,
+    "ply": 3,
+    "packCalls": 1928,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 216
+    },
+    "worldsMs": 178.5178229999874,
+    "loadMs": 74.10669799998868,
+    "longestSliceMs": 1273.2751100000023,
+    "peakHeap": 7561932,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "purple",
+    "worlds": 4,
+    "playouts": 100,
+    "nodes": 104,
+    "timedOut": false,
+    "capped": null,
+    "ms": 26493.637201000005,
+    "ply": 4,
+    "packCalls": 3848,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 416
+    },
+    "worldsMs": 145.4625459999952,
+    "loadMs": 50.43970399998943,
+    "longestSliceMs": 834.4535440000036,
+    "peakHeap": 16077764,
+    "game": 0,
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "orange",
+    "worlds": 2,
+    "playouts": 100,
+    "nodes": 102,
+    "timedOut": false,
+    "capped": null,
+    "ms": 33997.034315,
+    "ply": 5,
+    "packCalls": 5354,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 348
+    },
+    "worldsMs": 98.13780700002098,
+    "loadMs": 52.018012999993516,
+    "longestSliceMs": 1449.6662779999897,
+    "peakHeap": 7204244,
+    "game": 0,
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})"
+   },
+   {
+    "seat": "teal",
+    "worlds": 4,
+    "playouts": 200,
+    "nodes": 204,
+    "timedOut": false,
+    "capped": null,
+    "ms": 43540.804305,
+    "ply": 6,
+    "packCalls": 5780,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 632
+    },
+    "worldsMs": 214.3876900000032,
+    "loadMs": 66.40916900002048,
+    "longestSliceMs": 1074.739952999982,
+    "peakHeap": 13423021,
+    "game": 0,
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "pink",
+    "worlds": 8,
+    "playouts": 50,
+    "nodes": 58,
+    "timedOut": false,
+    "capped": null,
+    "ms": 18454.742799999978,
+    "ply": 7,
+    "packCalls": 2656,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 182
+    },
+    "worldsMs": 411.4695439999923,
+    "loadMs": 73.50752600000123,
+    "longestSliceMs": 1204.8500559999957,
+    "peakHeap": 11057356,
+    "game": 0,
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 1,
+    "ms": {
+     "median": 72621.702015,
+     "p90": 72621.702015,
+     "max": 72621.702015
+    },
+    "playouts": 200,
+    "worlds": 8,
+    "packCalls": 10952,
+    "evaluate": 1600,
+    "prior": 832,
+    "peakHeapMB": 36.2,
+    "longestSliceMs": 1451.724276
+   },
+   {
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":1})",
+    "searches": 1,
+    "ms": {
+     "median": 9281.125345000008,
+     "p90": 9281.125345000008,
+     "max": 9281.125345000008
+    },
+    "playouts": 50,
+    "worlds": 1,
+    "packCalls": 1337,
+    "evaluate": 400,
+    "prior": 204,
+    "peakHeapMB": 15.6,
+    "longestSliceMs": 708.9001629999984
+   },
+   {
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})",
+    "searches": 1,
+    "ms": {
+     "median": 11438.840112999998,
+     "p90": 11438.840112999998,
+     "max": 11438.840112999998
+    },
+    "playouts": 50,
+    "worlds": 2,
+    "packCalls": 1524,
+    "evaluate": 400,
+    "prior": 208,
+    "peakHeapMB": 3,
+    "longestSliceMs": 1013.1467910000065
+   },
+   {
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 12693.247418999992,
+     "p90": 12693.247418999992,
+     "max": 12693.247418999992
+    },
+    "playouts": 50,
+    "worlds": 4,
+    "packCalls": 1928,
+    "evaluate": 400,
+    "prior": 216,
+    "peakHeapMB": 7.6,
+    "longestSliceMs": 1273.2751100000023
+   },
+   {
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 26493.637201000005,
+     "p90": 26493.637201000005,
+     "max": 26493.637201000005
+    },
+    "playouts": 100,
+    "worlds": 4,
+    "packCalls": 3848,
+    "evaluate": 800,
+    "prior": 416,
+    "peakHeapMB": 16.1,
+    "longestSliceMs": 834.4535440000036
+   },
+   {
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})",
+    "searches": 1,
+    "ms": {
+     "median": 33997.034315,
+     "p90": 33997.034315,
+     "max": 33997.034315
+    },
+    "playouts": 100,
+    "worlds": 2,
+    "packCalls": 5354,
+    "evaluate": 800,
+    "prior": 348,
+    "peakHeapMB": 7.2,
+    "longestSliceMs": 1449.6662779999897
+   },
+   {
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 43540.804305,
+     "p90": 43540.804305,
+     "max": 43540.804305
+    },
+    "playouts": 200,
+    "worlds": 4,
+    "packCalls": 5780,
+    "evaluate": 1600,
+    "prior": 632,
+    "peakHeapMB": 13.4,
+    "longestSliceMs": 1074.739952999982
+   },
+   {
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 1,
+    "ms": {
+     "median": 18454.742799999978,
+     "p90": 18454.742799999978,
+     "max": 18454.742799999978
+    },
+    "playouts": 50,
+    "worlds": 8,
+    "packCalls": 2656,
+    "evaluate": 400,
+    "prior": 182,
+    "peakHeapMB": 11.1,
+    "longestSliceMs": 1204.8500559999957
+   }
+  ],
+  "wallMs": 229764.840235
+ },
+ {
+  "label": "draft game 8 seats, all add-ons, team play: one search per setting (trusted)",
+  "host": "Node v22.23.4",
+  "trust": "trusted",
+  "records": [
+   {
+    "baseSeed": "8b-grid",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f848a29480e861a2260667e1466917636ab1a5d603c0ab5d2e1156701e24f0db"
+      },
+      "playouts": 200,
+      "searchMs": 6424.5730469999835,
+      "searches": 1
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f7a73de09f1c3bdf915c48f2689ffd8659a260bf1cd084131494e690e983ad80"
+      },
+      "playouts": 50,
+      "searchMs": 711.9522820000129,
+      "searches": 1
+     },
+     {
+      "seat": "green",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:822cea9736d7f746b25b9a6dd29cdc3f8067ee024eb5aa6be04a7e295cac7614"
+      },
+      "playouts": 50,
+      "searchMs": 1182.6624200000078,
+      "searches": 1
+     },
+     {
+      "seat": "yellow",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:c1bd6866fa4ee1b39a7b561448a6c922b37218e5f2c9b726e29abbfa6236fa8b"
+      },
+      "playouts": 50,
+      "searchMs": 1163.2453899999964,
+      "searches": 1
+     },
+     {
+      "seat": "purple",
+      "lineup": 4,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:c1bd6866fa4ee1b39a7b561448a6c922b37218e5f2c9b726e29abbfa6236fa8b"
+      },
+      "playouts": 100,
+      "searchMs": 1924.3693499999936,
+      "searches": 1
+     },
+     {
+      "seat": "orange",
+      "lineup": 5,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:8628ebf22f82af3aea881e8adbbd41759709036925457c28840f428bc88d2fa0"
+      },
+      "playouts": 100,
+      "searchMs": 2597.286525000003,
+      "searches": 1
+     },
+     {
+      "seat": "teal",
+      "lineup": 6,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:fb5f3254f1981e6d987e63d3f0baa0bdfb7d27c13e5b2f73bf1d5663ccd66b8c"
+      },
+      "playouts": 200,
+      "searchMs": 3727.4430139999895,
+      "searches": 1
+     },
+     {
+      "seat": "pink",
+      "lineup": 7,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:f848a29480e861a2260667e1466917636ab1a5d603c0ab5d2e1156701e24f0db"
+      },
+      "playouts": 50,
+      "searchMs": 1660.938370000018,
+      "searches": 1
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 8,
+    "stopped": "stopped at 8 plies"
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "ms": 6419.9272390000115,
+    "ply": 0,
+    "packCalls": 10952,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 832
+    },
+    "worldsMs": 29.352381999982754,
+    "loadMs": 15.596710999991046,
+    "longestSliceMs": 158.88059000001522,
+    "peakHeap": 0,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "ms": 710.1694509999943,
+    "ply": 1,
+    "packCalls": 1337,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 204
+    },
+    "worldsMs": 12.050711000018055,
+    "loadMs": 10.215270999993663,
+    "longestSliceMs": 66.79086000000825,
+    "peakHeap": 9695632,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":1})"
+   },
+   {
+    "seat": "green",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1180.6757839999918,
+    "ply": 2,
+    "packCalls": 1524,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 208
+    },
+    "worldsMs": 12.052569999999832,
+    "loadMs": 7.499488000001293,
+    "longestSliceMs": 61.26641899999231,
+    "peakHeap": 0,
+    "game": 0,
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 4,
+    "playouts": 50,
+    "nodes": 54,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1160.4905729999882,
+    "ply": 3,
+    "packCalls": 1928,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 216
+    },
+    "worldsMs": 23.53550300002098,
+    "loadMs": 11.908974999998463,
+    "longestSliceMs": 116.43895000001066,
+    "peakHeap": 12486792,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "purple",
+    "worlds": 4,
+    "playouts": 100,
+    "nodes": 104,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1922.893750999996,
+    "ply": 4,
+    "packCalls": 3848,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 416
+    },
+    "worldsMs": 15.175197000004118,
+    "loadMs": 7.750032000010833,
+    "longestSliceMs": 64.60785800000303,
+    "peakHeap": 10229480,
+    "game": 0,
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "orange",
+    "worlds": 2,
+    "playouts": 100,
+    "nodes": 102,
+    "timedOut": false,
+    "capped": null,
+    "ms": 2595.2763390000036,
+    "ply": 5,
+    "packCalls": 5354,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 348
+    },
+    "worldsMs": 16.84978299998329,
+    "loadMs": 12.693368999985978,
+    "longestSliceMs": 132.5446430000011,
+    "peakHeap": 16441704,
+    "game": 0,
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})"
+   },
+   {
+    "seat": "teal",
+    "worlds": 4,
+    "playouts": 200,
+    "nodes": 204,
+    "timedOut": false,
+    "capped": null,
+    "ms": 3725.3824449999956,
+    "ply": 6,
+    "packCalls": 5780,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 632
+    },
+    "worldsMs": 16.5576449999935,
+    "loadMs": 7.466955999989295,
+    "longestSliceMs": 65.93150499998592,
+    "peakHeap": 12038096,
+    "game": 0,
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})"
+   },
+   {
+    "seat": "pink",
+    "worlds": 8,
+    "playouts": 50,
+    "nodes": 58,
+    "timedOut": false,
+    "capped": null,
+    "ms": 1658.3237880000088,
+    "ply": 7,
+    "packCalls": 2656,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 182
+    },
+    "worldsMs": 38.655174999992596,
+    "loadMs": 10.21284100000048,
+    "longestSliceMs": 140.63512700001593,
+    "peakHeap": 4320088,
+    "game": 0,
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 1,
+    "ms": {
+     "median": 6419.9272390000115,
+     "p90": 6419.9272390000115,
+     "max": 6419.9272390000115
+    },
+    "playouts": 200,
+    "worlds": 8,
+    "packCalls": 10952,
+    "evaluate": 1600,
+    "prior": 832,
+    "peakHeapMB": 0,
+    "longestSliceMs": 158.88059000001522
+   },
+   {
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":1})",
+    "searches": 1,
+    "ms": {
+     "median": 710.1694509999943,
+     "p90": 710.1694509999943,
+     "max": 710.1694509999943
+    },
+    "playouts": 50,
+    "worlds": 1,
+    "packCalls": 1337,
+    "evaluate": 400,
+    "prior": 204,
+    "peakHeapMB": 9.7,
+    "longestSliceMs": 66.79086000000825
+   },
+   {
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})",
+    "searches": 1,
+    "ms": {
+     "median": 1180.6757839999918,
+     "p90": 1180.6757839999918,
+     "max": 1180.6757839999918
+    },
+    "playouts": 50,
+    "worlds": 2,
+    "packCalls": 1524,
+    "evaluate": 400,
+    "prior": 208,
+    "peakHeapMB": 0,
+    "longestSliceMs": 61.26641899999231
+   },
+   {
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 1160.4905729999882,
+     "p90": 1160.4905729999882,
+     "max": 1160.4905729999882
+    },
+    "playouts": 50,
+    "worlds": 4,
+    "packCalls": 1928,
+    "evaluate": 400,
+    "prior": 216,
+    "peakHeapMB": 12.5,
+    "longestSliceMs": 116.43895000001066
+   },
+   {
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 1922.893750999996,
+     "p90": 1922.893750999996,
+     "max": 1922.893750999996
+    },
+    "playouts": 100,
+    "worlds": 4,
+    "packCalls": 3848,
+    "evaluate": 800,
+    "prior": 416,
+    "peakHeapMB": 10.2,
+    "longestSliceMs": 64.60785800000303
+   },
+   {
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":2})",
+    "searches": 1,
+    "ms": {
+     "median": 2595.2763390000036,
+     "p90": 2595.2763390000036,
+     "max": 2595.2763390000036
+    },
+    "playouts": 100,
+    "worlds": 2,
+    "packCalls": 5354,
+    "evaluate": 800,
+    "prior": 348,
+    "peakHeapMB": 16.4,
+    "longestSliceMs": 132.5446430000011
+   },
+   {
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
+    "searches": 1,
+    "ms": {
+     "median": 3725.3824449999956,
+     "p90": 3725.3824449999956,
+     "max": 3725.3824449999956
+    },
+    "playouts": 200,
+    "worlds": 4,
+    "packCalls": 5780,
+    "evaluate": 1600,
+    "prior": 632,
+    "peakHeapMB": 12,
+    "longestSliceMs": 65.93150499998592
+   },
+   {
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":8})",
+    "searches": 1,
+    "ms": {
+     "median": 1658.3237880000088,
+     "p90": 1658.3237880000088,
+     "max": 1658.3237880000088
+    },
+    "playouts": 50,
+    "worlds": 8,
+    "packCalls": 2656,
+    "evaluate": 400,
+    "prior": 182,
+    "peakHeapMB": 4.3,
+    "longestSliceMs": 140.63512700001593
+   }
+  ],
+  "wallMs": 19528.429268000007
+ }
+]

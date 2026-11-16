@@ -1,0 +1,88 @@
+[
+ {
+  "label": "draft game 8 seats, Scientist",
+  "settings": {
+   "cutoff": 1,
+   "explore": 1.4,
+   "noise": 0,
+   "playouts": 50
+  },
+  "worlds": 1,
+  "rows": [
+   {
+    "ply": 0,
+    "outsideMs": 8616.927393,
+    "outsideLoadMs": 53.71530199999995,
+    "insideMs": 4680.950729,
+    "trustedMs": 922.1044160000001,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   },
+   {
+    "ply": 24,
+    "outsideMs": 12241.197510000002,
+    "outsideLoadMs": 65.68057000000044,
+    "insideMs": 6531.781625,
+    "trustedMs": 1417.509388999999,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   },
+   {
+    "ply": 48,
+    "outsideMs": 14143.367333000002,
+    "outsideLoadMs": 56.43283499999961,
+    "insideMs": 6363.868353000005,
+    "trustedMs": 1715.7467819999947,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   }
+  ],
+  "wallMs": 57985.269979000004
+ },
+ {
+  "label": "co-op game 4 seats, Medic",
+  "settings": {
+   "cutoff": 1,
+   "explore": 1.4,
+   "noise": 0,
+   "playouts": 50
+  },
+  "worlds": 1,
+  "rows": [
+   {
+    "ply": 23,
+    "outsideMs": 10379.344183999994,
+    "outsideLoadMs": 51.33858599999803,
+    "insideMs": 7108.4619990000065,
+    "trustedMs": 745.8862510000035,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   },
+   {
+    "ply": 25,
+    "outsideMs": 3344.2964809999976,
+    "outsideLoadMs": 36.00730399999884,
+    "insideMs": 1917.393327999991,
+    "trustedMs": 406.8118450000038,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   },
+   {
+    "ply": 30,
+    "outsideMs": 9114.981630999988,
+    "outsideLoadMs": 54.50098300000536,
+    "insideMs": 5718.590251000001,
+    "trustedMs": 799.7453249999962,
+    "playouts": 50,
+    "insidePlayouts": 50,
+    "same": true
+   }
+  ],
+  "wallMs": 40139.053633999996
+ }
+]
