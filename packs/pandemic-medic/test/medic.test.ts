@@ -2,7 +2,7 @@
 // the same in both adapters, each seat searched from its own view (no team back door), and the response windows:
 // how many plies a persona plays without a search. Performance numbers come from boardcore/tools/persona-bench.
 import { describe, expect, it } from "vitest";
-import { personaSettings } from "@boardcore/core/rules-runtime";
+import { inRange, personaSettings } from "@boardcore/core/rules-runtime";
 import { selfplayGame, type SelfplayMove } from "@boardcore/testkit";
 import { bare, composed, kit, readDist, verifyPersonaDist } from "@boardcore-packs/kit";
 
@@ -16,6 +16,10 @@ describe("Medic (8b, private)", () => {
   it("passes install's checks, in range for the base", async () => {
     const p = await medic();
     expect(p.manifest.persona).toEqual({ pack: "boardcore/pandemic", range: "^1.0.0" });
+    // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
+    const base = dist("pandemic").manifest as { id: string; version: string };
+    expect(p.manifest.persona.pack).toBe(base.id);
+    expect(inRange(p.manifest.persona.range, base.version)).toBe(true);
     expect(personaSettings(p.manifest).cutoff).not.toBe(null);
   });
 

@@ -27,7 +27,10 @@
   "label": "draft game 8 seats, all add-ons, team play: one search per setting (sandboxed)",
   "lineup": [
    {
-    "persona": "../packs/seven-wonders-scientist"
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 200,
+    "worlds": 8,
+    "cutoff": 8
    },
    {
     "persona": "../packs/seven-wonders-scientist",
@@ -107,7 +110,10 @@
   "label": "draft game 8 seats, all add-ons, team play: one search per setting (trusted)",
   "lineup": [
    {
-    "persona": "../packs/seven-wonders-scientist"
+    "persona": "../packs/seven-wonders-scientist",
+    "playouts": 200,
+    "worlds": 8,
+    "cutoff": 8
    },
    {
     "persona": "../packs/seven-wonders-scientist",

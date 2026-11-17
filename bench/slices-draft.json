@@ -1,0 +1,60 @@
+[
+ {
+  "pack": "../packs/seven-wonders/dist",
+  "addons": [
+   "../packs/seven-wonders-leaders/dist",
+   "../packs/seven-wonders-cities/dist",
+   "../packs/seven-wonders-wonder-pack/dist"
+  ],
+  "options": {
+   "teamPlay": true
+  },
+  "addonOptions": {
+   "boardcore/seven-wonders-leaders": {
+    "promos": true
+   }
+  },
+  "seats": [
+   "red",
+   "blue",
+   "green",
+   "yellow",
+   "purple",
+   "orange",
+   "teal",
+   "pink"
+  ],
+  "label": "draft game 8 seats, all add-ons, team play: Scientist at every seat, a whole game (sandboxed)",
+  "lineup": [
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   },
+   {
+    "persona": "../packs/seven-wonders-scientist"
+   }
+  ],
+  "trust": "sandboxed",
+  "baseSeed": "8b-game",
+  "games": [
+   0
+  ]
+ }
+]

@@ -19,7 +19,10 @@
   "label": "co-op game 4 seats, four add-ons, closed hands: searches per setting (sandboxed)",
   "lineup": [
    {
-    "persona": "../packs/pandemic-medic"
+    "persona": "../packs/pandemic-medic",
+    "playouts": 200,
+    "worlds": 8,
+    "cutoff": 8
    },
    {
     "persona": "../packs/pandemic-medic",
@@ -70,7 +73,10 @@
   "label": "co-op game 4 seats, four add-ons, closed hands: searches per setting (trusted)",
   "lineup": [
    {
-    "persona": "../packs/pandemic-medic"
+    "persona": "../packs/pandemic-medic",
+    "playouts": 200,
+    "worlds": 8,
+    "cutoff": 8
    },
    {
     "persona": "../packs/pandemic-medic",

@@ -1,0 +1,1241 @@
+[
+ {
+  "label": "co-op game 4 seats, four add-ons, closed hands: Medic at every seat, the first 100 plies (sandboxed)",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-game",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 570.3770139999542,
+      "searches": 0
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 0,
+      "searches": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 0,
+      "searches": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 423937.31065499986,
+      "searches": 50
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 100,
+    "stopped": "stopped at 100 plies"
+   }
+  ],
+  "moves": [
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8381.893172,
+    "ply": 0,
+    "packCalls": 1538,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 66.74674999999996,
+    "loadMs": 51.66549600000002,
+    "longestSliceMs": 281.4226440000002,
+    "peakHeap": 14396764,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9231.867490999999,
+    "ply": 2,
+    "packCalls": 1657,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 77.87672200000088,
+    "loadMs": 57.17453100000057,
+    "longestSliceMs": 915.4850020000013,
+    "peakHeap": 12796124,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9903.236805,
+    "ply": 4,
+    "packCalls": 1638,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 324
+    },
+    "worldsMs": 67.48803499999849,
+    "loadMs": 50.03201999999874,
+    "longestSliceMs": 1061.0986479999992,
+    "peakHeap": 10788872,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8553.945652999999,
+    "ply": 6,
+    "packCalls": 1520,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 57.19382300000143,
+    "loadMs": 41.937925000002,
+    "longestSliceMs": 373.56624699999884,
+    "peakHeap": 11799136,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9033.318524000002,
+    "ply": 8,
+    "packCalls": 1654,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 324
+    },
+    "worldsMs": 52.91402899999957,
+    "loadMs": 51.23815800000011,
+    "longestSliceMs": 1003.4039669999984,
+    "peakHeap": 0,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 10121.442872,
+    "ply": 10,
+    "packCalls": 1667,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 50.87709000000177,
+    "loadMs": 39.9936549999984,
+    "longestSliceMs": 1091.5823349999991,
+    "peakHeap": 9270973,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8821.212652000002,
+    "ply": 12,
+    "packCalls": 1539,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 51.48797300000297,
+    "loadMs": 38.68249099999957,
+    "longestSliceMs": 304.49660399999993,
+    "peakHeap": 10062704,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7347.375281999994,
+    "ply": 14,
+    "packCalls": 1529,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 51.84198300000571,
+    "loadMs": 37.026313999987906,
+    "longestSliceMs": 244.5033240000048,
+    "peakHeap": 17135732,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9429.275964,
+    "ply": 16,
+    "packCalls": 1651,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 326
+    },
+    "worldsMs": 73.90780900001118,
+    "loadMs": 54.36182900000131,
+    "longestSliceMs": 996.9182230000006,
+    "peakHeap": 3975169,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9183.661233000006,
+    "ply": 18,
+    "packCalls": 1672,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 68.85823800000071,
+    "loadMs": 49.59427100000903,
+    "longestSliceMs": 872.9794029999903,
+    "peakHeap": 4763752,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7921.565237999996,
+    "ply": 20,
+    "packCalls": 1534,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 57.66854999998759,
+    "loadMs": 38.92831400000432,
+    "longestSliceMs": 273.9076600000117,
+    "peakHeap": 5715912,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7349.970475000009,
+    "ply": 22,
+    "packCalls": 1531,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 68.487043000001,
+    "loadMs": 50.75427299999865,
+    "longestSliceMs": 273.4540100000013,
+    "peakHeap": 18306156,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7577.867000999991,
+    "ply": 24,
+    "packCalls": 1533,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 66.29972199999611,
+    "loadMs": 40.736269999993965,
+    "longestSliceMs": 271.67831200000364,
+    "peakHeap": 4072824,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8104.056600000011,
+    "ply": 26,
+    "packCalls": 1535,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 48.26921300000686,
+    "loadMs": 40.31910300000163,
+    "longestSliceMs": 326.29349899999215,
+    "peakHeap": 15180636,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7522.9767820000125,
+    "ply": 28,
+    "packCalls": 1534,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 72.40126099999179,
+    "loadMs": 57.69922699999006,
+    "longestSliceMs": 281.1804090000078,
+    "peakHeap": 6248908,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8413.191869000002,
+    "ply": 30,
+    "packCalls": 1527,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 58.834877999994205,
+    "loadMs": 37.474737999989884,
+    "longestSliceMs": 298.4433920000156,
+    "peakHeap": 18307604,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8630.969960999995,
+    "ply": 32,
+    "packCalls": 1641,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 324
+    },
+    "worldsMs": 68.9984950000071,
+    "loadMs": 51.337223000009544,
+    "longestSliceMs": 953.4002340000006,
+    "peakHeap": 9194157,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8124.958620999998,
+    "ply": 34,
+    "packCalls": 1537,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 273
+    },
+    "worldsMs": 49.26964500002214,
+    "loadMs": 36.04594199999701,
+    "longestSliceMs": 281.47656699997606,
+    "peakHeap": 4507000,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7492.2085929999885,
+    "ply": 36,
+    "packCalls": 1529,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 68.0838690000237,
+    "loadMs": 52.03796000001603,
+    "longestSliceMs": 270.08430200000294,
+    "peakHeap": 16925420,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8140.716644999979,
+    "ply": 38,
+    "packCalls": 1539,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 50.78070599999046,
+    "loadMs": 39.81013399999938,
+    "longestSliceMs": 278.8427770000126,
+    "peakHeap": 7089704,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8799.398145999992,
+    "ply": 40,
+    "packCalls": 1676,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 336
+    },
+    "worldsMs": 69.10907500001485,
+    "loadMs": 51.43950499998755,
+    "longestSliceMs": 713.2175490000227,
+    "peakHeap": 11348677,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8301.270049000013,
+    "ply": 42,
+    "packCalls": 1536,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 60.04354899999453,
+    "loadMs": 54.74963599999319,
+    "longestSliceMs": 282.26268700000946,
+    "peakHeap": 13116132,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8426.494464000018,
+    "ply": 44,
+    "packCalls": 1522,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 64.60690400001477,
+    "loadMs": 53.59603499999503,
+    "longestSliceMs": 292.28233700001147,
+    "peakHeap": 8703264,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8704.243923000002,
+    "ply": 46,
+    "packCalls": 1538,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 274
+    },
+    "worldsMs": 68.43510399997467,
+    "loadMs": 54.827250000002095,
+    "longestSliceMs": 275.1559739999939,
+    "peakHeap": 9319264,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8514.342625999998,
+    "ply": 48,
+    "packCalls": 1537,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 273
+    },
+    "worldsMs": 67.08613299997523,
+    "loadMs": 49.390534999984084,
+    "longestSliceMs": 281.1888879999751,
+    "peakHeap": 11161181,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 10058.14495300001,
+    "ply": 50,
+    "packCalls": 1679,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 338
+    },
+    "worldsMs": 49.53682799998205,
+    "loadMs": 38.253991999983555,
+    "longestSliceMs": 1033.021275999985,
+    "peakHeap": 12085519,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7950.472838999995,
+    "ply": 52,
+    "packCalls": 1546,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 274
+    },
+    "worldsMs": 65.31714600001578,
+    "loadMs": 39.24100500001805,
+    "longestSliceMs": 284.26081800000975,
+    "peakHeap": 18339968,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9795.028494000027,
+    "ply": 54,
+    "packCalls": 1664,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 66.33400699999765,
+    "loadMs": 38.93268299999181,
+    "longestSliceMs": 1000.4021000000066,
+    "peakHeap": 7119648,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8730.112223999982,
+    "ply": 56,
+    "packCalls": 1643,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 324
+    },
+    "worldsMs": 47.48844799998915,
+    "loadMs": 35.55941899999743,
+    "longestSliceMs": 980.4798910000245,
+    "peakHeap": 4957989,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8599.483767000027,
+    "ply": 58,
+    "packCalls": 1643,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 324
+    },
+    "worldsMs": 49.9820030000119,
+    "loadMs": 36.82877200000803,
+    "longestSliceMs": 720.4291399999929,
+    "peakHeap": 9624396,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7779.7502170000225,
+    "ply": 60,
+    "packCalls": 1523,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 71.56283599999733,
+    "loadMs": 53.95482099999208,
+    "longestSliceMs": 291.99640000000363,
+    "peakHeap": 7786628,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8095.068395999959,
+    "ply": 62,
+    "packCalls": 1535,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 73.81096799997613,
+    "loadMs": 53.65747500001453,
+    "longestSliceMs": 292.7059279999812,
+    "peakHeap": 11912172,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8615.01414100005,
+    "ply": 64,
+    "packCalls": 1662,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 47.1948010000051,
+    "loadMs": 49.8288440000033,
+    "longestSliceMs": 818.9564290000126,
+    "peakHeap": 0,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8037.361368000042,
+    "ply": 66,
+    "packCalls": 1532,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 47.847933000011835,
+    "loadMs": 36.20264699996915,
+    "longestSliceMs": 313.30005799996434,
+    "peakHeap": 6387532,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8437.694344000018,
+    "ply": 68,
+    "packCalls": 1532,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 45.16455300000962,
+    "loadMs": 39.75650299998233,
+    "longestSliceMs": 286.03818500001216,
+    "peakHeap": 13735032,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7738.401353999972,
+    "ply": 70,
+    "packCalls": 1536,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 72.5840769999777,
+    "loadMs": 52.2138280000072,
+    "longestSliceMs": 289.2379419999779,
+    "peakHeap": 16489196,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7887.499600999989,
+    "ply": 72,
+    "packCalls": 1535,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 68.92313000001013,
+    "loadMs": 46.92923300003167,
+    "longestSliceMs": 278.02241100004176,
+    "peakHeap": 3952269,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7656.88346599997,
+    "ply": 74,
+    "packCalls": 1535,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 48.68712099996628,
+    "loadMs": 38.248010999988765,
+    "longestSliceMs": 321.53121699998155,
+    "peakHeap": 6994088,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 9014.44397199998,
+    "ply": 76,
+    "packCalls": 1673,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 68.87314199999673,
+    "loadMs": 45.64760300004855,
+    "longestSliceMs": 779.1972340000211,
+    "peakHeap": 10513500,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8773.943368999986,
+    "ply": 78,
+    "packCalls": 1528,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 85.35810999997193,
+    "loadMs": 57.86205999995582,
+    "longestSliceMs": 318.7754539999878,
+    "peakHeap": 5013696,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7781.832752000017,
+    "ply": 80,
+    "packCalls": 1531,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 55.87882199999876,
+    "loadMs": 53.01402499998221,
+    "longestSliceMs": 263.28687199996784,
+    "peakHeap": 11077057,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7863.324439000047,
+    "ply": 82,
+    "packCalls": 1534,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 64.1578360000276,
+    "loadMs": 47.58345299999928,
+    "longestSliceMs": 307.4126829999732,
+    "peakHeap": 10216464,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8660.329052000016,
+    "ply": 84,
+    "packCalls": 1530,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 74.6218420000514,
+    "loadMs": 56.59300799999619,
+    "longestSliceMs": 311.7896349999937,
+    "peakHeap": 14258812,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8124.956660000025,
+    "ply": 86,
+    "packCalls": 1534,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 58.45032499998342,
+    "loadMs": 38.2269850000157,
+    "longestSliceMs": 370.249615000037,
+    "peakHeap": 16560344,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7904.049651000008,
+    "ply": 88,
+    "packCalls": 1545,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 274
+    },
+    "worldsMs": 65.10710199997993,
+    "loadMs": 49.99387399997795,
+    "longestSliceMs": 286.3562379999785,
+    "peakHeap": 4414380,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8117.0684190000175,
+    "ply": 90,
+    "packCalls": 1537,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 67.6609120000503,
+    "loadMs": 50.61110599996755,
+    "longestSliceMs": 285.0644329999923,
+    "peakHeap": 15776448,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 7966.105305999983,
+    "ply": 92,
+    "packCalls": 1535,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 273
+    },
+    "worldsMs": 50.65198500000406,
+    "loadMs": 50.604733999993186,
+    "longestSliceMs": 290.0443999999552,
+    "peakHeap": 18410996,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8741.570464999997,
+    "ply": 94,
+    "packCalls": 1539,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 274
+    },
+    "worldsMs": 59.61814499995671,
+    "loadMs": 46.301013999967836,
+    "longestSliceMs": 280.357536000025,
+    "peakHeap": 3974269,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8982.758832000021,
+    "ply": 96,
+    "packCalls": 1664,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 335
+    },
+    "worldsMs": 66.44838199997321,
+    "loadMs": 44.59368500002893,
+    "longestSliceMs": 741.691594999982,
+    "peakHeap": 14168740,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "ms": 8201.756944000022,
+    "ply": 98,
+    "packCalls": 1528,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 272
+    },
+    "worldsMs": 47.41838699998334,
+    "loadMs": 35.412830999994185,
+    "longestSliceMs": 272.289981000009,
+    "peakHeap": 9419624,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 0,
+    "ms": {
+     "median": 0,
+     "p90": 0,
+     "max": 0
+    },
+    "playouts": 0,
+    "worlds": 0,
+    "packCalls": 0,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 0,
+    "longestSliceMs": 0
+   },
+   {
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 0,
+    "ms": {
+     "median": 0,
+     "p90": 0,
+     "max": 0
+    },
+    "playouts": 0,
+    "worlds": 0,
+    "packCalls": 0,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 0,
+    "longestSliceMs": 0
+   },
+   {
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 0,
+    "ms": {
+     "median": 0,
+     "p90": 0,
+     "max": 0
+    },
+    "playouts": 0,
+    "worlds": 0,
+    "packCalls": 0,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 0,
+    "longestSliceMs": 0
+   },
+   {
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 50,
+    "ms": {
+     "median": 8413.191869000002,
+     "p90": 9429.275964,
+     "max": 10121.442872
+    },
+    "playouts": 50,
+    "worlds": 2,
+    "packCalls": 1679,
+    "evaluate": 200,
+    "prior": 338,
+    "peakHeapMB": 18.4,
+    "longestSliceMs": 1091.5823349999991
+   }
+  ],
+  "wallMs": 430918.75100399996
+ }
+]

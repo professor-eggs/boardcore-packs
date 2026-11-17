@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import type { Json, Prompt, SeatId, Step } from "@boardcore/pack-sdk";
 import { decide, start, type Match } from "@boardcore/core/match";
 import { drawWorlds, fairGate, personaBot, searchSeed, type Situation } from "@boardcore/bots";
-import { personaSettings } from "@boardcore/core/rules-runtime";
+import { inRange, personaSettings } from "@boardcore/core/rules-runtime";
 import { legalActions, selfplayGame, type SelfplayMove } from "@boardcore/testkit";
 import { bare, composed, kit, readDist, verifyPersonaDist } from "@boardcore-packs/kit";
 import { Effect } from "effect";
@@ -25,6 +25,10 @@ describe("Scientist (8b, private)", () => {
   it("passes install's checks with its own settings, in range for the base", async () => {
     const p = await scientist();
     expect(p.manifest.persona).toEqual({ pack: "boardcore/seven-wonders", range: "^1.0.0" });
+    // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
+    const base = dist("seven-wonders").manifest as { id: string; version: string };
+    expect(p.manifest.persona.pack).toBe(base.id);
+    expect(inRange(p.manifest.persona.range, base.version)).toBe(true);
     expect(personaSettings(p.manifest)).toMatchObject({ playouts: expect.any(Number), worlds: expect.any(Number), cutoff: expect.any(Number) });
   });
 
