@@ -52,6 +52,16 @@ describe("seven-wonders base: setup", () => {
 });
 
 describe("seven-wonders base: a turn", () => {
+  it("plays no turn 7 when nobody holds two cards (PR #118 review)", async () => {
+    const p = await h();
+    let s = start(p, 3);
+    // Babylon B with its second stage built: the "last" pick stops the runner between turn 7 and the war.
+    s = { ...s, players: { ...s.players, red: { ...s.players.red!, wonder: "Babylon", side: "B", built: [0, 1] } } };
+    for (let t = 0; t < 6; t++) for (const x of p.status(s).actors) s = p.apply(s, x, pick(p, s, x), rng(5)).state as S;
+    expect(s.run.order[s.run.at]).toBe("last");
+    expect(p.status(s).actors).toEqual(["red"]);
+    expect(s.turn).toBe(6);
+  });
   it("keeps picks hidden until the last, then resolves together and passes the hands left", async () => {
     const p = await h();
     let s = start(p, 3);

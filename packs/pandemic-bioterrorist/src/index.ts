@@ -205,7 +205,11 @@ export default defineAddon<"boardcore/pandemic">({
         apply: ({ slice, state, action }) => {
           const city = String(action[0]).slice(2);
           const sl = note({ ...sliceOf(slice, state), city }, `start in ${city}`);
-          return { slice: sl, ops: [{ op: "log", text: "The Bio-Terrorist takes up a position." }] };
+          const ops: PDOp[] = [{ op: "log", text: "The Bio-Terrorist takes up a position." }];
+          // Starting where a pawn stands, he is spotted at once: the commit names his city, so it is a reveal,
+          // logged as any other spotting (PR #118 second review).
+          if (pawnCitiesOf(state!.pl, state!.players).includes(city)) return { slice: sl, ops: [...ops, { op: "log", text: `The Bio-Terrorist is spotted in ${city}!` }], reveal: true };
+          return { slice: sl, ops };
         },
       },
       ...STEPS.map(step),

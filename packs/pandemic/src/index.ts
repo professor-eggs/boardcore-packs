@@ -98,10 +98,18 @@ export default defineBase<"boardcore/pandemic">({
     const baseEvent = new Map<string, EventDef>(BASE_EVENTS.map((e) => [e.name, e]));
     const baseAction = new Map(BASE_ACTIONS.map((a) => [a.id, a]));
 
-    /** The runner's context as the effects context, counting the questions an action asks. */
+    /**
+     * The runner's context as the effects context, counting the questions an action asks that another seat
+     * agrees to (`give`, `consent`): their answer pays the action (`charge`). A colour choice or a hand-limit
+     * discard on the way pays nothing, so it never makes the action free (PR #118 second review).
+     */
     const fxOf = (ctx: PhaseCtx) => {
-      let asked = 0;
-      const fx: Fx & { asked(): number } = { zones: ctx.zones, rng: ctx.rng, ask: (q) => { asked++; ctx.ask(q); }, asked: () => asked };
+      let paying = 0;
+      const fx: Fx & { paidByAnswer(): boolean } = {
+        zones: ctx.zones, rng: ctx.rng,
+        ask: (q) => { if (q.kind === "give" || q.kind === "consent") paying++; ctx.ask(q); },
+        paidByAnswer: () => paying > 0,
+      };
       return fx;
     };
 
@@ -211,8 +219,9 @@ export default defineBase<"boardcore/pandemic">({
         cost = found.cost;
         s = applyOps(s, L, pts.act(s, { id, seat, rest: action.slice(1) }), fx);
       }
-      // An action another seat must agree to is paid by the answer (G2).
-      if (fx.asked() === 0) s = { ...s, actionsLeft: s.actionsLeft - cost };
+      // An action another seat must agree to is paid by the answer (G2); every other action is paid now,
+      // whatever else it asked (a colour choice, a hand-limit discard), whose answers never charge.
+      if (!fx.paidByAnswer()) s = { ...s, actionsLeft: s.actionsLeft - cost };
       return s;
     }
 
@@ -337,6 +346,8 @@ export default defineBase<"boardcore/pandemic">({
       point: pts.phases,
       applyOps: (s, ops) => applyOps(s, L, ops, null),
       phases,
+      // Won or lost at any action: the runner stops there, walking no remaining round (s11 X7).
+      ended: (s) => s.outcome !== null,
       interrupts: {
         discard: {
           choices: (s, q, partial) => {

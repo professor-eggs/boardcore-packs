@@ -113,3 +113,20 @@ Run 2026-11-15 at `e0c5d98`, Node 22, through `tools/kit` and the published kit 
 ## Engine bugs
 
 None found. N5 was the base's own bug, found by the kit.
+
+## Re-checked at `f03102d` (2026-11-17)
+
+Boardcore's part 7c with part 7b's PR #117 fixes merged in. Changes that touch these packs: an add-on's
+`describe` now gets its own ids without the `<add-on id>:` prefix, so Leaders' strip of it is gone; a pick
+phase's `apply` runs at the resolve (no phase here has one, every pick phase uses `resolve`); a leave that leaves
+work gives a Continue prompt (no pack here has `onLeave`, and no test plays on after a resign); Match refuses a
+game whose options differ from the handle's (the tests already start games with `h.options`). Every test, the kit
+in both adapters and the leak checks pass unchanged otherwise.
+
+## PR #118 review (2026-11-17)
+
+- The phantom turn 7, the Leaders' recruitment order and Hatshepsut in a recruitment were this pack's own bugs
+  (RULES-AUDIT.md). No new contract gap. Boardcore's runner now checks `ended` before a departed seat's recorded
+  answer; this base never ends early, so nothing changes here.
+
+Re-checked at `d0b034a` (boardcore with the runner's `ended` check before a recorded answer).

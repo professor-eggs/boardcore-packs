@@ -1,6 +1,6 @@
 // 7 Wonders: Leaders, an add-on of boardcore/seven-wonders 1.x. Before Age I each seat drafts four leaders
 // (three simultaneous hidden picks, passing the rest on; the last card is kept); at the start of each age it
-// recruits one (a simultaneous hidden pick after the deal): it pays the leader's cost and the leader's effects
+// recruits one (a simultaneous hidden pick before the deal): it pays the leader's cost and the leader's effects
 // join its public extras (the `grant` operation), or it uses the leader to build a wonder stage or discards it
 // for 3 coins. Roma, four guilds and 6 starting coins (a preset) come with it. Questions to one seat (the
 // Courtesans' Guild, Roma's extra leader) are asked in this add-on's own phases; Esteban (a promo) freezes the
@@ -103,7 +103,7 @@ function recruitPrompt(v: SWView, hand: string[], seat: SeatId, partial: Step[],
   if (partial.length === 0) {
     const options = hand.map((l) => opt(`l:${l}`, leaderText(l), extra && costOf(v.players, v.seats, seat, l) > v.players[seat]!.coins ? "not enough coins" : null));
     if (extra) options.push(opt("skip", "Recruit no one"));
-    return { kind: "pick", label: extra ? "Roma: put another leader into play" : `Recruitment for Age ${roman(v.age)}: choose a leader`, options };
+    return { kind: "pick", label: extra ? "Roma: put another leader into play" : `Recruitment for Age ${roman(v.age + 1)}: choose a leader`, options };
   }
   if (partial[0] === "skip" || extra) return null;
   const name = String(partial[0]).slice(2);
@@ -255,7 +255,9 @@ export default defineAddon<"boardcore/seven-wonders">({
       draftPhase(1, { before: "deal" }),
       ...[2, 3].map((k) => draftPhase(k, { after: `${ID}:draft${k - 1}` })),
       {
-        name: "recruit", kind: "pick", after: "deal",
+        // At the start of each age, before the age's cards are dealt: a seat chooses its leader without seeing
+        // its age hand (PR #118 second review). The base's `age` is still the last age's here.
+        name: "recruit", kind: "pick", before: "deal",
         seats: ({ slice, state }) => (slice === null || !state ? [] : state.seats.filter((x) => (sliceOf(slice).hands[x] ?? []).length > 0)),
         choices: ({ view, slice, seat, partial }) => recruitPrompt(view, sliceOf(slice).hands[seat] ?? [], seat, partial, false),
         resolve: ({ state, slice, picks }) => {
@@ -280,9 +282,14 @@ export default defineAddon<"boardcore/seven-wonders">({
             const coins = way.startsWith("stevie:") ? stevieCost(p.stageCosts[st] ?? "") : coinsIn(p.stageCosts[st] ?? "");
             pays.push({ op: "pay", seat: x, coins, L: way.startsWith("stevie:") ? 0 : plan.L, R: way.startsWith("stevie:") ? 0 : plan.R, B: way.startsWith("stevie:") ? 0 : plan.B });
             plays.push({ op: "stage", seat: x, stage: st, marker: "leader" });
+            // Hatshepsut: buying from a neighbour here counts too. The deal and the first turn clear the purchases
+            // before any `endTurn`, so it is paid now (PR #118 second review).
+            const hat = count(activeEffs(p), "leaders:hatshepsut");
+            const sides = way.startsWith("stevie:") ? 0 : (plan.L ? 1 : 0) + (plan.R ? 1 : 0);
+            if (hat && sides) sells.push({ op: "coins", seat: x, n: hat * sides });
           }
           // Before Age III the leader left in each hand goes out of the game.
-          if (s.age === 3) {
+          if (s.age + 1 === 3) {
             const out = { ...sl.out }, hands = { ...sl.hands };
             for (const x of s.seats) { out[x] = [...(out[x] ?? []), ...(hands[x] ?? [])]; hands[x] = []; }
             sl = { ...sl, out, hands };
@@ -356,7 +363,7 @@ export default defineAddon<"boardcore/seven-wonders">({
   describe: ({ view, seat, viewer, action }) => {
     if (view.log.length) return view.log.join(" ");
     if (viewer !== seat) return `${seat} has chosen.`;
-    const first = String(action[0]).replace(`${ID}:`, "");
+    const first = String(action[0]);
     return `You choose ${first.startsWith("l:") ? first.slice(2) : first}.`;
   },
   // Every leader `seat` can't see (other seats' draft and hands, their used ones, the box) redrawn, counts kept.
