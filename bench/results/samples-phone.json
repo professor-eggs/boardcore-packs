@@ -1,7 +1,7 @@
 [
  {
   "label": "FD Builder v Plain (phone)",
-  "host": "Chromium 153.0.8010.12, CPU 4× slower",
+  "host": "Chromium 153.0.8010.12, CPU 4\u00d7 slower",
   "trust": "sandboxed",
   "records": [
    {
@@ -166,7 +166,7 @@
  },
  {
   "label": "HF Careful v Plain (phone)",
-  "host": "Chromium 153.0.8010.12, CPU 4× slower",
+  "host": "Chromium 153.0.8010.12, CPU 4\u00d7 slower",
   "trust": "sandboxed",
   "records": [
    {
@@ -287,7 +287,7 @@
  },
  {
   "label": "LB Saver v Plain (phone)",
-  "host": "Chromium 153.0.8010.12, CPU 4× slower",
+  "host": "Chromium 153.0.8010.12, CPU 4\u00d7 slower",
   "trust": "sandboxed",
   "records": [
    {
@@ -300,10 +300,10 @@
       "persona": {
        "id": "sample/saver",
        "version": "1.0.0",
-       "hash": "sha256:873bb249a6f18b4f4821ed15a8e8457cb447963945f5daf8eafffe72d4dd9978"
+       "hash": "sha256:6eaf272439376a737cf969009b1b6c762ca980e6defc305ba84b40c6cfe88549"
       },
       "playouts": 200,
-      "searchMs": 86247.79999999888,
+      "searchMs": 91633.90000000224,
       "searches": 3
      },
      {
@@ -311,7 +311,7 @@
       "lineup": 1,
       "persona": null,
       "playouts": 200,
-      "searchMs": 23706,
+      "searchMs": 30584.099999997765,
       "searches": 1
      }
     ],
@@ -330,16 +330,16 @@
     "nodes": 204,
     "timedOut": false,
     "capped": null,
-    "ms": 31459.299999999814,
+    "ms": 33176.900000002235,
     "ply": 0,
     "packCalls": 14969,
     "personaCalls": {
      "evaluate": 0,
      "prior": 885
     },
-    "worldsMs": 92.59999999962747,
-    "loadMs": 67.20000000018626,
-    "longestSliceMs": 910.7999999998137,
+    "worldsMs": 102.19999999925494,
+    "loadMs": 67.80000000074506,
+    "longestSliceMs": 410.69999999925494,
     "peakHeap": 0,
     "game": 0,
     "lineup": 0,
@@ -352,16 +352,16 @@
     "nodes": 204,
     "timedOut": false,
     "capped": null,
-    "ms": 32375.5,
+    "ms": 32624.699999999255,
     "ply": 1,
-    "packCalls": 13338,
+    "packCalls": 13040,
     "personaCalls": {
      "evaluate": 0,
-     "prior": 840
+     "prior": 807
     },
-    "worldsMs": 93.5,
-    "loadMs": 76.3999999994412,
-    "longestSliceMs": 970.7000000001863,
+    "worldsMs": 77.10000000149012,
+    "loadMs": 66.40000000223517,
+    "longestSliceMs": 385.5,
     "peakHeap": 0,
     "game": 0,
     "lineup": 0,
@@ -374,16 +374,16 @@
     "nodes": 204,
     "timedOut": false,
     "capped": null,
-    "ms": 22376.099999999627,
+    "ms": 25797,
     "ply": 2,
-    "packCalls": 10086,
+    "packCalls": 10349,
     "personaCalls": {
      "evaluate": 0,
-     "prior": 752
+     "prior": 763
     },
-    "worldsMs": 79.79999999981374,
-    "loadMs": 66.80000000074506,
-    "longestSliceMs": 599.5999999996275,
+    "worldsMs": 120,
+    "loadMs": 71.79999999701977,
+    "longestSliceMs": 293.20000000298023,
     "peakHeap": 0,
     "game": 0,
     "lineup": 0,
@@ -396,16 +396,16 @@
     "nodes": 208,
     "timedOut": false,
     "capped": null,
-    "ms": 23697.60000000056,
+    "ms": 30572.5,
     "ply": 3,
-    "packCalls": 12132,
+    "packCalls": 12457,
     "personaCalls": {
      "evaluate": 0,
      "prior": 0
     },
-    "worldsMs": 77.80000000074506,
-    "loadMs": 67.20000000018626,
-    "longestSliceMs": 635.0999999996275,
+    "worldsMs": 116.69999999925494,
+    "loadMs": 75,
+    "longestSliceMs": 410.9000000022352,
     "peakHeap": 0,
     "game": 0,
     "lineup": 1,
@@ -418,9 +418,9 @@
     "persona": "Saver ({\"cutoff\":null,\"explore\":1.4,\"noise\":0,\"playouts\":200,\"worlds\":4})",
     "searches": 3,
     "ms": {
-     "median": 31459.299999999814,
-     "p90": 32375.5,
-     "max": 32375.5
+     "median": 32624.699999999255,
+     "p90": 33176.900000002235,
+     "max": 33176.900000002235
     },
     "playouts": 200,
     "worlds": 4,
@@ -428,26 +428,26 @@
     "evaluate": 0,
     "prior": 885,
     "peakHeapMB": 0,
-    "longestSliceMs": 970.7000000001863
+    "longestSliceMs": 410.69999999925494
    },
    {
     "lineup": 1,
     "persona": "Plain",
     "searches": 1,
     "ms": {
-     "median": 23697.60000000056,
-     "p90": 23697.60000000056,
-     "max": 23697.60000000056
+     "median": 30572.5,
+     "p90": 30572.5,
+     "max": 30572.5
     },
     "playouts": 200,
     "worlds": 8,
-    "packCalls": 12132,
+    "packCalls": 12457,
     "evaluate": 0,
     "prior": 0,
     "peakHeapMB": 0,
-    "longestSliceMs": 635.0999999996275
+    "longestSliceMs": 410.9000000022352
    }
   ],
-  "wallMs": 110169.79999999981
+  "wallMs": 122700.09999999776
  }
 ]

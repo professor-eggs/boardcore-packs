@@ -1,0 +1,55 @@
+[
+ {
+  "label": "FD Builder",
+  "settings": {
+   "cutoff": 4,
+   "explore": 1.4,
+   "noise": 0,
+   "playouts": 200
+  },
+  "worlds": 8,
+  "rows": [
+   {
+    "ply": 0,
+    "outsideMs": 2993.4993499999996,
+    "outsideLoadMs": 19.442587000000003,
+    "insideMs": 1572.064734,
+    "trustedMs": 311.01677800000016,
+    "playouts": 200,
+    "insidePlayouts": 200,
+    "same": true
+   },
+   {
+    "ply": 2,
+    "outsideMs": 2669.6529069999997,
+    "outsideLoadMs": 13.76185500000065,
+    "insideMs": 1558.5338900000006,
+    "trustedMs": 249.7908750000006,
+    "playouts": 200,
+    "insidePlayouts": 200,
+    "same": true
+   },
+   {
+    "ply": 4,
+    "outsideMs": 3179.1059000000005,
+    "outsideLoadMs": 14.436743000000206,
+    "insideMs": 1668.0110029999996,
+    "trustedMs": 237.43287400000008,
+    "playouts": 200,
+    "insidePlayouts": 200,
+    "same": true
+   },
+   {
+    "ply": 6,
+    "outsideMs": 2845.854107000001,
+    "outsideLoadMs": 22.116688000000067,
+    "insideMs": 1696.6660010000014,
+    "trustedMs": 316.03064999999697,
+    "playouts": 200,
+    "insidePlayouts": 200,
+    "same": true
+   }
+  ],
+  "wallMs": 19562.155512
+ }
+]
