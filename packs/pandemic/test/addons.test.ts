@@ -172,6 +172,17 @@ describe("pandemic-bioterrorist", () => {
     expect(p.status(t).actors).toEqual([cur(t)]);
   });
 
+  it("is spotted at once when he starts where a pawn stands: a reveal, logged as a spotting (PR #118 review)", async () => {
+    const { p, s } = await start({ addons: ["bioterrorist"] }, 3);
+    const quiet = p.apply(s, "green", [`${BT}:c:Lima`], rng(3));
+    expect(quiet.reveal).toBeFalsy();
+    const r = p.apply(s, "green", [`${BT}:c:Atlanta`], rng(3));
+    expect(r.reveal).toBe(true);
+    const t = r.state as S;
+    expect(t.log).toContain("The Bio-Terrorist is spotted in Atlanta!");
+    expect((p.view(t, "red") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Atlanta");
+  });
+
   it("picks a random seat when asked", async () => {
     const h = await room({ addons: ["bioterrorist"], addonOptions: { bioterrorist: { seat: "random" } } });
     const pawns = new Set([1, 2, 3, 4, 5, 6].map((n) => (h.trusted.setup({ options: h.options, seats: seats(4), rng: rng(n) }) as S).players.join()));

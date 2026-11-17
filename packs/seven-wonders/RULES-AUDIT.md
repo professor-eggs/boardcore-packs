@@ -366,6 +366,9 @@ Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander
 - 2-player expert variant: still blocked (concise only says "see rules"; seat minimum is 3).
 - Catan goodie board: still blocked (no stage costs).
 - Extra 7w-1 promo leaders listed above: not implemented.
+- **Owner to confirm against the physical cards** (PR #118 review; the code is left as it is until then):
+  - Spies Guild's cost: coded `SSSG` (3 stone + 1 glass); the review read it as 3 clay + 1 glass.
+  - Olympia B stage 3's cost: coded `LO` (1 ore + 1 loom); the review read it as 2 ore + 1 loom.
 
 ## 1.0.0: what the port changed
 
@@ -394,3 +397,17 @@ see differently:
 - **The decks.** Guilds are chosen with `sample` (11 §3) and the Cities black cards are drawn by the Cities
   add-on, so the same seed deals different cards than 0.1.0: old games replay only on 0.1.0 (A87,
   `test/fixtures.test.ts`).
+
+## PR #118 review fixes (2026-11-17)
+
+- **The phantom turn 7.** In an age without the Cities cards nobody holds two cards at turn 7, so the empty pick
+  phase resolved anyway, set the turn to 7 and fired every add-on's end of turn once more, for a turn nobody
+  played (no coins changed, since the purchases and gains were cleared first). An empty turn now plays nothing;
+  with Cities' eighth card turn 7 is played as before.
+- **Leaders: recruitment comes before the deal.** At the start of each age the leader is chosen before the age's
+  cards are dealt, so a seat no longer sees its new hand when it chooses. The leader left over before Age III
+  still goes out of the game.
+- **Hatshepsut in a recruitment.** Building a wonder stage with a leader and buying from a neighbour now pays
+  Hatshepsut's coin at once (before, the deal and the first turn cleared the purchase before any end of turn
+  counted it).
+- Spies Guild and Olympia B stage 3: listed under "Still unverified or blocked" for the owner to confirm.

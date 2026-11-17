@@ -123,3 +123,13 @@ Boardcore's part 7c with part 7b's PR #117 fixes merged in. Nothing in these pac
 `describe` read its prefixed ids, no phase is a pick with an `apply`, no pack has `onLeave` (so the Continue
 prompt after a leave never comes up), and the tests already start games with the handle's options (`h.options`).
 Every test, the kit in both adapters and the leak checks pass.
+
+## PR #118 review (2026-11-17)
+
+- **X7 was not used here.** Boardcore's runner took `ended` from part 7c on, but this base never passed it, so
+  a game won or lost early still walked every remaining round in the action that ended it (the "game ends"
+  costliest calls above). It passes `ended` now (the outcome is set). The runner itself also checked `ended`
+  only after a departed seat's recorded answer had run; fixed in boardcore at the new pin.
+- No new contract gap: the free-action and Bio-Terrorist spotting bugs were this pack's own (RULES-AUDIT.md).
+
+Re-checked at `d0b034a` (boardcore with the runner's `ended` check before a recorded answer).

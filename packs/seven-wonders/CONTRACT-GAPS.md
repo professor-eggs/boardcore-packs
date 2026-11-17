@@ -122,3 +122,11 @@ phase's `apply` runs at the resolve (no phase here has one, every pick phase use
 work gives a Continue prompt (no pack here has `onLeave`, and no test plays on after a resign); Match refuses a
 game whose options differ from the handle's (the tests already start games with `h.options`). Every test, the kit
 in both adapters and the leak checks pass unchanged otherwise.
+
+## PR #118 review (2026-11-17)
+
+- The phantom turn 7, the Leaders' recruitment order and Hatshepsut in a recruitment were this pack's own bugs
+  (RULES-AUDIT.md). No new contract gap. Boardcore's runner now checks `ended` before a departed seat's recorded
+  answer; this base never ends early, so nothing changes here.
+
+Re-checked at `d0b034a` (boardcore with the runner's `ended` check before a recorded answer).

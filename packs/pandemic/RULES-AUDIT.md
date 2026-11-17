@@ -172,3 +172,15 @@ S11 part 7c moved the pack onto the phase runner and split On the Brink into add
 | In the Lab, State of Emergency content in C | C | Out of scope |
 | Both colours placed on a purple city: which colour goes first | O p4 | Not stated. The card's colour is placed first, then purple. |
 | New Assignment from the Contingency Planner or Field Operative: what happens to the stored event or samples | O | Not stated. The stored event goes to the discards; samples go back to the supply. |
+
+## PR #118 review fixes (2026-11-17)
+
+- **Every action costs an action.** An action was charged only when it raised no question at all, a rule meant
+  for the actions another player agrees to (Share, the Dispatcher, ...), whose answer pays. So an action that
+  raised any other question on the way was free: entering a city with two colours under Mobile Hospital (the
+  colour choice), or the Archivist taking a card back over the hand limit (the discard). Now only a give or
+  consent question's answer pays; every other action is paid at once, and a choice or discard answer never pays.
+- **Bio-Terrorist starting where a pawn stands** (Atlanta at the start, say) is spotted at once: the commit is a
+  reveal and the log says "The Bio-Terrorist is spotted in <city>!", as for any other spotting.
+- **The game stops where it ends.** The base now gives the phase runner its end (won or lost), so a game won or
+  lost early no longer walks every remaining round inside the action that ended it (boardcore s11 X7).

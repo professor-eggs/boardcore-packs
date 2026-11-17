@@ -32,12 +32,12 @@ const player = (over: Partial<SWPlayer> = {}): SWPlayer => ({
 const stateOf = (players: { [seat: string]: SWPlayer }, over: Partial<SWState> = {}) => ({ seats: Object.keys(players), players, age: 1, ...over }) as SWState;
 
 describe("Leaders", () => {
-  it("presets 6 starting coins, drafts four leaders a seat in hidden picks, then recruits after the deal", async () => {
+  it("presets 6 starting coins, drafts four leaders a seat in hidden picks, then recruits before the deal", async () => {
     const h = await room({ addons: ["leaders"] });
     const p = h.trusted;
     expect(h.options.startCoins).toBe(6);
     let s = start(p, h.options, 4);
-    expect(s.run.order.slice(0, 5)).toEqual([`${L}:draft1`, `${L}:draft2`, `${L}:draft3`, "deal", `${L}:recruit`]);
+    expect(s.run.order.slice(0, 5)).toEqual([`${L}:draft1`, `${L}:draft2`, `${L}:draft3`, `${L}:recruit`, "deal"]);
     const v = (x: string) => (p.view(s, x) as SWView & { addons: { [id: string]: { draft: string[]; hand: string[]; draftSizes: { [x: string]: number } } } }).addons[L]!;
     expect(v("red").draft).toHaveLength(4);
     expect(v("red").draftSizes).toEqual({ blue: 4, green: 4, red: 4, yellow: 4 });
@@ -47,14 +47,42 @@ describe("Leaders", () => {
     expect(v("red").hand).toHaveLength(4);
     expect(v("red").draft).toEqual([]);
     expect(s.run.order[s.run.at]).toBe(`${L}:recruit`);
-    expect(s.players.red!.hand.items).toHaveLength(7);
+    // Recruitment comes before the age's cards are dealt: nobody sees its age hand yet (PR #118 review).
+    expect(s.players.red!.hand.items).toHaveLength(0);
+    expect(p.choices(s, "red", [])!.label).toBe("Recruitment for Age I: choose a leader");
     // Everyone recruits its first leader it can afford.
     const coins = s.players.red!.coins;
     s = playAll(p, s, /^recruit$/);
     expect(s.players.red!.extras).toHaveLength(1);
     expect(s.players.red!.coins).toBeLessThanOrEqual(coins);
     expect(v("red").hand).toHaveLength(3);
+    expect(s.players.red!.hand.items).toHaveLength(7);
     expect(s.run.order[s.run.at]).toBe("turn1");
+  });
+
+  it("recruits each later age before its deal too, and puts the leftover leader out before Age III", async () => {
+    const h = await room({ addons: ["leaders"] });
+    const p = h.trusted;
+    let s = start(p, h.options, 3);
+    for (let i = 0; i < 400 && !(s.run.round === 3 && s.run.order[s.run.at] === `${L}:recruit`); i++) s = playAll(p, s);
+    expect(s.run.round).toBe(3);
+    expect(s.run.order.indexOf(`${L}:recruit`)).toBeLessThan(s.run.order.indexOf("deal"));
+    expect(s.seats.every((x) => s.players[x]!.hand.items.length === 0)).toBe(true);
+    expect(p.choices(s, "red", [])!.label).toBe("Recruitment for Age III: choose a leader");
+    s = playAll(p, s);
+    const sl = s.addons[L] as { hands: { [x: string]: string[] } };
+    expect(s.seats.every((x) => sl.hands[x]!.length === 0)).toBe(true);
+    expect(s.age).toBe(3);
+    expect(s.seats.every((x) => s.players[x]!.hand.items.length === 7)).toBe(true);
+  });
+
+  it("pays Hatshepsut for a neighbour bought from while building a stage with a leader in a recruitment", () => {
+    const recruit = (leaders as unknown as { contributes: { phases: { name: string; resolve: unknown }[] } }).contributes.phases.find((x) => x.name === "recruit")!;
+    const hat = { from: "leaders", name: "Hatshepsut", cost: 2, eff: [{ k: "leaders:hatshepsut" }], off: null };
+    const players = { red: player({ coins: 5, stageCosts: ["SS"], extras: [hat] as never }), blue: player({ coins: 0 }), green: player({ coins: 0 }) };
+    const slice = { draft: {}, hands: { red: ["Caesar"], blue: [], green: [] }, box: [], out: { red: [], blue: [], green: [] }, used: [], frozen: null, askCopy: [], askExtra: [] };
+    const out = call<{ ops: SWOp[] }>(recruit.resolve, { state: stateOf(players, { age: 0 }), slice, picks: { red: ["l:Caesar", "wonder", "pay:1,1,0"] } });
+    expect(out.ops).toContainEqual({ op: "coins", seat: "red", n: 2 });
   });
 
   it("describes a draft pick to its picker by the leader's name, others see only that a seat chose", async () => {

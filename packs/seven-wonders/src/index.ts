@@ -174,6 +174,9 @@ export default defineBase<"boardcore/seven-wonders">({
       seats: (s) => s.seats.filter((x) => s.players[x]!.hand.items.length >= 2),
       choices: (s, seat, partial) => handPrompt(s, seat, partial, `Age ${roman(s.age)}, turn ${n}: choose a card`),
       resolve: (s, picks, ctx) => {
+        // Nobody had two cards (turn 7 without the eighth card a seat): no turn is played, so `turn` stays and
+        // the end phase after it fires nothing (PR #118 second review).
+        if (!Object.keys(picks).length) return s;
         s = resolveHands({ ...s, turn: n, gained: {}, bought: [] }, picks);
         if (s.seats.every((x) => s.players[x]!.hand.items.length <= 1)) s = discardLast(s, s.seats.filter((x) => !has(lib, s, x, "lastCard")));
         return askPending(s, ctx);
