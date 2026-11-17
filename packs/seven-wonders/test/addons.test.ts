@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import type { Json, Rng, Step } from "@boardcore/pack-sdk";
 import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
-import leaders from "../../seven-wonders-leaders/src/index";
+import leaders, { leaderText } from "../../seven-wonders-leaders/src/index";
+import { LEADERS } from "../../seven-wonders-leaders/src/data";
 import { CITIES_CARDS } from "../../seven-wonders-cities/src/data";
 import wonderPack from "../../seven-wonders-wonder-pack/src/index";
 import { BASE_CARDS } from "../src/data";
@@ -187,5 +188,17 @@ describe("Wonder Pack", () => {
       state: s, slice: null, args: { effects: { a: [{ k: "wp:stoneVP", n: 1 }], b: [], c: [] }, city: { a: [stone, mixed], b: [], c: [] }, markers: { a: ["red", "blue"], b: [], c: [] } },
     });
     expect(out.a).toEqual([{ cat: "wonder", vp: 2 }, { cat: "wonder", vp: 3 }, { cat: "wonder", vp: 6 }]);
+  });
+});
+
+describe("Leaders: the words on a leader's card", () => {
+  // Phone play (2026-11-17) showed "Nero (1 coins): nero": an effect's code name and a wrong plural.
+  it("says every leader's effect in words, never an effect kind's name, and counts coins right", () => {
+    for (const l of LEADERS) {
+      const t = leaderText(l.name);
+      expect(t, t).not.toMatch(/: [a-z]+(;|$)|; [a-z]+(;|$)/);
+      expect(t, t).not.toMatch(/\b1 coins\b/);
+      expect(t, t).not.toMatch(/[a-z]+:[a-z]/);
+    }
   });
 });

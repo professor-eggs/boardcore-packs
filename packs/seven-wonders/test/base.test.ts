@@ -129,3 +129,37 @@ describe("seven-wonders base: whole games", () => {
     expect(outcomeOf(at({ red: 2, blue: 5, green: 0 }), { red: 30, blue: 30, green: 31 }).places).toEqual({ green: 1, blue: 2, red: 3 });
   });
 });
+
+describe("seven-wonders base: the board text fits a phone", () => {
+  // A phone shows about 36 columns of the board text (phone play, 2026-11-17): every line stays within 34, and
+  // the board at the end says each seat's score.
+  const WIDTH = 34;
+  const first = (p: PackHandle, s: S, seat: string): Action => {
+    const out: Step[] = [];
+    for (;;) {
+      const pr = p.choices(s, seat, out);
+      if (!pr) return out;
+      const o = pr.options.find((x) => !x.disabled && x.id !== "sell") ?? pr.options.find((x) => !x.disabled)!;
+      out.push(o.id);
+    }
+  };
+  it("keeps every line within 34 characters at 3 and 7 seats, and ends with the scores", async () => {
+    const p = await h();
+    for (const n of [3, 7]) {
+      let s = start(p, n, {}, 9 + n);
+      const r = rng(n + 90);
+      const wide = new Set<string>();
+      for (let i = 0; i < 400 && !p.status(s).outcome; i++) {
+        for (const viewer of ["spectator", s.seats[0]!]) for (const l of (p.layout(p.view(s, viewer)) ?? "").split("\n")) if (l.length > WIDTH) wide.add(l);
+        const a = p.status(s).actors;
+        const x = a[r.int(a.length)]!;
+        s = p.apply(s, x, first(p, s, x), r).state as S;
+      }
+      expect(p.status(s).outcome).toBeTruthy();
+      const end = p.layout(p.view(s, "spectator"))!;
+      for (const l of end.split("\n")) if (l.length > WIDTH) wide.add(l);
+      expect([...wide]).toEqual([]);
+      for (const x of s.seats) expect(end).toMatch(new RegExp(`^${x} \\d+ points?:`, "m"));
+    }
+  });
+});

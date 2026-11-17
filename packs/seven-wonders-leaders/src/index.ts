@@ -67,14 +67,14 @@ function leaderWays(v: SWView, seat: SeatId, name: string): SWWay[] {
   const p = v.players[seat]!;
   const none = [{ L: 0, R: 0, B: 0 }];
   const cost = costOf(v.players, v.seats, seat, name);
-  const ways: SWWay[] = [{ id: "recruit", label: `Recruit ${name} (${cost} coins)`, disabled: cost > p.coins ? "not enough coins" : null, plans: none, coins: cost }];
+  const ways: SWWay[] = [{ id: "recruit", label: `Recruit ${name} (${coins(cost)})`, disabled: cost > p.coins ? "not enough coins" : null, plans: none, coins: cost }];
   for (const w of v.stageWays) ways.push({ ...w, label: `${w.label} with this leader` });
   if (count(def(name).eff, "leaders:stevie")) {
     for (const w of v.stageWays) {
       if (w.disabled === "your wonder is finished") continue;
       const i = stageAt(p.stages.length, w.id);
       const c = stevieCost(p.stageCosts[i] ?? "");
-      ways.push({ id: `stevie:${i}`, label: `Build ${p.wonder} stage ${i + 1} with Stevie (${c} coins)`, disabled: c > p.coins ? "not enough coins" : null, plans: none, coins: c });
+      ways.push({ id: `stevie:${i}`, label: `Build ${p.wonder} stage ${i + 1} with Stevie (${coins(c)})`, disabled: c > p.coins ? "not enough coins" : null, plans: none, coins: c });
     }
   }
   ways.push({ id: "sell", label: "Discard for 3 coins", disabled: null, plans: none, coins: 0 });
@@ -84,7 +84,7 @@ function leaderWays(v: SWView, seat: SeatId, name: string): SWWay[] {
 function effText(e: SWEff): string {
   switch (e.k) {
     case "vp": return `${e.n} VP`;
-    case "coins": return `${e.n} coins now`;
+    case "coins": return `${coins(e.n)} now`;
     case "shields": return `${e.n} shield${e.n === 1 ? "" : "s"}`;
     case "sci": return "a science symbol";
     case "perVP": return `${e.n} VP per ${e.stages ? "wonder stage" : `${(e.colors ?? []).join("/")} card`}`;
@@ -93,11 +93,31 @@ function effText(e: SWEff): string {
     case "bank": return "buy a resource from the bank for 1 coin each turn";
     case "freeColor": return `${e.color} cards free${e.perAge ? " once an age" : ""}`;
     case "discardBuild": return "build a discarded card free";
-    case "leaders:vp": return `VP for ${String(e.what)}`;
-    default: return e.k.replace(/^\w+:/, "");
+    case "leaders:vp": return LEADER_VP[String(e.what)] ?? "VP at the end";
+    case "leaders:hatshepsut": return "1 coin for each resource bought from a neighbour, once a neighbour a turn";
+    case "leaders:free": return "recruit later leaders free";
+    case "leaders:nero": return "2 coins for each victory token won";
+    case "leaders:tomyris": return "your defeat tokens go to the neighbour who beat you";
+    case "leaders:vitruvius": return "2 coins for each card built free by a chain";
+    case "leaders:xenophon": return "2 coins for each yellow card built";
+    case "leaders:stevie": return "build a wonder stage paying 1 coin per resource";
+    case "leaders:esteban": return "once a game, hold the hands for a turn: everyone plays a second card";
+    case "leaders:courtesan": return "copy a neighbour's leader";
+    case "leaders:perNbrLeader": return `${e.n} VP per leader your neighbours have`;
+    case "cities:berenice": return "1 coin at the end of each turn you took coins from the bank";
+    case "cities:diplomacy": return "a diplomacy token";
+    case "cities:semiramis": return "your defeat tokens count as shields";
+    case "cities:diocletian": return "2 coins for each black card built";
+    default: return "a special effect";
   }
 }
-const leaderText = (name: string) => `${name} (${def(name).cost} coins): ${def(name).eff.map(effText).join("; ")}`;
+export /** What a leader's `leaders:vp` scores, in words. */
+const LEADER_VP: { [what: string]: string } = {
+  victories: "1 VP per victory token", justinian: "3 VP per set of a red, a blue and a green card",
+  coins3: "1 VP per 3 coins", plato: "7 VP per set of one card of each of the seven colours", louis: "7 VP minus 1 per victory token",
+};
+const coins = (n: number) => `${n} coin${n === 1 ? "" : "s"}`;
+export const leaderText = (name: string) => `${name} (${coins(def(name).cost)}): ${def(name).eff.map(effText).join("; ")}`;
 
 function recruitPrompt(v: SWView, hand: string[], seat: SeatId, partial: Step[], extra: boolean): Prompt | null {
   if (partial.length === 0) {

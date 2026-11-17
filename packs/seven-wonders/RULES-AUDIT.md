@@ -547,3 +547,41 @@ checks in both adapters).
   two-stage board; Stevie, Imhotep and the Cities wonder-stage effects read the new stage costs.
 - The Scientist persona (`seven-wonders-scientist`) is 2.0.0 with range `^2.0.0`; its science card names are
   unchanged, and its prior no longer looks for the removed Olympia way.
+
+## Testing record
+
+### 5a. Random-play fuzzing through the server and web client (2026-11-17)
+
+Boardcore `pnpm fuzz` at public commit 2480df1 (PR #121 branch), with `FUZZ_EXTRA_PACKS` pointed at the built
+base, Leaders, Cities, Wonder Pack and Scientist, `FUZZ_GAMES="7 Wonders"`, `FUZZ_SEATS=3,5,7`, `FUZZ_STRICT=1`,
+3 workers. Add-ons and options (B sides, random sides, team play, starting coins) switched at random on the form.
+
+- Three runs, about 33 minutes: **34 episodes, 5,948 steps, 48 rooms, 17 games played to the end**. The last
+  run, on the final harness: 12 episodes, 2,354 steps, 25 rooms, 7 games ended, **no failure**.
+- Failures found: 3 signatures, all in the harness's leak check, none a leak (each replayed with `FUZZ_REPLAY`
+  and checked against the seat views): a seat's own sold card in its own log ("You choose Lumber Yard (sell)")
+  matching another hand's copy; public lines ("Leader draft: pick 1 made.", "Age II begins.") read on one side
+  of a commit; a resigned seat's own old hand holding the hand it passed on. Fixed in the public harness;
+  the replays run clean.
+- Also found: a room with **team play at 3, 5 or 7 seats** is created and filled, then every start is a bare
+  `PackFault` (setup throws "Team play needs 4, 6 or 8 players"), so the room never starts (44 refused starts
+  in run 2). Contract gap: public `docs/10-questions.md` Q106. The option's description names the counts.
+- And: a nameless browser could never make a room (harness fix). Notes left: takebacks refused across a
+  secret pick (by design, said in words).
+
+### 5b. Phone play (2026-11-17)
+
+Playwright, iPhone 13 at deviceScaleFactor 1, scripted. A full 3-player base game with three phones (one per
+seat), and a full 3-player game with Leaders and Cities, one phone and two Scientist bots.
+
+- Rules: simultaneous picks (the others see "Ana has chosen", never the card); hands passed left in Ages I and
+  III and right in Age II, checked every turn; neighbour payments offered and paid; wonder stages built; end
+  scoring checked by an independent scorer from the public view (military, treasury, wonder, civic, commerce,
+  guilds, science): all three seats matched the pack, and the lines add to the outcome (base 38/37/35, Leaders
+  and Cities 59/56/63, debt and leaders lines included).
+- Fixed: the board text was 700 to 1,700 px wide in a 330 px box, cut off at the coins column (now a few lines
+  a seat within 34 columns, with each seat's score at the end; `base.test.ts` "fits a phone"); the leader cards
+  read "Nero (1 coins): nero" (every leader effect now in words, plural fixed; `addons.test.ts`); the Confirm
+  row showed option ids ("c:0 → build → Pay 2 to the right"), a web fix in public 2480df1.
+- Left: the board names seats by colour (red, blue) while the log and results use player names; "VP" is
+  abbreviated; the turn pill covers the room code for two seconds.
