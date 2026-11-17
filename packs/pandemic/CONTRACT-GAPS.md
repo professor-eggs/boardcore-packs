@@ -139,3 +139,15 @@ Every test, the kit in both adapters and the leak checks pass.
 - No new contract gap: the free-action and Bio-Terrorist spotting bugs were this pack's own (RULES-AUDIT.md).
 
 Re-checked at `d0b034a` (boardcore with the runner's `ended` check before a recorded answer).
+
+## 2nd-edition rules audit, 2.0.0 (2026-11-17)
+
+No new gap in the public contract. The audit's three fixes were this pack's own (RULES-AUDIT.md). One limit is
+this pack's design, written here because closing it touches how the response windows are built:
+
+- **A free role ability out of turn** (low). On the Brink lets one role give back what it holds at any time, as
+  freely as an event, which is not an action. The base's response windows (G1) list only event cards, and an
+  add-on reaches them only through the `events` registry. So the ability is offered on its owner's own turn only,
+  after the last action as well. Closing it needs a base point that adds non-card options to a window, with the
+  same public-information rule for who is an actor (a stored-on-role ability is public, so its holder would always
+  be an actor). That point would belong to the pack, not the engine; nothing is carried to the public docs.

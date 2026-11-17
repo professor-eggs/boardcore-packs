@@ -1,4 +1,4 @@
-// Pandemic: On the Brink's Bio-Terrorist challenge, an add-on of boardcore/pandemic 1.x (11 §10 "one against
+// Pandemic: On the Brink's Bio-Terrorist challenge, an add-on of boardcore/pandemic 2.x (11 §10 "one against
 // all": the base declares hidden information, an `outcome` point that may name a lone winner, the seats that get
 // a pawn and every other point this mode needs). One seat (the last, as a volunteer, or a random one; `pawnSeats`)
 // gets no pawn and plays against the others: a secret location in this add-on's slice, infection cards as his

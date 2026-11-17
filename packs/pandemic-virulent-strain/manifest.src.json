@@ -1,12 +1,12 @@
 {
   "id": "boardcore/pandemic-virulent-strain",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "Pandemic: Virulent Strain",
-  "description": "On the Brink's Virulent Strain challenge: its 8 epidemic cards replace the normal ones. Presets 5 epidemics. Private local build: not for distribution.",
+  "description": "On the Brink's Virulent Strain challenge: its 8 epidemic cards replace the normal ones. Presets 5 epidemics. On the Brink, 2013 edition. Private local build: not for distribution.",
   "authors": ["Boardcore"],
   "licence": "UNLICENSED",
   "contract": 1,
-  "addon": { "base": "boardcore/pandemic", "range": "^1.0.0", "presets": { "epidemics": 5 } },
+  "addon": { "base": "boardcore/pandemic", "range": "^2.0.0", "presets": { "epidemics": 5 } },
   "after": ["boardcore/pandemic-roles", "boardcore/pandemic-events"],
   "tags": ["expansion", "challenge"]
 }

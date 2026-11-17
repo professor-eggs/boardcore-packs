@@ -1,11 +1,11 @@
 {
   "id": "boardcore/pandemic-events",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "Pandemic: On the Brink events",
-  "description": "Eight more events; the game uses 2 events per player. Private local build: not for distribution.",
+  "description": "Eight more events; the game uses 2 events per player. On the Brink, 2013 edition. Private local build: not for distribution.",
   "authors": ["Boardcore"],
   "licence": "UNLICENSED",
   "contract": 1,
-  "addon": { "base": "boardcore/pandemic", "range": "^1.0.0" },
+  "addon": { "base": "boardcore/pandemic", "range": "^2.0.0" },
   "tags": ["expansion"]
 }

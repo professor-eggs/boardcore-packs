@@ -1,4 +1,4 @@
-// Pandemic: On the Brink's Mutation challenge, an add-on of boardcore/pandemic 1.x. A fifth, purple disease joins
+// Pandemic: On the Brink's Mutation challenge, an add-on of boardcore/pandemic 2.x. A fifth, purple disease joins
 // the `diseases` registry (12 cubes, cured with city cards of any colour, at least one of a city with purple on it;
 // in the infection step a city that already has purple gets one more). Two Mutation infection cards start in the
 // infection discards (`startDiscard`) and three Mutation event cards go into the player deck (`playerCards`); both

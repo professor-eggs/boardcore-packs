@@ -15,7 +15,7 @@ const room = () => composed(dist("pandemic"), ["roles", "events", "virulent-stra
 describe("Medic (8b, private)", () => {
   it("passes install's checks, in range for the base", async () => {
     const p = await medic();
-    expect(p.manifest.persona).toEqual({ pack: "boardcore/pandemic", range: "^1.0.0" });
+    expect(p.manifest.persona).toEqual({ pack: "boardcore/pandemic", range: "^2.0.0" });
     // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
     const base = dist("pandemic").manifest as { id: string; version: string };
     expect(p.manifest.persona.pack).toBe(base.id);

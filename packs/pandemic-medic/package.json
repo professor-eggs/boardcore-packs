@@ -1,6 +1,6 @@
 {
   "name": "@boardcore-packs/pandemic-medic",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Medic: a persona for boardcore/pandemic (13 \u00a76), a cooperative evaluation of the board and a prior on treating and curing.",
   "license": "UNLICENSED",
   "private": true,

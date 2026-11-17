@@ -1,4 +1,4 @@
-// Pandemic: On the Brink's six roles, an add-on of boardcore/pandemic 1.x. The roles join the `roles` registry;
+// Pandemic: On the Brink's six roles, an add-on of boardcore/pandemic 2.x. The roles join the `roles` registry;
 // with them a 5th player and the legendary game (7 epidemics) become possible. Each role works through the base's
 // points: the Generalist's 5 actions and the Archivist's hand limit of 8 are modifiers, the Troubleshooter's look
 // at the infection deck is a `peek` at the start of her turn and her direct flights only show the card (`payCard`),

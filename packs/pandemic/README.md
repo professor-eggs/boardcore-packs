@@ -1,9 +1,13 @@
 # Pandemic (`boardcore/pandemic`) and its On the Brink add-ons
 
 A cooperative game for 2 to 4 players (5 with the roles add-on), on Boardcore's phase runner, hidden zones and
-interrupt queue (S11 part 7). The base is version 1.0.0; each On the Brink module is its own add-on pack in this
-repository, type-checked against the base's published points (`src/points.d.ts`). Every rule is checked, with
-its rulebook page, in [RULES-AUDIT.md](RULES-AUDIT.md); contract gaps are in [CONTRACT-GAPS.md](CONTRACT-GAPS.md).
+interrupt queue (S11 part 7). **Edition: Pandemic 2nd edition (Z-Man, 2013) and On the Brink 2013 edition**, the
+owner's copies; there is no option for the 1st edition. The base is version 2.0.0 (the 2nd-edition audit's
+fixes); each On the Brink module is its own add-on pack in this repository (2.0.0, range `^2.0.0`), type-checked
+against the base's published points (`src/points.d.ts`). Every rule is checked against the 2nd-edition rulebooks,
+with its source and page, in [RULES-AUDIT.md](RULES-AUDIT.md) (with the items the owner still has to confirm);
+`test/second-edition.test.ts` covers each 2nd-edition rule and each fix. Contract gaps are in
+[CONTRACT-GAPS.md](CONTRACT-GAPS.md).
 
 | Pack | What it adds | Options and presets |
 |---|---|---|

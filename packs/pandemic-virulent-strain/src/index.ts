@@ -1,4 +1,4 @@
-// Pandemic: On the Brink's Virulent Strain challenge, an add-on of boardcore/pandemic 1.x. Its 8 epidemic cards
+// Pandemic: On the Brink's Virulent Strain challenge, an add-on of boardcore/pandemic 2.x. Its 8 epidemic cards
 // replace the normal ones (`epidemics`: as many as the difficulty asks, drawn from the 8; the rest stay unseen).
 // The first one drawn names the strain: the standard disease with the most cubes on the board (ties at random).
 // Immediate effects happen after the epidemic's Infect step (`epidemic`, step "infected"); continuing effects

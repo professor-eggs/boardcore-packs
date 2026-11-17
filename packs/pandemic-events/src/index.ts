@@ -1,4 +1,4 @@
-// Pandemic: On the Brink's eight events, an add-on of boardcore/pandemic 1.x. They join the `events` registry and
+// Pandemic: On the Brink's eight events, an add-on of boardcore/pandemic 2.x. They join the `events` registry and
 // the game uses 2 events per seat (`eventCount`; the Bio-Terrorist's seat counts). Each is played through the base's `eventCheck`, `steps` and
 // `act`: the base spends the card and applies the operations, and an event that acts on another player's pawn or
 // role asks that player first (a `consent`, G2; refused, the card stays in hand). Commercial Travel Ban and

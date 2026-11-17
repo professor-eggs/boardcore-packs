@@ -1,4 +1,4 @@
-// boardcore/pandemic 1.x: the published point declarations (11 §10 "Typed declarations"). A global script with
+// boardcore/pandemic 2.x: the published point declarations (11 §10 "Typed declarations"). A global script with
 // no import of its own: an add-on's build includes this file and `defineAddon<"boardcore/pandemic">` checks
 // every contribution against it. A changed signature is a new major version of the base.
 type PDJson = import("@boardcore/pack-sdk").Json;

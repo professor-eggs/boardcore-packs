@@ -306,6 +306,8 @@ export function applyOps(s: State, L: Lib, ops: readonly PDJsonOp[], fx: Fx | nu
           s = { ...s, actionsLeft: Math.max(0, s.actionsLeft + Math.max(0, L.pts.actionLimit(s, 4, { seat: o.seat }) - before)) };
         }
         s = say(s, `${o.seat} becomes the ${o.role}.`);
+        // Off the Archivist (hand limit 8) with 8 cards: the hand limit applies at once.
+        s = checkHand(s, L, o.seat, fx);
         break;
       }
       case "sample": {

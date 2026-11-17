@@ -183,7 +183,12 @@ export default defineBase<"boardcore/pandemic">({
             if (why === "hide") continue;
             own.push(opt(a.id, a.label(s, seat), why ?? (a.cost > s.actionsLeft ? "no actions left" : null)));
           }
-          for (const a of pts.actions(s, { seat }).flat()) own.push(opt(a.id, a.label, a.disabled ?? (a.cost > s.actionsLeft ? "no actions left" : null)));
+        }
+        // A role's free ability (the Epidemiologist's take, returning samples) is no action: it stays on offer
+        // during the player's turn after the last action too.
+        for (const a of pts.actions(s, { seat }).flat()) {
+          if (a.cost > 0 && s.actionsLeft <= 0) continue;
+          own.push(opt(a.id, a.label, a.disabled ?? (a.cost > s.actionsLeft ? "no actions left" : null)));
         }
         const call = canCall(s, seat) ? [opt("call", "Wait for the other players' events")] : [];
         return pick(`${plural(s.actionsLeft, "action")} left`, [...own, ...eventOptions(s, seat, "turn"), ...call, opt("end", s.actionsLeft ? `End your actions (${s.actionsLeft} left)` : "End your actions")]);
