@@ -116,3 +116,10 @@ Run 2026-11-15 at `e0c5d98`, Node 22, through `tools/kit` and the published kit 
 ## Engine bugs
 
 None found in the engine. N4 is a test-kit limitation with a repro above.
+
+## Re-checked at `f03102d` (2026-11-17)
+
+Boardcore's part 7c with part 7b's PR #117 fixes merged in. Nothing in these packs needed a change: no add-on's
+`describe` read its prefixed ids, no phase is a pick with an `apply`, no pack has `onLeave` (so the Continue
+prompt after a leave never comes up), and the tests already start games with the handle's options (`h.options`).
+Every test, the kit in both adapters and the leak checks pass.

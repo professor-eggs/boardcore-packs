@@ -356,7 +356,7 @@ export default defineAddon<"boardcore/seven-wonders">({
   describe: ({ view, seat, viewer, action }) => {
     if (view.log.length) return view.log.join(" ");
     if (viewer !== seat) return `${seat} has chosen.`;
-    const first = String(action[0]).replace(`${ID}:`, "");
+    const first = String(action[0]);
     return `You choose ${first.startsWith("l:") ? first.slice(2) : first}.`;
   },
   // Every leader `seat` can't see (other seats' draft and hands, their used ones, the box) redrawn, counts kept.

@@ -57,6 +57,18 @@ describe("Leaders", () => {
     expect(s.run.order[s.run.at]).toBe("turn1");
   });
 
+  it("describes a draft pick to its picker by the leader's name, others see only that a seat chose", async () => {
+    const h = await room({ addons: ["leaders"] });
+    const p = h.trusted;
+    const s = start(p, h.options, 3);
+    const pr = p.choices(s, "red", [])!;
+    const first = pr.options.find((o) => !o.disabled)!.id;
+    expect(first.startsWith(`${L}:l:`)).toBe(true);
+    // The composer strips the add-on's prefix before its describe, as for every handler (11 §10 "describe").
+    expect(p.describe(s, "red", [first], "red")).toBe(`You choose ${first.slice(`${L}:l:`.length)}.`);
+    expect(p.describe(s, "red", [first], "blue")).toBe("red has chosen.");
+  });
+
   it("gives Tomyris's defeat to the winner and Nero 2 coins a victory token", () => {
     const ext = (name: string, k: `${string}:${string}`): SWExtra => ({ from: "leaders", name, cost: 1, eff: [{ k }], off: null });
     const s = stateOf({ a: player({ extras: [ext("Nero", "leaders:nero")] }), b: player({ extras: [ext("Tomyris", "leaders:tomyris")] }) });
