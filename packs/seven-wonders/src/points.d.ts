@@ -1,4 +1,4 @@
-// boardcore/seven-wonders 1.x: the published point declarations (11 §10 "Typed declarations"). A global
+// boardcore/seven-wonders 2.x (the 2nd edition): the published point declarations (11 §10 "Typed declarations"). A global
 // script with no import of its own: an add-on's build includes this file and `defineAddon<"boardcore/seven-wonders">`
 // checks every contribution against it. A changed signature is a new major version of the base.
 type SWJson = import("@boardcore/pack-sdk").Json;
@@ -22,16 +22,20 @@ type SWEff =
   | { [k: string]: SWJson; k: "trade"; side: "L" | "R" | "LR"; kind: "raw" | "man" }
   | { [k: string]: SWJson; k: "perCoins"; n: number; who: SWWho; colors?: SWColor[]; stages?: true; victories?: true }
   | { [k: string]: SWJson; k: "perVP"; n: number; who: SWWho; colors?: SWColor[]; stages?: true; defeats?: true; victories?: true }
-  /** Once an age, build a card for free. */
-  | { [k: string]: SWJson; k: "freeBuild" }
+  /** Build free a card of a colour the city has none of (2nd edition Olympia A). */
+  | { [k: string]: SWJson; k: "freeFirstColor" }
+  /** Build free the card played on each age's first turn (2nd edition Olympia B). */
+  | { [k: string]: SWJson; k: "freeFirstCard" }
+  /** Build free the card played on each age's last turn, from a hand of two (2nd edition Olympia B). */
+  | { [k: string]: SWJson; k: "freeLastCard" }
   /** Cards of a colour are free (always, or once an age). */
   | { [k: string]: SWJson; k: "freeColor"; color: SWColor; perAge?: true }
   /** Play the last card of each age. */
   | { [k: string]: SWJson; k: "lastCard" }
   /** Build a card from the discard pile for free (asked once the turn is played). */
   | { [k: string]: SWJson; k: "discardBuild" }
-  /** At the end, copy the neighbour guild worth most to this city. */
-  | { [k: string]: SWJson; k: "copyGuild" }
+  /** n VP at the end if every stage of the seat's wonder is built (the Decorators Guild). */
+  | { [k: string]: SWJson; k: "wonderDoneVP"; n: number }
   /** Cards of a colour (or wonder stages) cost one resource less. */
   | { [k: string]: SWJson; k: "discount"; color: SWColor | "wonder" }
   /** Buy one resource a turn from the bank for 1 coin. */
@@ -112,7 +116,7 @@ interface SWPlayer {
   /** The cards under the built stages, in build order ("leader" for a leader used instead). */
   markers: SWZone<string>;
   extras: SWExtra[];
-  /** Once-an-age free builds: the age each was last used in. */
+  /** Once-an-age free builds (a colour free once an age): the age each was last used in. */
   freeUsed: { [k: string]: number };
 }
 

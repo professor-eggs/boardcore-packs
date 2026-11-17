@@ -202,14 +202,28 @@ export const parsePlan = (id: Step | undefined): Plan => {
 
 // ---- What a seat may do with a card ----------------------------------------------------------------------
 
-/** Why this build is free (a colour made free, once an age or always), or null. */
+/** The base's pick phase running now ("turn1" ... "turn7", "last"), or null. */
+const phaseNow = (s: State): string | null => (s.run ? s.run.order[s.run.at] ?? null : null);
+
+/**
+ * Why building this card from the hand is free, or null: a colour made free (once an age or always), or the
+ * 2nd edition's Olympia (the first card of a colour in the city; the card played on an age's first turn; the
+ * card played from a hand of two, the age's last turn). The hand still holds the card while this is asked, at
+ * the prompt and at the resolve alike.
+ */
 function freeFor(lib: Lib, s: State, seat: SeatId, item: Item): string | null {
   if (item.type !== "card") return null;
-  for (const e of ofKind(effs(lib, s, seat), "freeColor")) {
+  const all = effs(lib, s, seat);
+  for (const e of ofKind(all, "freeColor")) {
     if (e.color !== item.color) continue;
     if (!e.perAge) return `free ${e.color}`;
     if (s.players[seat]!.freeUsed[`color:${e.color}`] !== s.age) return `free ${e.color}, once an age`;
   }
+  const p = s.players[seat]!;
+  const ph = phaseNow(s);
+  if (all.some((e) => e.k === "freeFirstColor") && !(p.colors[item.color] ?? 0)) return `free as the first ${item.color} card`;
+  if (all.some((e) => e.k === "freeFirstCard") && ph === "turn1") return "free as the first card of the age";
+  if (all.some((e) => e.k === "freeLastCard") && ph !== null && /^turn\d+$/.test(ph) && p.hand.items.length === 2) return "free as the last card of the age";
   return null;
 }
 
@@ -239,17 +253,14 @@ export function cardWays(lib: Lib, s: State, seat: SeatId, key: string): Way[] {
   else {
     const w = waysFor(lib, s, seat, cardItem(d), d.cost);
     ways.push({ id: "build", label: `Build ${d.name}${w.free ? ` (${w.free})` : ""}`, disabled: w.plans.length ? null : "you can't pay for it", plans: w.plans, coins: w.coins });
-    if (!w.free && has(lib, s, seat, "freeBuild") && p.freeUsed.olympia !== s.age)
-      ways.push({ id: "olympia", label: `Build ${d.name} free (once this age)`, disabled: null, plans: [none], coins: 0 });
   }
   ways.push(...stageWays(lib, s, seat));
   ways.push({ id: "sell", label: "Discard for 3 coins", disabled: null, plans: [none], coins: 0 });
   return ways;
 }
 
-/** The free reason a card's build way gives, as resolved: chain, a free colour or Olympia's once an age. */
+/** The free reason a card's build way gives, as resolved: chain, a free colour or Olympia's. */
 export function wayFree(lib: Lib, s: State, seat: SeatId, key: string, way: string): string | null {
-  if (way === "olympia") return "olympia";
   if (way !== "build") return null;
   const p = s.players[seat]!;
   const d = cardOf(lib, key);
@@ -341,8 +352,7 @@ export function built(lib: Lib, s: State, seat: SeatId, list: Eff[], item: Item)
 export function buildCard(lib: Lib, s: State, seat: SeatId, key: string, free: string | null): State {
   const d = cardOf(lib, key);
   s = setP(s, seat, (p) => ({ ...p, cards: [...p.cards, key], colors: { ...p.colors, [d.color]: (p.colors[d.color] ?? 0) + 1 } }));
-  if (free === "olympia") s = setP(s, seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, olympia: s.age } }));
-  else if (free?.endsWith("once an age")) s = setP(s, seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, [`color:${d.color}`]: s.age } }));
+  if (free?.endsWith("once an age")) s = setP(s, seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, [`color:${d.color}`]: s.age } }));
   s = say(s, `${seat} builds ${d.name}${free ? ` (free: ${free})` : ""}.`);
   return built(lib, s, seat, d.eff, cardItem(d, free));
 }
@@ -490,6 +500,7 @@ function baseLines(lib: Lib, s: State, seat: SeatId): Line[] {
   for (const { eff, src } of all) {
     if (eff.k === "vp") add(catOf(src), eff.n);
     else if (eff.k === "perVP") add(catOf(src), eff.n * perCount(s, seat, eff));
+    else if (eff.k === "wonderDoneVP" && openStages(lib, p).length === 0) add(catOf(src), eff.n);
   }
   const list = all.map((e) => e.eff);
   add("science", sciScore(sciCounts(lib, s, seat, list), 7 + ofKind(list, "sciSetBonus").reduce((t, e) => t + e.n, 0)));
@@ -509,22 +520,9 @@ function scoreArgs(lib: Lib, s: State): SWScoreArgs {
 }
 
 /** Every seat's scoring lines: the base's, then each add-on's (the `score` point). */
-export function scoreAll(lib: Lib, s: State, noCopy = false): { [seat: string]: Line[] } {
+export function scoreAll(lib: Lib, s: State): { [seat: string]: Line[] } {
   const out: { [seat: string]: Line[] } = {};
   for (const x of s.seats) out[x] = baseLines(lib, s, x);
   for (const part of lib.pts.score(s, scoreArgs(lib, s))) for (const x of s.seats) for (const l of part[x] ?? []) if (l.vp) out[x]!.push({ cat: String(l.cat), vp: l.vp });
-  if (noCopy) return out;
-  // Copy the neighbour guild worth the most to this city.
-  for (const x of s.seats) {
-    if (!has(lib, s, x, "copyGuild")) continue;
-    const now = total(out[x]!);
-    let best = 0;
-    for (const y of nbrs(s, x)) for (const k of s.players[y]!.cards) {
-      if (cardOf(lib, k).color !== "purple" || s.players[x]!.cards.includes(k)) continue;
-      const v = total(scoreAll(lib, setP(s, x, (p) => ({ ...p, cards: [...p.cards, k], colors: { ...p.colors, purple: (p.colors.purple ?? 0) + 1 } })), true)[x]!) - now;
-      if (v > best) best = v;
-    }
-    if (best) out[x]!.push({ cat: "guilds", vp: best });
-  }
   return out;
 }

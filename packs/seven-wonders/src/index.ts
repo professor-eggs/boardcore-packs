@@ -140,11 +140,10 @@ export default defineBase<"boardcore/seven-wonders">({
       const after: (() => void)[] = [];
       for (const d of done) {
         s = setP(s, d.seat, (p) => ({ ...p, hand: withItems(p.hand, p.hand.items.filter((_, j) => j !== d.i)) }));
-        if (d.way.id === "build" || d.way.id === "olympia") {
+        if (d.way.id === "build") {
           const c = defOf(lib, d.key);
           s = setP(s, d.seat, (p) => ({ ...p, cards: [...p.cards, d.key], colors: { ...p.colors, [c.color]: (p.colors[c.color] ?? 0) + 1 } }));
-          if (d.free === "olympia") s = setP(s, d.seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, olympia: s.age } }));
-          else if (d.free?.endsWith("once an age")) s = setP(s, d.seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, [`color:${c.color}`]: s.age } }));
+          if (d.free?.endsWith("once an age")) s = setP(s, d.seat, (p) => ({ ...p, freeUsed: { ...p.freeUsed, [`color:${c.color}`]: s.age } }));
           s = say(s, `${d.seat} builds ${c.name}${d.free ? ` (free: ${d.free})` : ""}.`);
           after.push(() => { s = built(lib, s, d.seat, c.eff, cardItem(c, d.free)); });
         } else if (d.way.id.startsWith("wonder")) {

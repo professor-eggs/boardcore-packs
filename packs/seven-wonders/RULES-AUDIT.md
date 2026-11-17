@@ -12,6 +12,12 @@ Checked against the references Xavier supplied. Short names used below:
 - **parts**: *7 Wonders: Cities (1st Edition) Card and Part List* (names of every Cities card, guild and leader, and which age each black card belongs to).
 - **sheet**: Cities & Leaders cheatsheet (setup, 8-player variant, leader draft, debt, diplomacy, team play).
 - **photos**: Wonder Pack boards, sides A and B (Great Wall, Abu Simbel, Manneken Pis, Stonehenge).
+- **2e article**: a third-party web article comparing the 1st and 2nd editions, which Xavier supplied when he
+  chose the 2nd edition (2.0.0). Section names below are the article's headings: *Box and Component Updates*,
+  *1st Age*, *2nd Age*, *3rd Age* (and its military list), *Building Chains*, and one per wonder.
+
+**Since 2.0.0 the base is the 2nd edition.** The Rules, Cards and Wonders tables below are the 1st-edition audit
+(1.0.0); where the 2nd edition changed a row, "2nd edition (2.0.0)" at the end of this file supersedes it.
 
 Statuses:
 
@@ -366,9 +372,12 @@ Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander
 - 2-player expert variant: still blocked (concise only says "see rules"; seat minimum is 3).
 - Catan goodie board: still blocked (no stage costs).
 - Extra 7w-1 promo leaders listed above: not implemented.
-- **Owner to confirm against the physical cards** (PR #118 review; the code is left as it is until then):
-  - Spies Guild's cost: coded `SSSG` (3 stone + 1 glass); the review read it as 3 clay + 1 glass.
-  - Olympia B stage 3's cost: coded `LO` (1 ore + 1 loom); the review read it as 2 ore + 1 loom.
+- **Owner to confirm against the physical cards** (PR #118 review), both overtaken by the 2nd edition:
+  - Spies Guild's cost: 1.0.0 coded `SSSG` (3 stone + 1 glass); the review read it as 3 clay + 1 glass. The 2e
+    article also says the 1st edition's cost had clay ("reduced by 1 clay"). 2.0.0 codes `CCG`: see
+    "2nd edition: owner to confirm" below.
+  - Olympia B stage 3's cost: 1.0.0 coded `LO`; the review read it as 2 ore + 1 loom, which the 2e article
+    confirms for the 1st edition ("a loom and 2 ore"). Moot in 2.0.0: the stage now costs glass, papyrus, loom.
 
 ## 1.0.0: what the port changed
 
@@ -411,3 +420,130 @@ see differently:
   Hatshepsut's coin at once (before, the deal and the first turn cleared the purchase before any end of turn
   counted it).
 - Spies Guild and Olympia B stage 3: listed under "Still unverified or blocked" for the owner to confirm.
+
+## 2nd edition (2.0.0)
+
+Xavier owns the 2nd edition and asked for it (2026-11-17). 2.0.0 implements it in the base, with no option for
+the 1st edition. Source: the 2e article; it lists the changes, not every printed value. Where it gives no number,
+the 1st-edition value is kept (or, for a new card, the value of the 1st-edition card whose copies it took) and
+the item is listed under "2nd edition: owner to confirm against the cards". Why a major version: card ids
+changed (`Pawnshop@1`, `Strategists Guild@3` are gone), the effect kinds in `points.d.ts` changed (11 §10: a
+changed signature is a new major), and the same seed deals and plays differently, so a 1.0.0 game replays only
+on 1.0.0.
+
+### Rules and components
+
+| Item | 1st ed (1.0.0) | 2nd ed (2.0.0) | Source |
+|---|---|---|---|
+| Turn, trading, military, end scoring | as in Rules above | unchanged: the article says the flow and rules of play were left intact | 2e article, overview |
+| Players | 3 to 7 (2-player variant not built) | 3 to 7; the 2nd edition dropped the 2-player variant and its cards, so nothing to build | Box and Component Updates |
+| Defeat tokens, value-1 coins | unlimited in the engine | 2 more defeat tokens and 8 more 1-coins in the box: no effect, the engine's supply is unlimited | Box and Component Updates |
+| Wonder cards (random boards) | boards drawn by the engine (`sample`) | the cards were removed; boards are still drawn by the engine, sides by the options | Box and Component Updates |
+| Chain marks | names | symbols on the cards: display only, the chains are by card (below) | Building Chains |
+
+### Cards
+
+| Card | 1st ed (1.0.0) | 2nd ed (2.0.0) | Source |
+|---|---|---|---|
+| Pawnshop (I) | blue, free, 3 VP, 4+ and 7+ | removed; replaced by the **Well** | 1st Age |
+| Well (I) | none | blue, free, 3 VP, 4+ and 7+ (the Pawnshop's values: the article calls it a renaming), chains to the Statue | 1st Age |
+| Altar (I) | 2 VP; chained to the Temple | 3 VP; chains to the Pantheon | 1st Age |
+| Theater (I) | 2 VP; chained to the Statue | 3 VP; chains to the Gardens | 1st Age |
+| Temple (II) | 3 VP; from the Altar, to the Pantheon | 4 VP; no chain | 2nd Age |
+| Statue (II) | from the Theater, to the Gardens | from the Well; to nothing | 2nd Age |
+| Pantheon (III) | from the Temple | from the Altar | 3rd Age |
+| Gardens (III) | from the Statue | from the Theater | 3rd Age |
+| Town Hall (III) | 3+, 5+, 6+ | 3+, 6+ (the 5+ copy became a Ludus) | 3rd Age |
+| Arena (III) | 3+, 5+, 7+ | 3+, 5+ (the 7+ copy became a Ludus) | 3rd Age |
+| Ludus (III) | none | yellow, 5+ and 7+; 3 coins per red card in your city when built; cost `SSO` (owner to confirm) | 3rd Age (coins: "12-18 coins" for 4 to 6 military cards) |
+| Arsenal (III) | 3+, 4+, 7+ | 3+, 5+ | 3rd Age, military list |
+| Fortifications (III) | 3 ore + 1 stone (`OOOS`) | 3 ore + 1 clay (`OOOC`) | 3rd Age, military list |
+| Circus (III) | 4+, 5+, 6+ | 4+, 6+ (the 5+ copy removed) | 3rd Age, military list |
+| Castrum (III) | none | red, 4+ and 7+; 3 shields and cost `WWOL` (owner to confirm) | 3rd Age, military list |
+| Siege Workshop (III) | 3+, 5+ | unchanged (the fifth military card; "80%" of them changed) | 3rd Age, military list |
+| Strategists Guild | 1 VP per neighbours' defeat token | removed; replaced by the **Decorators Guild** | 3rd Age |
+| Decorators Guild | none | purple; 7 VP if every stage of your wonder is built (owner to confirm); cost `OOSL` (owner to confirm) | 3rd Age ("rewards building your Wonder") |
+| Builders Guild | `SSCCG` | `SSSCCG` (+1 stone) | 3rd Age |
+| Spies Guild | `SSSG` as coded (see above) | `CCG` (owner to confirm) | 3rd Age ("reduced by 1 clay") |
+
+Each age still deals 7 cards a seat at 3 to 7 seats: the copies replaced balance (`test/second-edition.test.ts`).
+
+### Wonders
+
+Stage effects are unchanged unless the row says so. Boards' starting resources are the same on both sides.
+
+| Wonder | 1st ed (1.0.0) | 2nd ed (2.0.0) | Source |
+|---|---|---|---|
+| Alexandria A stage 3 | 2 glass | papyrus + loom | The Lighthouse of Alexandria |
+| Alexandria B stage 2 | 2 wood | 3 ore | The Lighthouse of Alexandria |
+| Alexandria B stage 3 | 3 stone | 4 wood | The Lighthouse of Alexandria |
+| Babylon board | clay | wood | The Hanging Gardens of Babylon |
+| Babylon A stage 2 | 3 wood | 2 ore + loom | The Hanging Gardens of Babylon |
+| Babylon A stage 3 | 4 clay | 4 wood | The Hanging Gardens of Babylon |
+| Babylon B | 3 stages: clay + loom (3 VP); 2 wood + glass (last card); 3 clay + papyrus (science) | 2 stages: 2 stone (last card); 3 clay + glass (science); the 3 VP stage removed | The Hanging Gardens of Babylon |
+| Ephesus A stage 1 | 2 stone | 2 clay | The Temple of Artemis in Ephesus |
+| Ephesus A stage 3 | 2 papyrus | 2 ore + glass | The Temple of Artemis in Ephesus |
+| Ephesus B stage 3 | papyrus + loom + glass | 2 ore + loom | The Temple of Artemis in Ephesus |
+| Giza A stage 1 | 2 stone | 2 wood | The Pyramids of Giza |
+| Giza A stage 2 | 3 wood | 2 clay + loom | The Pyramids of Giza |
+| Halicarnassus A stage 1 | 2 clay | 2 ore | The Mausoleum of Halicarnassus |
+| Halicarnassus A stage 2 | 3 ore | glass + papyrus | The Mausoleum of Halicarnassus |
+| Halicarnassus A stage 3 | 2 loom | 3 stone | The Mausoleum of Halicarnassus |
+| Halicarnassus B stage 1 | 2 ore | 2 clay | The Mausoleum of Halicarnassus |
+| Halicarnassus B stage 2 | 3 clay | glass + papyrus | The Mausoleum of Halicarnassus |
+| Halicarnassus B stage 3 | glass + papyrus + loom | 3 wood | The Mausoleum of Halicarnassus |
+| Olympia board | wood | clay | The Statue of Zeus in Olympia |
+| Olympia A stage 1 | 2 wood | 2 stone (3 VP) | The Statue of Zeus in Olympia |
+| Olympia A stage 2 | 2 stone; once an age, build a card free | 2 wood; a card of a colour your city has none of is free, all game (`freeFirstColor`) | The Statue of Zeus in Olympia |
+| Olympia A stage 3 | 2 ore | 3 clay (7 VP) | The Statue of Zeus in Olympia |
+| Olympia B stage 1 | 2 wood; raw goods from both neighbours at 1 coin | 2 ore; 2 VP and the card played on each age's first turn is free (`freeFirstCard`) | The Statue of Zeus in Olympia |
+| Olympia B stage 2 | 2 stone; 5 VP | 3 clay; 3 VP and the card played on each age's last turn is free (`freeLastCard`) | The Statue of Zeus in Olympia |
+| Olympia B stage 3 | loom + ore as coded (2 ore + loom per the article); copy a neighbour's guild | glass + papyrus + loom; 5 VP | The Statue of Zeus in Olympia |
+| Rhodes | as in Wonders above | unchanged: the article names no change and shows no Rhodes picture | none |
+| Giza B | as in Wonders above | unchanged: the article names no change (it pictures side A only) | none |
+
+How 2.0.0 reads the Olympia effects: "free" means no coins and no resources, through the card's usual build
+option. The first-of-a-colour build counts the cards in the city (a card built from the discard pile or a free
+chain counts too), over the whole game, as the article says the FAQ rules. The first card of an age is the card
+picked on the age's turn 1; the last card is the card picked from a hand of two (turn 6, or turn 7 with the Cities
+eighth card). The effect kinds `freeBuild` (1st-edition Olympia A) and `copyGuild` (1st-edition Olympia B) are
+gone from `points.d.ts`; no add-on used them.
+
+### 2nd edition: owner to confirm against the cards
+
+The article gives no number for these; the code keeps the value named, and Xavier's cards decide.
+
+- **Ludus cost**: the article says only "inexpensive to build". Coded `SSO` (2 stone + ore), the 1st-edition
+  Arena's cost (the 7+ Arena is one of the copies it replaced). Chain: none coded.
+- **Ludus victory points**: the article gives the coins (3 per red card, from "12-18 coins" for 4 to 6 military
+  cards) and no points. Coded with no VP; if the card also scores per red card, add a `perVP` beside the coins.
+- **Castrum cost, shields and chain**: the article only says it was added for 4+ and 7+. Coded as the
+  1st-edition Arsenal it took the copies of: `WWOL`, 3 shields (every Age III red card's), no chain.
+- **Decorators Guild cost and effect**: the article says it "rewards building your Wonder" and replaces the
+  Strategists. Coded cost `OOSL` (the Strategists'); effect 7 VP if every stage of your wonder is built. The 7 is
+  not in the article.
+- **Spies Guild cost**: the article says "reduced by 1 clay"; 1.0.0 coded `SSSG` from 7w-5, which has no clay to
+  remove. The PR #118 review read the 1st-edition card as 3 clay + glass, and the article agrees it had clay, so
+  2.0.0 codes `CCG` (2 clay + glass).
+- **Well**: coded as the Pawnshop it renames (free, 3 VP, 4+ and 7+); the article says its copies are 4+ and 7+.
+- **Olympia B stage 1, "the first card of each Age"**: read as the card picked on turn 1 of each age.
+- **Rhodes (both sides) and Giza B**: not mentioned by the article; kept as 1.0.0.
+- **Other values the article doesn't touch** (every other cost, chain, effect and copy count, both sides of each
+  board's untouched stages): kept as 1.0.0; the "Still unverified" list above still applies to them.
+
+### Expansions with the 2nd-edition base
+
+Leaders, Cities and the Wonder Pack keep their rules as audited above (1st-edition expansions); **which editions
+of them Xavier owns is unconfirmed.** Each is now 2.0.0 with range `^2.0.0` (only the range changed) and is
+tested composed with the 2nd-edition base (`test/addons.test.ts`, the kit tests, every seat count, the leak
+checks in both adapters).
+
+- No add-on names a card the 2nd edition removed or renamed (no Pawnshop, no Strategists Guild): their cards and
+  leaders refer to colours, effect kinds and their own cards only. The Leaders and Cities guilds join the Age III
+  guild pool with the Decorators Guild in the Strategists' place.
+- Indirect effects of the edition on 1st-edition expansion content: Tomyris (defeat tokens go to the
+  neighbour) no longer feeds a Strategists Guild; Manneken Pis A's copies of a neighbour's stage now copy the new
+  Olympia free builds, and a copy of a stage Babylon B no longer has (stage 3) copies nothing, as with any
+  two-stage board; Stevie, Imhotep and the Cities wonder-stage effects read the new stage costs.
+- The Scientist persona (`seven-wonders-scientist`) is 2.0.0 with range `^2.0.0`; its science card names are
+  unchanged, and its prior no longer looks for the removed Olympia way.

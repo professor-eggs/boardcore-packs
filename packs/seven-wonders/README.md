@@ -1,9 +1,11 @@
-# 7 Wonders (pack `boardcore/seven-wonders` 1.0.0) and its add-ons
+# 7 Wonders (pack `boardcore/seven-wonders` 2.0.0) and its add-ons
 
-Private, local-only build of 7 Wonders (1st edition). Since 1.0.0 the expansions are separate add-on packs of
+Private, local-only build of 7 Wonders, **2nd edition** since 2.0.0 (1.0.0 was the 1st edition; there is no
+option for it). Since 1.0.0 the expansions are separate add-on packs of
 this base, each chosen per room: **Leaders** (`boardcore/seven-wonders-leaders`), **Cities**
 (`boardcore/seven-wonders-cities`) and the **Wonder Pack** (`boardcore/seven-wonders-wonder-pack`), each
-`addon: { base: "boardcore/seven-wonders", range: "^1.0.0" }`. Mechanics only: card names and numbers, no rulebook
+`addon: { base: "boardcore/seven-wonders", range: "^2.0.0" }` (each 2.0.0: their rules are as before; which
+editions of them the owner has is unconfirmed). Mechanics only: card names and numbers, no rulebook
 text or art. Not for distribution.
 
 ## Options
@@ -52,17 +54,20 @@ Each age is a round of the phase runner: `deal`, `ready`, `turn1`/`end1` ... `tu
 
 ## Tests
 
-`test/base.test.ts` (rules of the base), `test/addons.test.ts` (rules of the add-ons), `test/kit-games.test.ts`
+`test/base.test.ts` (rules of the base), `test/second-edition.test.ts` (each 2nd-edition card and wonder change:
+cost, production, effect, chain, copies), `test/addons.test.ts` (rules of the add-ons), `test/kit-games.test.ts`
 and `test/kit-checks.test.ts` (the test kit: both adapters, replays, every seat count with and without each
 add-on, the leak check, interleaved rooms), `test/fixtures.test.ts` (A87: a game recorded by 0.1.0).
 
 ## Gaps and stubs
 
 - `RULES-AUDIT.md` checks every rule, card, wonder stage and leader against the references Xavier supplied;
-  player-count copies and some stage costs are still unverified. Its "1.0.0" section lists what changed.
+  player-count copies and some stage costs are still unverified. Its "1.0.0" section lists what the port changed;
+  its "2nd edition (2.0.0)" section lists every edition change with its source, and the values the owner still
+  has to confirm against his cards.
 - `CONTRACT-GAPS.md`: where the contract was awkward, with the test-kit numbers; `GAPS-FOR-PUBLIC.md`: the
   generic gaps in words, to carry into the public docs.
-- Team play keeps seats individual in the result (G4). The 2-player variant is not built.
+- Team play keeps seats individual in the result (G4). The 2-player variant is not built (the 2nd edition dropped it).
 - Simplifications: the Courtesans' Guild copies a leader's lasting and scoring effects, not one-off coins;
-  Olympia B's copied guild, masks and wild science symbols are chosen at the end for the best score; Manneken
+  masks and wild science symbols are chosen at the end for the best score; Manneken
   Pis A copies the neighbour's stage effects even if that neighbour hasn't built that stage.

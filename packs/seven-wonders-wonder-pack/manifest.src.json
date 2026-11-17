@@ -1,11 +1,11 @@
 {
   "id": "boardcore/seven-wonders-wonder-pack",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "7 Wonders: Wonder Pack",
   "description": "Four more wonder boards: the Great Wall, Stonehenge, Manneken Pis, and Abu Simbel (dealt only with the Leaders add-on). Private local build: not for distribution.",
   "authors": ["Boardcore"],
   "licence": "UNLICENSED",
   "contract": 1,
-  "addon": { "base": "boardcore/seven-wonders", "range": "^1.0.0" },
+  "addon": { "base": "boardcore/seven-wonders", "range": "^2.0.0" },
   "tags": ["expansion"]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@boardcore-packs/seven-wonders-scientist",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Scientist: a persona for boardcore/seven-wonders (13 \u00a76), a prior on science cards and an evaluation of each city's points.",
   "license": "UNLICENSED",
   "private": true,

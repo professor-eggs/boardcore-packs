@@ -41,7 +41,7 @@ export default definePersona<View>({
     const card = v.hand[Number(first.slice(2))];
     const way = action[1];
     if (way === "sell") return 0.5;
-    if (way === "build" || way === "olympia") return card !== undefined && SCIENCE[card] !== undefined ? 4 : 1;
+    if (way === "build") return card !== undefined && SCIENCE[card] !== undefined ? 4 : 1;
     return 1;
   },
 });

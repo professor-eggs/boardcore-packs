@@ -24,7 +24,7 @@ interface SwState { [k: string]: Json; turn: number; age: number; players: { [se
 describe("Scientist (8b, private)", () => {
   it("passes install's checks with its own settings, in range for the base", async () => {
     const p = await scientist();
-    expect(p.manifest.persona).toEqual({ pack: "boardcore/seven-wonders", range: "^1.0.0" });
+    expect(p.manifest.persona).toEqual({ pack: "boardcore/seven-wonders", range: "^2.0.0" });
     // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
     const base = dist("seven-wonders").manifest as { id: string; version: string };
     expect(p.manifest.persona.pack).toBe(base.id);
