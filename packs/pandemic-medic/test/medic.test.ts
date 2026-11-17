@@ -34,6 +34,8 @@ describe("Medic (8b, private)", () => {
     });
     const t = await play("trusted");
     expect(bare(await play("sandboxed"))).toEqual(bare(t));
+    // No search failed and no seat fell back (PR #109 second review, R3): every move measured is a searched one.
+    for (const x of t.seats) expect([x.failedSearches, x.fallbacks]).toEqual([0, 0]);
     expect(moves.length).toBeGreaterThan(0);
     for (const m of moves) {
       // A hidden-information game: every search ran over its own seat's worlds, never the true state.

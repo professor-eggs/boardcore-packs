@@ -1,0 +1,1173 @@
+[
+ {
+  "label": "draft game 8 seats, all add-ons, team play: one search per setting (sandboxed, first visit, PR #109 second review)",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-grid",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:63901e1284341ef53f362ef4d7596decf1a1da04110dcf95c2055e524a4ef60f"
+      },
+      "playouts": 200,
+      "searchMs": 86934.506234,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:eab6f311dfe5e526f08412a849e49543b9b3347ea596609800dd53d418782a53"
+      },
+      "playouts": 50,
+      "searchMs": 11160.55283,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:b6ef1f8deb13c98fb0fba7f2f592035d811b857da5a494cfc0b32c407d8497de"
+      },
+      "playouts": 50,
+      "searchMs": 12218.943637999997,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:7237a60731abf8942e6eb9781c544b79043662f0476bcc690559058c6cc2ce5d"
+      },
+      "playouts": 50,
+      "searchMs": 14925.527934999991,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "purple",
+      "lineup": 4,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:7237a60731abf8942e6eb9781c544b79043662f0476bcc690559058c6cc2ce5d"
+      },
+      "playouts": 100,
+      "searchMs": 33889.997634,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "orange",
+      "lineup": 5,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:81612deb93b4186949d6fbb26cd34f8b752557aaf3b7a914953041e945223f2a"
+      },
+      "playouts": 100,
+      "searchMs": 45836.48303999999,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "teal",
+      "lineup": 6,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:ff91c546a804f1d869f70040b6c9e05b660fb47474b6c6918815a939fb51939d"
+      },
+      "playouts": 200,
+      "searchMs": 54547.247203000006,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "pink",
+      "lineup": 7,
+      "persona": {
+       "id": "boardcore/scientist",
+       "version": "1.0.0",
+       "hash": "sha256:63901e1284341ef53f362ef4d7596decf1a1da04110dcf95c2055e524a4ef60f"
+      },
+      "playouts": 50,
+      "searchMs": 22640.409556,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 8,
+    "stopped": "stopped at 8 plies"
+   }
+  ],
+  "moves": [
+   {
+    "seat": "red",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 624.5738139999994,
+    "ms": 86899.59280000001,
+    "ply": 0,
+    "packCalls": 10952,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 832
+    },
+    "worldsMs": 255.30894500000005,
+    "loadMs": 99.78733199999999,
+    "longestSliceMs": 624.5861910000021,
+    "peakHeap": 36514748,
+    "game": 0,
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 383.761096000002,
+    "ms": 11128.772346000012,
+    "ply": 1,
+    "packCalls": 1337,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 204
+    },
+    "worldsMs": 125.74115000000165,
+    "loadMs": 102.27099699999962,
+    "longestSliceMs": 383.96047000000544,
+    "peakHeap": 10093176,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})"
+   },
+   {
+    "seat": "green",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 433.0174430000043,
+    "ms": 12190.535990000004,
+    "ply": 2,
+    "packCalls": 1524,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 208
+    },
+    "worldsMs": 129.10832699999446,
+    "loadMs": 64.33093999999983,
+    "longestSliceMs": 433.0394890000025,
+    "peakHeap": 7945852,
+    "game": 0,
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "yellow",
+    "worlds": 4,
+    "playouts": 50,
+    "nodes": 54,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 464.3790880000015,
+    "ms": 14900.303703000012,
+    "ply": 3,
+    "packCalls": 1928,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 216
+    },
+    "worldsMs": 240.25664599999436,
+    "loadMs": 99.71080100000836,
+    "longestSliceMs": 464.61932300000626,
+    "peakHeap": 9519956,
+    "game": 0,
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})"
+   },
+   {
+    "seat": "purple",
+    "worlds": 4,
+    "playouts": 100,
+    "nodes": 104,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 494.0043200000073,
+    "ms": 33858.88317999999,
+    "ply": 4,
+    "packCalls": 3848,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 416
+    },
+    "worldsMs": 162.74174800000037,
+    "loadMs": 59.72108699999808,
+    "longestSliceMs": 494.01940099999774,
+    "peakHeap": 5204552,
+    "game": 0,
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})"
+   },
+   {
+    "seat": "orange",
+    "worlds": 2,
+    "playouts": 100,
+    "nodes": 102,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 649.4137580000097,
+    "ms": 45810.28694600001,
+    "ply": 5,
+    "packCalls": 5354,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 348
+    },
+    "worldsMs": 203.02123899999424,
+    "loadMs": 105.8122329999751,
+    "longestSliceMs": 649.4251360000053,
+    "peakHeap": 5923403,
+    "game": 0,
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "teal",
+    "worlds": 4,
+    "playouts": 200,
+    "nodes": 204,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 431.8829599999881,
+    "ms": 54512.33758200001,
+    "ply": 6,
+    "packCalls": 5780,
+    "personaCalls": {
+     "evaluate": 1600,
+     "prior": 632
+    },
+    "worldsMs": 191.2294469999906,
+    "loadMs": 64.50268199999118,
+    "longestSliceMs": 431.8965460000036,
+    "peakHeap": 8645308,
+    "game": 0,
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})"
+   },
+   {
+    "seat": "pink",
+    "worlds": 8,
+    "playouts": 50,
+    "nodes": 58,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 702.1860599999782,
+    "ms": 22605.067408000003,
+    "ply": 7,
+    "packCalls": 2656,
+    "personaCalls": {
+     "evaluate": 400,
+     "prior": 182
+    },
+    "worldsMs": 482.0852259999956,
+    "loadMs": 69.08979800000088,
+    "longestSliceMs": 702.1985100000165,
+    "peakHeap": 10921244,
+    "game": 0,
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 86899.59280000001,
+     "p90": 86899.59280000001,
+     "max": 86899.59280000001
+    },
+    "playouts": 200,
+    "worlds": 8,
+    "packCalls": 10952,
+    "evaluate": 1600,
+    "prior": 832,
+    "peakHeapMB": 36.5,
+    "longestSliceMs": 624.5861910000021,
+    "longestVisitMs": 624.5738139999994
+   },
+   {
+    "lineup": 1,
+    "persona": "Scientist ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 11128.772346000012,
+     "p90": 11128.772346000012,
+     "max": 11128.772346000012
+    },
+    "playouts": 50,
+    "worlds": 1,
+    "packCalls": 1337,
+    "evaluate": 400,
+    "prior": 204,
+    "peakHeapMB": 10.1,
+    "longestSliceMs": 383.96047000000544,
+    "longestVisitMs": 383.761096000002
+   },
+   {
+    "lineup": 2,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 12190.535990000004,
+     "p90": 12190.535990000004,
+     "max": 12190.535990000004
+    },
+    "playouts": 50,
+    "worlds": 2,
+    "packCalls": 1524,
+    "evaluate": 400,
+    "prior": 208,
+    "peakHeapMB": 7.9,
+    "longestSliceMs": 433.0394890000025,
+    "longestVisitMs": 433.0174430000043
+   },
+   {
+    "lineup": 3,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 14900.303703000012,
+     "p90": 14900.303703000012,
+     "max": 14900.303703000012
+    },
+    "playouts": 50,
+    "worlds": 4,
+    "packCalls": 1928,
+    "evaluate": 400,
+    "prior": 216,
+    "peakHeapMB": 9.5,
+    "longestSliceMs": 464.61932300000626,
+    "longestVisitMs": 464.3790880000015
+   },
+   {
+    "lineup": 4,
+    "persona": "Scientist ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 33858.88317999999,
+     "p90": 33858.88317999999,
+     "max": 33858.88317999999
+    },
+    "playouts": 100,
+    "worlds": 4,
+    "packCalls": 3848,
+    "evaluate": 800,
+    "prior": 416,
+    "peakHeapMB": 5.2,
+    "longestSliceMs": 494.01940099999774,
+    "longestVisitMs": 494.0043200000073
+   },
+   {
+    "lineup": 5,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 45810.28694600001,
+     "p90": 45810.28694600001,
+     "max": 45810.28694600001
+    },
+    "playouts": 100,
+    "worlds": 2,
+    "packCalls": 5354,
+    "evaluate": 800,
+    "prior": 348,
+    "peakHeapMB": 5.9,
+    "longestSliceMs": 649.4251360000053,
+    "longestVisitMs": 649.4137580000097
+   },
+   {
+    "lineup": 6,
+    "persona": "Scientist ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 54512.33758200001,
+     "p90": 54512.33758200001,
+     "max": 54512.33758200001
+    },
+    "playouts": 200,
+    "worlds": 4,
+    "packCalls": 5780,
+    "evaluate": 1600,
+    "prior": 632,
+    "peakHeapMB": 8.6,
+    "longestSliceMs": 431.8965460000036,
+    "longestVisitMs": 431.8829599999881
+   },
+   {
+    "lineup": 7,
+    "persona": "Scientist ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})",
+    "searches": 1,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 22605.067408000003,
+     "p90": 22605.067408000003,
+     "max": 22605.067408000003
+    },
+    "playouts": 50,
+    "worlds": 8,
+    "packCalls": 2656,
+    "evaluate": 400,
+    "prior": 182,
+    "peakHeapMB": 10.9,
+    "longestSliceMs": 702.1985100000165,
+    "longestVisitMs": 702.1860599999782
+   }
+  ],
+  "log": [],
+  "flagged": null,
+  "wallMs": 283468.828074
+ },
+ {
+  "label": "co-op game 4 seats, four add-ons, closed hands: searches per setting (sandboxed, first visit, PR #109 second review)",
+  "host": "Node v22.23.4",
+  "trust": "sandboxed",
+  "records": [
+   {
+    "baseSeed": "8b-grid",
+    "game": 0,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001"
+      },
+      "playouts": 200,
+      "searchMs": 39.760395999997854,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "blue",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4"
+      },
+      "playouts": 50,
+      "searchMs": 47106.984140999964,
+      "searches": 3,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:2c39a0bbfc333e831b67ba6ada06307d724103b9ec416e8a8532cda637df222b"
+      },
+      "playouts": 100,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 6,
+    "stopped": "stopped at 6 plies"
+   },
+   {
+    "baseSeed": "8b-grid",
+    "game": 1,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:2c39a0bbfc333e831b67ba6ada06307d724103b9ec416e8a8532cda637df222b"
+      },
+      "playouts": 100,
+      "searchMs": 23.87280200002715,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "blue",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001"
+      },
+      "playouts": 200,
+      "searchMs": 213019.93630999996,
+      "searches": 3,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4"
+      },
+      "playouts": 50,
+      "searchMs": 12555.615987000056,
+      "searches": 1,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 6,
+    "stopped": "stopped at 6 plies"
+   },
+   {
+    "baseSeed": "8b-grid",
+    "game": 2,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 39177.800392999896,
+      "searches": 3,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "blue",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:2c39a0bbfc333e831b67ba6ada06307d724103b9ec416e8a8532cda637df222b"
+      },
+      "playouts": 100,
+      "searchMs": 50.174329999950714,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001"
+      },
+      "playouts": 200,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4"
+      },
+      "playouts": 50,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 6,
+    "stopped": "stopped at 6 plies"
+   },
+   {
+    "baseSeed": "8b-grid",
+    "game": 3,
+    "seats": [
+     {
+      "seat": "red",
+      "lineup": 1,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4"
+      },
+      "playouts": 50,
+      "searchMs": 303.50217699992936,
+      "searches": 0,
+      "failedSearches": 1,
+      "fallbacks": 1
+     },
+     {
+      "seat": "blue",
+      "lineup": 2,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada"
+      },
+      "playouts": 50,
+      "searchMs": 39405.27065399999,
+      "searches": 4,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "green",
+      "lineup": 3,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:2c39a0bbfc333e831b67ba6ada06307d724103b9ec416e8a8532cda637df222b"
+      },
+      "playouts": 100,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     },
+     {
+      "seat": "yellow",
+      "lineup": 0,
+      "persona": {
+       "id": "boardcore/medic",
+       "version": "1.0.0",
+       "hash": "sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001"
+      },
+      "playouts": 200,
+      "searchMs": 0,
+      "searches": 0,
+      "failedSearches": 0,
+      "fallbacks": 0
+     }
+    ],
+    "winners": null,
+    "places": null,
+    "scores": null,
+    "plies": 6,
+    "stopped": "stopped at 6 plies"
+   }
+  ],
+  "moves": [
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 1388.0124369999976,
+    "ms": 15452.536237999971,
+    "ply": 0,
+    "packCalls": 2668,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 770
+    },
+    "worldsMs": 68.74336000002222,
+    "loadMs": 59.63030499999877,
+    "longestSliceMs": 1388.0235329999705,
+    "peakHeap": 21513796,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 680.433173999947,
+    "ms": 14179.146983999992,
+    "ply": 2,
+    "packCalls": 2521,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 698
+    },
+    "worldsMs": 89.14251199999126,
+    "loadMs": 76.34824800002389,
+    "longestSliceMs": 680.4467740000109,
+    "peakHeap": 5292729,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 880.2466540000169,
+    "ms": 17297.69743,
+    "ply": 4,
+    "packCalls": 2517,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 698
+    },
+    "worldsMs": 55.5075010000146,
+    "loadMs": 49.705240999988746,
+    "longestSliceMs": 880.2668330000015,
+    "peakHeap": 5304921,
+    "game": 0,
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 1578.0305440000375,
+    "ms": 66944.98500300001,
+    "ply": 0,
+    "packCalls": 11134,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 1082
+    },
+    "worldsMs": 131.62932700000238,
+    "loadMs": 57.358891000039876,
+    "longestSliceMs": 1578.0518049999955,
+    "peakHeap": 8735517,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Medic ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 1347.1295790000004,
+    "ms": 72513.725974,
+    "ply": 2,
+    "packCalls": 11357,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 1142
+    },
+    "worldsMs": 108.35224899998866,
+    "loadMs": 46.855455000011716,
+    "longestSliceMs": 1347.1432049999712,
+    "peakHeap": 20120716,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Medic ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 8,
+    "playouts": 200,
+    "nodes": 208,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 1459.964960000012,
+    "ms": 73391.38617799996,
+    "ply": 4,
+    "packCalls": 11205,
+    "personaCalls": {
+     "evaluate": 800,
+     "prior": 1110
+    },
+    "worldsMs": 122.3113060000469,
+    "loadMs": 58.36532099999022,
+    "longestSliceMs": 1459.9768559999648,
+    "peakHeap": 9879044,
+    "game": 1,
+    "lineup": 0,
+    "persona": "Medic ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})"
+   },
+   {
+    "seat": "green",
+    "worlds": 1,
+    "playouts": 50,
+    "nodes": 51,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 1132.1427100000437,
+    "ms": 12533.654614,
+    "ply": 5,
+    "packCalls": 1668,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 422
+    },
+    "worldsMs": 95.38839700003155,
+    "loadMs": 77.32194699998945,
+    "longestSliceMs": 1226.80333600007,
+    "peakHeap": 0,
+    "game": 1,
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})"
+   },
+   {
+    "seat": "red",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 991.3715849999571,
+    "ms": 14514.363763000001,
+    "ply": 0,
+    "packCalls": 1918,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 448
+    },
+    "worldsMs": 108.36010299995542,
+    "loadMs": 80.29093899996951,
+    "longestSliceMs": 991.4012149999617,
+    "peakHeap": 2195553,
+    "game": 2,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "red",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 471.20246299996506,
+    "ms": 12664.810154000064,
+    "ply": 2,
+    "packCalls": 1656,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 323
+    },
+    "worldsMs": 104.84205099998508,
+    "loadMs": 77.69184700003825,
+    "longestSliceMs": 471.2156059999252,
+    "peakHeap": 5969388,
+    "game": 2,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "red",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 448.1163069999311,
+    "ms": 11772.479056000011,
+    "ply": 4,
+    "packCalls": 1649,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 326
+    },
+    "worldsMs": 97.76531199994497,
+    "loadMs": 75.02277200005483,
+    "longestSliceMs": 448.2737859999761,
+    "peakHeap": 5312920,
+    "game": 2,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 420.404470999958,
+    "ms": 10717.975157000008,
+    "ply": 0,
+    "packCalls": 1700,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 342
+    },
+    "worldsMs": 73.95585399994161,
+    "loadMs": 61.12371900002472,
+    "longestSliceMs": 423.58902600000147,
+    "peakHeap": 16298489,
+    "game": 3,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 411.7337749999715,
+    "ms": 11177.578770999913,
+    "ply": 1,
+    "packCalls": 1653,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 322
+    },
+    "worldsMs": 100.42664499999955,
+    "loadMs": 76.30002799991053,
+    "longestSliceMs": 411.8764979999978,
+    "peakHeap": 7322980,
+    "game": 3,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 365.00661599996965,
+    "ms": 8012.475245999987,
+    "ply": 3,
+    "packCalls": 1313,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 183
+    },
+    "worldsMs": 96.5275510000065,
+    "loadMs": 73.77826099994127,
+    "longestSliceMs": 365.02224900003057,
+    "peakHeap": 7344756,
+    "game": 3,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   },
+   {
+    "seat": "blue",
+    "worlds": 2,
+    "playouts": 50,
+    "nodes": 52,
+    "timedOut": false,
+    "capped": null,
+    "longestVisitMs": 669.8320290000411,
+    "ms": 9237.688698000042,
+    "ply": 5,
+    "packCalls": 1411,
+    "personaCalls": {
+     "evaluate": 200,
+     "prior": 229
+    },
+    "worldsMs": 99.5695190000115,
+    "loadMs": 73.95192999998108,
+    "longestSliceMs": 669.8484669999452,
+    "peakHeap": 8406284,
+    "game": 3,
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})"
+   }
+  ],
+  "summary": [
+   {
+    "lineup": 0,
+    "persona": "Medic ({\"cutoff\":8,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":8})",
+    "searches": 3,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 72513.725974,
+     "p90": 73391.38617799996,
+     "max": 73391.38617799996
+    },
+    "playouts": 200,
+    "worlds": 8,
+    "packCalls": 11357,
+    "evaluate": 800,
+    "prior": 1142,
+    "peakHeapMB": 20.1,
+    "longestSliceMs": 1578.0518049999955,
+    "longestVisitMs": 1578.0305440000375
+   },
+   {
+    "lineup": 1,
+    "persona": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1})",
+    "searches": 4,
+    "failedSearches": 1,
+    "fallbacks": 1,
+    "ms": {
+     "median": 15452.536237999971,
+     "p90": 17297.69743,
+     "max": 17297.69743
+    },
+    "playouts": 50,
+    "worlds": 1,
+    "packCalls": 2668,
+    "evaluate": 200,
+    "prior": 770,
+    "peakHeapMB": 21.5,
+    "longestSliceMs": 1388.0235329999705,
+    "longestVisitMs": 1388.0124369999976
+   },
+   {
+    "lineup": 2,
+    "persona": "Medic ({\"cutoff\":2,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":2})",
+    "searches": 7,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 11177.578770999913,
+     "p90": 14514.363763000001,
+     "max": 14514.363763000001
+    },
+    "playouts": 50,
+    "worlds": 2,
+    "packCalls": 1918,
+    "evaluate": 200,
+    "prior": 448,
+    "peakHeapMB": 16.3,
+    "longestSliceMs": 991.4012149999617,
+    "longestVisitMs": 991.3715849999571
+   },
+   {
+    "lineup": 3,
+    "persona": "Medic ({\"cutoff\":4,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":4})",
+    "searches": 0,
+    "failedSearches": 0,
+    "fallbacks": 0,
+    "ms": {
+     "median": 0,
+     "p90": 0,
+     "max": 0
+    },
+    "playouts": 0,
+    "worlds": 0,
+    "packCalls": 0,
+    "evaluate": 0,
+    "prior": 0,
+    "peakHeapMB": 0,
+    "longestSliceMs": 0,
+    "longestVisitMs": 0
+   }
+  ],
+  "log": [
+   "game 0: blue: the persona boardcore/medic 1.0.0 (sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4): more than 64 actions; searching the first 64 (Q53)",
+   "game 1: blue: the persona boardcore/medic 1.0.0 (sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001): more than 64 actions; searching the first 64 (Q53)",
+   "game 1: blue: the persona boardcore/medic 1.0.0 (sha256:1576416bd48a36d53a8435771460277768a30b5361ed25f28cb72833f6fe8001): more than 64 actions; searching the first 64 (Q53)",
+   "game 2: red: the persona boardcore/medic 1.0.0 (sha256:a5c1773b43406ab24ea72e017d346515102aa9f01ef04f4ccf0c055d80319ada): more than 64 actions; searching the first 64 (Q53)",
+   "game 3: red: the persona boardcore/medic 1.0.0 (sha256:d77902f23a7a52576be16352b02b5e81c852d2251599bf69bc027981a98382a4)'s search failed (a pack fault in apply in a world of this seat's: threw: blue has no city:Cairo); playing its fallback"
+  ],
+  "flagged": "Medic ({\"cutoff\":1,\"explore\":1.4,\"noise\":0,\"playouts\":50,\"worlds\":1}): 1 failed searches, 1 fallbacks",
+  "wallMs": 354293.719733
+ }
+]

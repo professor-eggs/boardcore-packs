@@ -45,6 +45,8 @@ describe("Scientist (8b, private)", () => {
     const s = await play("sandboxed");
     expect(bare(s)).toEqual(bare(t));
     expect(t.seats.every((x) => x.persona?.id === "boardcore/scientist")).toBe(true);
+    // No search failed and no seat fell back (PR #109 second review, R3).
+    for (const x of t.seats) expect([x.failedSearches, x.fallbacks]).toEqual([0, 0]);
     expect(moves.length).toBeGreaterThan(0);
     for (const m of moves) {
       expect(m.playouts).toBe(50);
