@@ -71,6 +71,21 @@ function firstPath(choices: (p: Step[]) => Prompt | null): Action | null {
   return null;
 }
 
+/** The board text's width: what a phone shows of it (about 36 columns). */
+export const BOARD_WIDTH = 34;
+/** One line of board text wrapped at word breaks to BOARD_WIDTH, the rest indented by two spaces. */
+export function wrap(line: string, width = BOARD_WIDTH): string[] {
+  const lead = /^ */.exec(line)![0];
+  const out: string[] = [];
+  let ind = lead, cur = "";
+  for (const w of line.slice(lead.length).split(" ")) {
+    if (cur && ind.length + cur.length + 1 + w.length > width) { out.push(ind + cur); ind = `${lead}  `; cur = w; }
+    else cur = cur ? `${cur} ${w}` : w;
+  }
+  out.push(ind + cur);
+  return out.flatMap((l) => (l.length <= width ? [l] : l.match(new RegExp(`.{1,${width}}`, "g"))!));
+}
+
 /**
  * The outcome (11 §2, D79): places by points, a tie broken by the most coins, still tied shares the place;
  * scores are the points. Places are competition ranks (1, 1, 3), so the winners are the seats at place 1.
@@ -377,11 +392,27 @@ export default defineBase<"boardcore/seven-wonders">({
           return parts.join(" ");
         },
         layout(v) {
-          const rows = v.seats.map((x) => {
+          // Narrow enough for a phone (about 36 columns): a few short lines a seat, wrapped at word breaks.
+          const out: string[] = [heading(v)];
+          for (const x of v.seats) {
             const p = v.players[x]!;
-            return `${x.padEnd(7)} ${p.wonder.padEnd(14)} ${p.side} st ${p.stages.length}/${p.stageCount} $${String(p.coins).padStart(2)} mil ${String(p.victories.reduce((a, b) => a + b, 0) - p.defeats).padStart(3)} ${p.waiting ? "…" : " "} ${p.cards.join(", ")}`;
-          });
-          return [heading(v), ...rows, v.hand.length ? `Hand: ${v.hand.join(" | ")}` : ""].filter(Boolean).join("\n");
+            const ex = p.extras.filter((e) => e.off === null).map((e) => e.name);
+            const mil = p.victories.reduce((a, b) => a + b, 0) - p.defeats;
+            out.push(...wrap(`${x}: ${p.wonder} ${p.side}${p.waiting ? " (choosing)" : ""}`));
+            out.push(...wrap(`  stage ${p.stages.length}/${p.stageCount}, ${plural(p.coins, "coin")}, military ${mil}${v.partner[x] ? `, partner ${v.partner[x]}` : ""}`));
+            const city = [...p.cards, ...ex];
+            if (city.length) out.push(...wrap(`  ${city.join(", ")}`));
+          }
+          if (v.hand.length) out.push(...wrap(`Your hand: ${v.hand.join(", ")}`));
+          if (v.scores) {
+            for (const x of v.seats) {
+              const sum = new Map<string, number>();
+              for (const l of v.scores[x]! as Line[]) sum.set(l.cat, (sum.get(l.cat) ?? 0) + l.vp);
+              const n = total(v.scores[x]! as Line[]);
+              out.push(...wrap(`${x} ${plural(n, "point")}: ${[...sum].map(([c, k]) => `${c} ${k}`).join(", ")}`));
+            }
+          }
+          return out.join("\n");
         },
       },
     };
