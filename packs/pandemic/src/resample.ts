@@ -5,7 +5,13 @@
 // epidemic cards of the pool are still in it), the other players' closed hands, the infection deck's order
 // within each segment the table knows as a set (beyond the top cards this seat has looked at), other seats'
 // held infection cards, and a forecast someone else is ordering. Counts, segments and piles stay.
-import { canSee, shuffle, withItems, type Rng, type SeatId } from "@boardcore/pack-sdk";
+//
+// What stays in a hand it can't see: a card a pending question already commits from that hand (an offered city
+// card a consent gives, an event a consent spends, the city card a dispatched flight pays). The question is on
+// the table (the runner's record is public), so every world keeps it there, at a fresh place in the hand: a
+// world without it would offer an answer its own `apply` can't play (PR #109 second review, "blue has no
+// city:Cairo").
+import { canSee, shuffle, withItems, type Json, type Rng, type SeatId } from "@boardcore/pack-sdk";
 import { isEpidemic, type State } from "./engine";
 
 /** `pool` less one copy of each of `out`. */
@@ -15,13 +21,62 @@ function less(pool: readonly string[], out: readonly string[]): string[] {
   return rest;
 }
 
+type O = { [k: string]: Json };
+/** The hand cards an operation (and the operations it carries) takes from a seat's hand, as [seat, card]. */
+function committedBy(s: State, raw: Json, out: [SeatId, string][]): void {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return;
+  const o = raw as O;
+  const str = (k: string) => (typeof o[k] === "string" ? (o[k] as string) : null);
+  switch (o.op) {
+    case "give": if (str("from") && str("card")) out.push([str("from")!, str("card")!]); break;
+    case "handToDiscard": if (str("seat") && str("card")) out.push([str("seat")!, str("card")!]); break;
+    case "spendEvent": if (str("seat") && str("name")) out.push([str("seat")!, `event:${str("name")}`]); break;
+    case "cure": if (str("seat") && Array.isArray(o.cards)) for (const k of o.cards) if (typeof k === "string") out.push([str("seat")!, k]); break;
+    case "move": {
+      const payer = str("payer"), pawn = str("pawn"), to = str("to");
+      if (payer && o.kind === "direct" && to) out.push([payer, `city:${to}`]);
+      if (payer && o.kind === "charter" && pawn && s.pl[pawn]) out.push([payer, `city:${s.pl[pawn]!.city}`]);
+      break;
+    }
+    case "consent": for (const x of (o.ops as Json[] | undefined) ?? []) committedBy(s, x, out); break;
+    case "ask": for (const c of (o.choices as O[] | undefined) ?? []) for (const x of (c.ops as Json[] | undefined) ?? []) committedBy(s, x, out); break;
+  }
+}
+
+/** Each seat's hand cards that a pending question commits, no more of a card than the hand holds. */
+export function pinnedCards(s: State): { [seat: string]: string[] } {
+  const want: [SeatId, string][] = [];
+  for (const q of s.run?.questions ?? []) {
+    const a = (q.args ?? null) as O | null;
+    if (!a || typeof a !== "object" || Array.isArray(a)) continue;
+    if (q.kind === "consent") for (const x of (a.ops as Json[] | undefined) ?? []) committedBy(s, x, want);
+    if (q.kind === "choose") for (const c of (a.choices as O[] | undefined) ?? []) for (const x of (c.ops as Json[] | undefined) ?? []) committedBy(s, x, want);
+  }
+  const out: { [seat: string]: string[] } = {};
+  for (const [x, k] of want) {
+    const hand = s.pl[x]?.hand.items;
+    if (!hand) continue;
+    const have = hand.filter((c) => c === k).length;
+    const got = (out[x] ??= []);
+    if (got.filter((c) => c === k).length < have) got.push(k);
+  }
+  return out;
+}
+
 export function resampleBase(s: State, seat: SeatId, rng: Rng): State {
-  // Player cards: hands this seat can't see and the deck's non-epidemic slots, pooled.
+  // Player cards: hands this seat can't see and the deck's non-epidemic slots, pooled, less the cards pending
+  // questions commit (they stay in their hands, at a fresh place).
   const hidden = s.players.filter((x) => !canSee(s.pl[x]!.hand, seat));
   const deck = s.playerDeck.items.slice();
-  const pool = shuffle(rng, [...hidden.flatMap((x) => s.pl[x]!.hand.items), ...deck.filter((k) => !isEpidemic(k))]);
+  const pins = pinnedCards(s);
+  const pinned = (x: SeatId) => pins[x] ?? [];
+  const pool = shuffle(rng, [...hidden.flatMap((x) => less(s.pl[x]!.hand.items, pinned(x))), ...deck.filter((k) => !isEpidemic(k))]);
   const pl = { ...s.pl };
-  for (const x of hidden) pl[x] = { ...pl[x]!, hand: withItems(pl[x]!.hand, pool.splice(0, pl[x]!.hand.items.length)) };
+  for (const x of hidden) {
+    const keep = pinned(x);
+    const drawn = pool.splice(0, pl[x]!.hand.items.length - keep.length);
+    pl[x] = { ...pl[x]!, hand: withItems(pl[x]!.hand, keep.length ? shuffle(rng, [...keep, ...drawn]) : drawn) };
+  }
 
   // Epidemics: each stays in its pile (piles were made at setup, top first), at a fresh place in it, redrawn
   // from the pool's cards not yet seen.

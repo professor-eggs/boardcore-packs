@@ -44,7 +44,11 @@ when the other seat agrees.
 **Hidden zones.** Both decks are face-down zones, hands are zones seen by their owner (or by all with open
 hands), a Forecast is a zone seen by its player, and the Bio-Terrorist's infection cards are a `held` zone seen by
 him. The infection deck keeps the segments the table knows as sets (`infSegs`) and the top cards each seat has
-looked at (`infKnown`), so `resampleHidden` keeps both.
+looked at (`infKnown`), so `resampleHidden` keeps both. A card a pending question commits from a hand (the card a
+consent gives, the event it spends, the city card a dispatched direct or charter flight pays) stays in that hand
+in every world, at a fresh place, so a world never offers an answer its own `apply` can't play
+(`test/resample-worlds.test.ts`). Left open: the view shows a pending question's seat and kind only, so the kit's
+resampler check still lists the question's own arguments, and a one-card hand a question commits whole, as kept.
 
 ## The add-ons
 

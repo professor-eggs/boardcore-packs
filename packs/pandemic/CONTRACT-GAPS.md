@@ -108,6 +108,12 @@ Run 2026-11-15 at `e0c5d98`, Node 22, through `tools/kit` and the published kit 
   1,032 sampled states, 4,177 worlds, 2,330 quiet actions, **no findings**; plus one game run identically in the
   sandbox (same report as trusted). While porting it found three Bio-Terrorist actions that name the city he was
   in (a local infection, a sabotage, a charter's sighting) and weren't marked reveals; they are now.
+- **Resampled worlds** (PR #109 second review's failed search: a world had redrawn a card a pending consent
+  gives): every legal action of every actor applied in each seat's world, 10 trusted games (all four add-ons with
+  Mutation at 4 seats, roles + events + VS + Bio-Terrorist at 3, the base at 2), 2,600 worlds, 42,991 actions,
+  **no faults**; the kit's resampler check keeps no hand card at a state with a committed card, but a one-card
+  hand the question commits whole. The view shows a pending question's seat and kind only, so that check still
+  lists the question's arguments as kept (a gap for G3: the asked seat and the log know them, the view doesn't).
 - **A87:** the 0.1.0 game in `test/fixtures` (4 seats, On the Brink and Virulent Strain as options) replays on
   0.1.0 and fails at ply 0 on 1.0.0, a different pack.
 - **Faults:** none. The costliest sandboxed calls are game ends in Bio-Terrorist rooms (N2).

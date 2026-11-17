@@ -192,4 +192,56 @@ describe("pandemic base: resampleHidden", () => {
     expect(r.infDeck.items).not.toEqual(s.infDeck.items);
     expect(p.view(r, me)).toEqual(p.view(s, me));
   });
+
+  // PR #109 second review: the persona bench's co-op game, game 3, lowest setting: red's search faulted in a world
+  // ("blue has no city:Cairo"): blue had offered red a card, and red's world redrew blue's hand without it.
+  const committed = (p: PackHandle, me: string, other: string, s0: S) => {
+    const cases: [string, S, string, string][] = [];
+    // A Share Knowledge offer: the consent gives the offered card.
+    cases.push(["an offered card", act(p, withHand(s0, me, ["city:Atlanta", "city:Lima", "city:Paris"]), me, ["share", `give:${other}:city:Atlanta`]), "city:Atlanta", other]);
+    // Airlift on another's pawn: the consent spends the event.
+    cases.push(["Airlift", act(p, withHand(s0, me, ["city:Lima", "event:Airlift", "city:Paris"]), me, ["ev:Airlift", other, "Paris"]), "event:Airlift", other]);
+    // A Dispatcher's direct flight of another's pawn: the consent pays with the card.
+    cases.push(["a dispatched direct flight", act(p, withRole(withHand(s0, me, ["city:Lima", "city:Tokyo", "city:Paris"]), me, "Dispatcher"), me, ["dispatch", other, "direct", "Tokyo"]), "city:Tokyo", other]);
+    return cases;
+  };
+
+  it("keeps in every world a card a pending question commits from a hand the seat can't see", async () => {
+    const p = await base();
+    const s0 = start(p, 3);
+    const me = cur(s0), [other, third] = s0.players.filter((x) => x !== me) as [string, string];
+    for (const [what, s, card, asked] of committed(p, me, other, s0)) {
+      expect(p.status(s).actors, what).toEqual([asked]);
+      const places = new Set<number>();
+      for (const x of [other, third]) {
+        for (let i = 0; i < 40; i++) {
+          const w = p.resampleHidden!(s, x, rng(100 + i)) as S;
+          expect(w.pl[me]!.hand.items, what).toContain(card);
+          expect(w.pl[me]!.hand.items).toHaveLength(s.pl[me]!.hand.items.length);
+          expect(p.view(w, x), what).toEqual(p.view(s, x));
+          places.add(w.pl[me]!.hand.items.indexOf(card));
+          // The asked seat's search plays "yes" in its world: the answer applies.
+          const yes = p.apply(w, asked, ["yes"], rng(9)).state as S;
+          const n = (h: S) => h.pl[me]!.hand.items.filter((k) => k === card).length;
+          expect(n(yes), what).toBe(n(w) - 1);
+        }
+      }
+      // Kept at a fresh place in the hand, not where it was.
+      expect(places.size, what).toBeGreaterThan(1);
+    }
+  });
+
+  it("keeps the committed card the same way in the sandbox", async () => {
+    const h = await room({ addons: [] });
+    const s0 = h.sandboxed.setup({ options: { epidemics: 5, openHands: false }, seats: seats(3), rng: rng(1) }) as S;
+    const me = cur(s0), other = s0.players.find((x) => x !== me)!;
+    for (const [what, s, card, asked] of committed(h.sandboxed, me, other, s0)) {
+      for (let i = 0; i < 8; i++) {
+        const w = h.sandboxed.resampleHidden!(s, asked, rng(200 + i));
+        expect(w, what).toEqual(h.trusted.resampleHidden!(s, asked, rng(200 + i)));
+        expect((w as S).pl[me]!.hand.items, what).toContain(card);
+        expect(() => h.sandboxed.apply(w, asked, ["yes"], rng(9)), what).not.toThrow();
+      }
+    }
+  });
 });
