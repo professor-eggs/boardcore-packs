@@ -1,4 +1,4 @@
-# 7 Wonders (pack `boardcore/seven-wonders` 2.1.0) and its add-ons
+# 7 Wonders (pack `boardcore/seven-wonders` 2.2.0) and its add-ons
 
 Private, local-only build of 7 Wonders, **2nd edition** since 2.0.0 (1.0.0 was the 1st edition; there is no
 option for it). Since 1.0.0 the expansions are separate add-on packs of
@@ -63,10 +63,10 @@ add-on, the leak check, interleaved rooms), `test/fixtures.test.ts` (A87: a game
 
 ## Gaps and stubs
 
-- `RULES-AUDIT.md` checks every rule, card, wonder stage and leader against the references Xavier supplied;
-  player-count copies and some stage costs are still unverified. Its "1.0.0" section lists what the port changed;
-  its "2nd edition (2.0.0)" section lists every edition change with its source, and the values the owner still
-  has to confirm against his cards.
+- `RULES-AUDIT.md` checks every rule, card, wonder stage and leader against the references Xavier supplied.
+  Its "1.0.0" section lists what the port changed; its "2nd edition (2.0.0)" section lists every edition change,
+  and "2nd-edition sources (2.2.0)" checks every base card (cost, copies, chain, effect) and stage against
+  2nd-edition sources, with the few values left for the owner to check on his cards.
 - `CONTRACT-GAPS.md`: where the contract was awkward, with the test-kit numbers; `GAPS-FOR-PUBLIC.md`: the
   generic gaps in words, to carry into the public docs.
 - Team play keeps seats individual in the result (G4). The 2-player variant is not built (the 2nd edition dropped it).

@@ -1,8 +1,9 @@
 // The base game's content as data (7 Wonders 2nd edition, since 2.0.0): card names, ages, costs, seat counts,
-// chains and effects, and the seven wonder boards. Mechanics only. The 2nd-edition changes and the values the
-// owner still has to confirm against his cards ("2E?" below) are in ../RULES-AUDIT.md "2nd edition (2.0.0)". Resources: W wood, S stone, C clay, O ore (raw, brown); G glass, L loom,
+// chains and effects, and the seven wonder boards. Mechanics only. The 2nd-edition changes are in ../RULES-AUDIT.md
+// "2nd edition (2.0.0)", checked against 2nd-edition sources in "2nd-edition sources (2.2.0)". Resources: W wood, S stone, C clay, O ore (raw, brown); G glass, L loom,
 // P papyrus (manufactured, grey). A cost is resource letters with an optional coin prefix: "$2SC" = 2 coins,
-// a stone and a clay. Sources: ../RULES-AUDIT.md. Player-count copies and some stage costs stay UNVERIFIED.
+// a stone and a clay. Sources: ../RULES-AUDIT.md. Since 2.2.0 every base card's cost, copies, chain and effect,
+// and every base stage, match 2nd-edition sources; only Babylon B's stages have no photo yet.
 // Add-ons add their cards and boards through the `cards` and `wonders` registries (11 §10).
 
 type Eff = SWEff;
@@ -77,13 +78,13 @@ export const BASE_CARDS: readonly SWCardDef[] = [
   card("Lighthouse", 3, "yellow", "SG", [3, 6], [{ k: "perCoins", n: 1, who: "self", colors: ["yellow"] }, { k: "perVP", n: 1, who: "self", colors: ["yellow"] }], ["Caravansery"]),
   card("Chamber of Commerce", 3, "yellow", "CCP", [4, 6], [{ k: "perCoins", n: 2, who: "self", colors: ["grey"] }, { k: "perVP", n: 2, who: "self", colors: ["grey"] }]),
   card("Arena", 3, "yellow", "SSO", [3, 5], [{ k: "perCoins", n: 3, who: "self", stages: true }, { k: "perVP", n: 1, who: "self", stages: true }], ["Dispensary"]),
-  // 2E: the 5+ Town Hall and the 7+ Arena became the Ludus. Its cost is 2E? (Arena's, the slot it took).
-  card("Ludus", 3, "yellow", "SSO", [5, 7], [{ k: "perCoins", n: 3, who: "self", colors: ["red"] }]),
+  // 2E: the 5+ Town Hall and the 7+ Arena became the Ludus (cost and VP: 2.2.0, ../RULES-AUDIT.md).
+  card("Ludus", 3, "yellow", "SO", [5, 7], [{ k: "perCoins", n: 3, who: "self", colors: ["red"] }, { k: "perVP", n: 1, who: "self", colors: ["red"] }]),
   card("Fortifications", 3, "red", "OOOC", [3, 7], [sh(3)], ["Walls"]),
   card("Circus", 3, "red", "SSSO", [4, 6], [sh(3)], ["Training Ground"]),
   card("Arsenal", 3, "red", "WWOL", [3, 5], [sh(3)]),
-  // 2E: new, in the 4+ and 7+ slots the Arsenal left. Its cost and shields are 2E? (the Arsenal's).
-  card("Castrum", 3, "red", "WWOL", [4, 7], [sh(3)]),
+  // 2E: new, in the 4+ and 7+ slots the Arsenal left (cost: 2.2.0, ../RULES-AUDIT.md).
+  card("Castrum", 3, "red", "WCCP", [4, 7], [sh(3)]),
   card("Siege Workshop", 3, "red", "CCCW", [3, 5], [sh(3)], ["Laboratory"]),
   card("Lodge", 3, "green", "CCLP", [3, 6], [sci("c")], ["Dispensary"]),
   card("Observatory", 3, "green", "OOGL", [3, 7], [sci("g")], ["Laboratory"]),
@@ -96,7 +97,7 @@ export const BASE_CARDS: readonly SWCardDef[] = [
   card("Traders Guild", 3, "purple", "LPG", [], [{ k: "perVP", n: 1, who: "nbr", colors: ["yellow"] }]),
   card("Philosophers Guild", 3, "purple", "CCCLP", [], [{ k: "perVP", n: 1, who: "nbr", colors: ["green"] }]),
   card("Spies Guild", 3, "purple", "CCG", [], [{ k: "perVP", n: 1, who: "nbr", colors: ["red"] }]),
-  // 2E: replaces the Strategists Guild. Its cost (the Strategists') and its 7 VP are 2E?.
+  // 2E: replaces the Strategists Guild.
   card("Decorators Guild", 3, "purple", "OOSL", [], [{ k: "wonderDoneVP", n: 7 }]),
   card("Shipowners Guild", 3, "purple", "WWWGP", [], [{ k: "perVP", n: 1, who: "self", colors: ["brown", "grey", "purple"] }]),
   card("Scientists Guild", 3, "purple", "WWOOP", [], [sci("*")]),
@@ -111,7 +112,7 @@ export const BASE_WONDERS: readonly SWWonderDef[] = [
   { id: "Rhodes", base: "O",
     A: [st("WW", vp(3)), st("CCC", sh(2)), st("OOOO", vp(7))],
     B: [st("SSS", sh(1), vp(3), { k: "coins", n: 3 }), st("OOOO", sh(1), vp(4), { k: "coins", n: 4 })] },
-  // 2E stage costs (RULES-AUDIT.md "2nd edition"); Rhodes and Giza B: the article names no change.
+  // 2E stage costs (RULES-AUDIT.md "2nd edition"); Rhodes and Giza B unchanged, confirmed by 2nd-edition sources (2.2.0).
   { id: "Alexandria", base: "G",
     A: [st("SS", vp(3)), st("OO", N("WSCO")), st("PL", vp(7))],
     B: [st("CC", N("WSCO")), st("OOO", N("GLP")), st("WWWW", vp(7))] },

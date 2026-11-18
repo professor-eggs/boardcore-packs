@@ -27,7 +27,7 @@ Statuses:
 - **blocked**: the source defines it but it can't be built here; the reason is given.
 - **not covered**: no supplied source defines it, so it can't be confirmed either way (UNVERIFIED).
 
-**Still not in any source.** Player-count copy lists for base cards (which copies appear at 3, 4, … players). The stage costs of the base boards, Rome, Petra and Byzantium (7w-5 prints effects only; the Wonder Pack costs are from the photos since 2026-11-18). The Mourners Guild's resource cost (7w-5 p9 leaves the cost cell empty). Archery Range's resource cost (7w-5 p6 only prints the chain). Those stay UNVERIFIED in `src/data.ts`.
+**Still not in any source.** The stage costs of Rome, Petra and Byzantium (7w-5 prints effects only; the Wonder Pack costs are from the photos since 2026-11-18). The Mourners Guild's resource cost (7w-5 p9 leaves the cost cell empty). Those stay UNVERIFIED. Since 2.2.0 the base's copy lists, card costs (Archery Range included) and stage costs are checked against 2nd-edition sources: see "2nd-edition sources (2.2.0)".
 
 Cost and chain values that *are* in 7w-5, 7w-2/3 or the photos are treated as confirmed and the UNVERIFIED mark was removed.
 
@@ -366,16 +366,19 @@ Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander
 
 ## Still unverified or blocked
 
-- Player-count copy lists for every base card.
-- Archery Range's resource cost (7w-5 only prints the chain).
-- Mourners Guild's resource cost (7w-5 p9 leaves the cell empty).
-- Wonder stage costs for the base boards, Rome, Petra and Byzantium (7w-5 lists effects, not costs).
+- ~~Player-count copy lists for every base card~~: resolved for the 2nd edition in 2.2.0 (every count matches).
+- ~~Archery Range's resource cost~~: resolved in 2.2.0 (2 wood + ore, as coded). It is a base card in both
+  editions, not an expansion card.
+- Mourners Guild's resource cost (7w-5 p9 leaves the cell empty): still open; no source found in 2.2.0.
+- Wonder stage costs for Rome, Petra and Byzantium (7w-5 lists effects, not costs). ~~The base boards~~: resolved
+  in 2.2.0, except Babylon B (see "2nd-edition sources (2.2.0)").
 - ~~Some Wonder Pack stage costs~~: resolved from the photos on 2026-11-18.
 - 2-player expert variant: still blocked (concise only says "see rules"; seat minimum is 3).
 - Catan goodie board: still blocked (no stage costs).
 - Extra 7w-1 promo leaders listed above: not implemented.
-- **Owner to confirm against the physical cards** (PR #118 review), both overtaken by the 2nd edition
-  (2026-11-18: still open; the 1st-edition sheets settle neither for 2.0.0, see "2nd edition: owner to confirm"):
+- **Owner to confirm against the physical cards** (PR #118 review), both overtaken by the 2nd edition.
+  **Resolved in 2.2.0** for the 2nd edition (Spies Guild 2 clay + glass; Olympia B stage 3 glass + papyrus + loom),
+  see "2nd-edition sources (2.2.0)":
   - Spies Guild's cost: 1.0.0 coded `SSSG` (3 stone + 1 glass); the review read it as 3 clay + 1 glass. The 2e
     article also says the 1st edition's cost had clay ("reduced by 1 clay"). 2.0.0 codes `CCG`: see
     "2nd edition: owner to confirm" below.
@@ -458,16 +461,16 @@ on 1.0.0.
 | Gardens (III) | from the Statue | from the Theater | 3rd Age |
 | Town Hall (III) | 3+, 5+, 6+ | 3+, 6+ (the 5+ copy became a Ludus) | 3rd Age |
 | Arena (III) | 3+, 5+, 7+ | 3+, 5+ (the 7+ copy became a Ludus) | 3rd Age |
-| Ludus (III) | none | yellow, 5+ and 7+; 3 coins per red card in your city when built; cost `SSO` (owner to confirm) | 3rd Age (coins: "12-18 coins" for 4 to 6 military cards) |
+| Ludus (III) | none | yellow, 5+ and 7+; 3 coins per red card in your city when built, and (2.2.0) 1 VP per red card at the end; cost (2.2.0) `SO` (was `SSO`) | 3rd Age; 2.2.0: card list, photo, databases |
 | Arsenal (III) | 3+, 4+, 7+ | 3+, 5+ | 3rd Age, military list |
 | Fortifications (III) | 3 ore + 1 stone (`OOOS`) | 3 ore + 1 clay (`OOOC`) | 3rd Age, military list |
 | Circus (III) | 4+, 5+, 6+ | 4+, 6+ (the 5+ copy removed) | 3rd Age, military list |
-| Castrum (III) | none | red, 4+ and 7+; 3 shields and cost `WWOL` (owner to confirm) | 3rd Age, military list |
+| Castrum (III) | none | red, 4+ and 7+; 3 shields; cost (2.2.0) `WCCP` (was `WWOL`) | 3rd Age, military list; 2.2.0: card list, photo, databases |
 | Siege Workshop (III) | 3+, 5+ | unchanged (the fifth military card; "80%" of them changed) | 3rd Age, military list |
 | Strategists Guild | 1 VP per neighbours' defeat token | removed; replaced by the **Decorators Guild** | 3rd Age |
-| Decorators Guild | none | purple; 7 VP if every stage of your wonder is built (owner to confirm); cost `OOSL` (owner to confirm) | 3rd Age ("rewards building your Wonder") |
+| Decorators Guild | none | purple; 7 VP if every stage of your wonder is built; cost `OOSL` (both confirmed in 2.2.0) | 3rd Age; 2.2.0: card list, photo, databases |
 | Builders Guild | `SSCCG` | `SSSCCG` (+1 stone) | 3rd Age |
-| Spies Guild | `SSSG` as coded (see above) | `CCG` (owner to confirm) | 3rd Age ("reduced by 1 clay") |
+| Spies Guild | `SSSG` as coded (see above) | `CCG` (confirmed in 2.2.0) | 3rd Age; 2.2.0: photo, databases |
 
 Each age still deals 7 cards a seat at 3 to 7 seats: the copies replaced balance (`test/second-edition.test.ts`).
 
@@ -513,6 +516,10 @@ eighth card). The effect kinds `freeBuild` (1st-edition Olympia A) and `copyGuil
 gone from `points.d.ts`; no add-on used them.
 
 ### 2nd edition: owner to confirm against the cards
+
+**Resolved in 2.2.0** from 2nd-edition sources (see "2nd-edition sources (2.2.0)"): every item below. Two values
+were wrong and are fixed (the Ludus's cost and missing VP, the Castrum's cost); the rest were right. The text
+below is the 2.0.0 record, kept for history.
 
 The article gives no number for these; the code keeps the value named, and Xavier's cards decide.
 
@@ -562,6 +569,63 @@ checks in both adapters).
   two-stage board; Stevie, Imhotep and the Cities wonder-stage effects read the new stage costs.
 - The Scientist persona (`seven-wonders-scientist`) is 2.0.0 with range `^2.0.0`; its science card names are
   unchanged, and its prior no longer looks for the removed Olympia way.
+
+## 2nd-edition sources (2.2.0)
+
+Online research on 2026-11-18, which Xavier allowed, to settle the 2nd-edition owner items. Many sites describe
+the 1st edition (2010), so each source's edition is recorded and only sources that are clearly 2nd edition were
+trusted: a source counts as 2nd edition when it has the Well, Ludus, Castrum and Decorators Guild, day and night
+sides, and the new Olympia. Mechanics only; no text was copied.
+
+| Short name | Source | Edition | What it gave |
+|---|---|---|---|
+| **rprod FAQ** | Repos Production's official FAQ, <https://www.rprod.com/en/7-wonders/faq> | 2nd (discusses the night-side Olympia free builds and both editions' compatibility) | the Olympia rulings |
+| **card list** | the 2nd-edition rulebook's "List of Cards" and "List of Chains" sheets, transcribed at <https://rulespal.com/7-wonders-second-edition/rulebook> (and its setup section) | 2nd (Well, Ludus, Castrum, Decorators Guild; day and night) | every card's effect and player counts; the guild rule. No costs |
+| **photos** | BoardGameGeek photos filed under 7 Wonders (Second Edition), item 316377: Age II, Age III and guild cards of the Italian printing, <https://boardgamegeek.com/image/7689938>, <https://boardgamegeek.com/image/7689937>, <https://boardgamegeek.com/image/7689944> | 2nd (new card frames, Ludus, Castrum, Decorators Guild) | printed costs read here: Ludus, Castrum, Spies, Decorators, Craftsmens Guild, Archery Range |
+| **BGA data** | Board Game Arena's licensed 2nd-edition card data, as captured in <https://github.com/martenkrohn/seven-wonders-rl> (`bga_cards-v1.json`, ruleset "bga-second-edition") | 2nd (Ludus, Castrum, Decorators Guild; Strategists retired) | every card's cost, copies, chains and effect |
+| **haftgane** | the photo-checked 2nd-edition catalog of an open-source implementation, <https://github.com/NightMachinery/ajayeb> (`docs/haftgane/edition-differences.md`, `catalog/testdata/cards.golden.csv`, `catalog.golden.txt`) | 2nd (checked against the publisher's sheets and BGG photos) | every card and every wonder stage; the list of known errors in other sources |
+| fan wiki | <https://7-wonders.fandom.com> card list | 2nd, but a fan source with known cost errors | cross-check only; not trusted where it disagrees |
+| 2e article (above) | third-party 1st vs 2nd comparison | 2nd changes, few numbers | (2.0.0) |
+
+Rejected: the Esoteric Order of Gamers summary (1st edition, has the Strategists Guild); the Dized card pages
+(no edition named); the Asmodee file `7ED_EN02_Rules.pdf` (it is the Edifice expansion's rulebook).
+
+**The owner items, settled:**
+
+| # | Item | Coded before | 2nd edition | Status | Sources |
+|---|---|---|---|---|---|
+| 1 | Ludus cost | `SSO` | stone + ore (`SO`) | **fixed** | photos (7689937), BGA data, haftgane |
+| 1 | Ludus points | none | 1 VP per red card in your city at the end, beside the 3 coins per red card | **fixed** (play change) | card list, photos, BGA data, haftgane |
+| 2 | Castrum cost | `WWOL` | wood + 2 clay + papyrus (`WCCP`) | **fixed** | photos (7689937), BGA data, haftgane |
+| 2 | Castrum shields | 3 | 3 | matching | card list, photos, BGA data |
+| 3 | Decorators Guild | `OOSL`; 7 VP if every stage built | same | matching | card list, photos (7689944), BGA data, haftgane |
+| 4 | Spies Guild | `CCG` | 2 clay + glass | matching | photos (7689944), BGA data, haftgane |
+| 5 | Olympia B stage 1 | `OO`; 2 VP; card picked on each age's turn 1 free | same; the free card is the first card chosen in the age, lost if it is sold or used for a stage; not usable in the age the stage is built in (it is built after turn 1) | matching | rprod FAQ, haftgane |
+| 5 | Olympia B stage 2 | `CCC`; 3 VP; the card played from a hand of two | same: the sixth card played, not the one discarded | matching | rprod FAQ, haftgane |
+| 6 | Copies per player count | as in `src/data.ts` | every Age I to III card's counts match | matching | card list, BGA data, haftgane |
+| 6 | Guilds | seats + 2 at random | seats + 2 drawn at random from the ten | matching | card list (setup) |
+| 7 | Every other base card's cost, chain and effect | as coded | all match | matching | BGA data, haftgane; costs not printed in the card list |
+| 7 | Every base wonder stage (both sides) | as coded | all match, Rhodes and Giza B included | matching (Babylon B: see below) | haftgane, BGA data |
+| 8 | Archery Range cost | `WWO` | 2 wood + ore | matching | photos (7689938), BGA data, haftgane |
+| 8 | Mourners Guild cost (Cities, 1st edition) | `SSCG` | no source found | **still open** | none |
+
+Archery Range is a base card in both editions (Age II, chained from the Workshop), not a Cities or Leaders card.
+The 2nd-edition data above settles it for this base.
+
+**Source disagreements, decided:**
+
+- The card list's chain table names Stables → Arena, Archery Range → Siege Workshop and Courthouse → Senate.
+  BGA data and haftgane (which read the printed chain symbols on photos) give Dispensary → Arena, Laboratory →
+  Siege Workshop and Library → Senate, as coded. Kept as coded: two sources that read the cards outweigh one
+  transcription of a diagram.
+- The fan wiki gives Town Hall `SSSG`, Arena `CCO`, Circus `CCCO` and the Craftsmens Guild `SSO`. BGA data,
+  haftgane and the photos (Craftsmens Guild, 7689944) give `SSOG`, `SSO`, `SSSO` and `SSOO`, as coded. Kept.
+
+**Still open: owner card check** (on his physical 2nd-edition copy):
+
+- Babylon's night side: two stages, 2 stone (play the age's last card) and 3 clay + glass (a science symbol of
+  your choice). BGA data and haftgane agree, but no photo of the printed board was found.
+- Mourners Guild (Cities, 1st edition): its resource cost, coded 2 stone + clay + glass.
 
 ## Checked against the owner's reference sheets (2026-11-18)
 
@@ -623,10 +687,11 @@ left. The expansions are coded as the 1st edition (Xavier's choice), so their mi
 **Not covered by any sheet:**
 
 - Copy counts per player count. The parts list is the Cities list and has none (one black card a seat and age,
-  as coded); no other sheet lists them. The base's counts stay UNVERIFIED.
+  as coded); no other sheet lists them. The base's counts were UNVERIFIED here; 2.2.0 checked them against
+  2nd-edition sources ("2nd-edition sources (2.2.0)").
 - Archery Range's resource cost (7w-5 prints only the chain) and the Mourners Guild's cost (blank on 7w-5).
 - The five 2nd-edition owner items (Ludus, Castrum, Decorators Guild, Spies Guild, Olympia B stage 1): see
-  "2nd edition: owner to confirm" above.
+  "2nd edition: owner to confirm" above; all resolved in 2.2.0 ("2nd-edition sources (2.2.0)").
 
 **Noted, not changed** (the 2015 Cities printing, parts list): its mask mark says the Counterfeiters Guild, the
 Guild of Shadows, Aspasia, Caligula, Darius and Diocletian need Cities, so Berenice, Semiramis and the Mourners

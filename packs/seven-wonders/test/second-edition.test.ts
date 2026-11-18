@@ -60,7 +60,16 @@ describe("2nd edition cards (data)", () => {
   });
   it("Age III commerce: the Ludus (5+, 7+) takes the 5+ Town Hall's and the 7+ Arena's places, 3 coins per red card", () => {
     expect(cardDef("Arena").counts).toEqual([3, 5]);
-    expect(cardDef("Ludus")).toMatchObject({ age: 3, color: "yellow", counts: [5, 7], from: [], eff: [{ k: "perCoins", n: 3, who: "self", colors: ["red"] }] });
+    expect(cardDef("Ludus")).toMatchObject({ age: 3, color: "yellow", counts: [5, 7], from: [] });
+  });
+  it("the Ludus costs a stone and an ore, pays 3 coins and scores 1 VP per red card in the city (2.2.0, card list and photo)", () => {
+    expect(cardDef("Ludus")).toMatchObject({
+      cost: "SO",
+      eff: [{ k: "perCoins", n: 3, who: "self", colors: ["red"] }, { k: "perVP", n: 1, who: "self", colors: ["red"] }],
+    });
+  });
+  it("the Castrum costs a wood, two clay and a papyrus (2.2.0, card photo and card databases)", () => {
+    expect(cardDef("Castrum")).toMatchObject({ cost: "WCCP", counts: [4, 7], from: [], eff: [{ k: "shields", n: 3 }] });
   });
   it("Age III military: two copies each of five cards, the Castrum new, the Fortifications costing clay", () => {
     const red = BASE_CARDS.filter((c) => c.age === 3 && c.color === "red");
@@ -203,6 +212,28 @@ describe("2nd edition in play", () => {
     expect(buildOf(p, s)).toEqual({ id: "build", label: "Build Ludus" });
     const after = turn(p, s, ["c:0", "build"]);
     expect(after.players.red!.coins).toBe(6);
+  });
+
+  it("the Ludus scores 1 VP per red card in the city at the end (stone + ore is enough to build it)", async () => {
+    const p = await h();
+    const s0 = start(p);
+    // Rhodes makes ore: one stone pit pays for the Ludus.
+    const s = withRed(s0, { wonder: "Rhodes", side: "A", coins: 0, ...city(["Stone Pit@1", "Stockade@1", "Barracks@1"]), hand: hand(s0, ["Ludus@3", "Lumber Yard@1", "Loom@1"]) });
+    expect(buildOf(p, s)).toEqual({ id: "build", label: "Build Ludus" });
+    const ended = withRed(s, city(["Stone Pit@1", "Stockade@1", "Barracks@1", "Walls@2", "Ludus@3"]));
+    const lines = (p.view({ ...ended, run: { ...ended.run, over: true } }, "spectator") as SWView).scores!.red!;
+    expect(lines.filter((l) => l.cat === "commerce")).toEqual([{ cat: "commerce", vp: 3 }]);
+  });
+
+  it("the Castrum takes a wood, two clay and a papyrus, not the Arsenal's cost", async () => {
+    const p = await h();
+    const s0 = start(p);
+    const can = (cards: string[]) =>
+      buildOf(p, withRed(s0, { wonder: "Babylon", side: "A", coins: 0, ...city(cards), hand: hand(s0, ["Castrum@3", "Lumber Yard@1"]) })).disabled === undefined;
+    // Babylon makes wood.
+    expect(can(["Brickyard@2", "Press@1"])).toBe(true);
+    expect(can(["Clay Pool@1", "Press@1"])).toBe(false);
+    expect(can(["Sawmill@2", "Ore Vein@1", "Loom@1"])).toBe(false);
   });
 
   it("costs: the Fortifications take clay, the Builders Guild three stones, the Spies Guild two clay", async () => {
