@@ -7,7 +7,7 @@ import { selfplayGame, type SelfplayMove } from "@boardcore/testkit";
 import { bare, composed, kit, readDist, verifyPersonaDist } from "@boardcore-packs/kit";
 
 const dist = (name: string) => readDist(new URL(`../../${name}/dist/`, import.meta.url));
-const NAMES = ["red", "blue", "green", "yellow", "purple"];
+const NAMES = ["green", "orange", "white", "pink", "brown"];
 const seats = (n: number) => NAMES.slice(0, n).map((seat) => ({ seat, team: null }));
 const medic = () => verifyPersonaDist(new URL("../dist/", import.meta.url));
 const room = () => composed(dist("pandemic"), ["roles", "events", "virulent-strain", "mutation"].map((a) => dist(`pandemic-${a}`)), { epidemics: 5 });

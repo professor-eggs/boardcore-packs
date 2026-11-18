@@ -78,7 +78,19 @@ export default defineAddon<"boardcore/pandemic">({
     legend: () => "Virulent Strain: the epidemic cards are Virulent Strain epidemics; the first names the strain, each has an immediate or a lasting effect.",
     state: ({ view }) => {
       const v = view as Slice | null;
-      return v?.color ? `The virulent strain is ${v.color}${v.active.length ? ` (lasting: ${v.active.join(", ")})` : ""}.` : "";
+      return v?.color ? wrap(`The virulent strain is ${v.color}${v.active.length ? ` (lasting: ${v.active.join(", ")})` : ""}.`) : "";
     },
   },
 });
+
+/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
+function wrap(text: string, width = 34): string {
+  const lines: string[] = [];
+  let line = "";
+  for (const w of text.split(" ")) {
+    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
+    else line = line ? `${line} ${w}` : w;
+  }
+  if (line) lines.push(line);
+  return lines.join("\n");
+}

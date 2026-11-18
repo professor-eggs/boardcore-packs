@@ -48,8 +48,8 @@ describe("pandemic base: setup", () => {
 
   it("opens the hands in the introductory game (4 epidemics) and on request", async () => {
     const p = await base();
-    expect(start(p, 3, { epidemics: 4 }).pl.red!.hand.seenBy).toBe("all");
-    expect(start(p, 3, { openHands: true }).pl.blue!.hand.seenBy).toBe("all");
+    expect(start(p, 3, { epidemics: 4 }).pl.green!.hand.seenBy).toBe("all");
+    expect(start(p, 3, { openHands: true }).pl.orange!.hand.seenBy).toBe("all");
   });
 
   it("refuses 5 players and the legendary game without the On the Brink roles add-on", async () => {
@@ -242,6 +242,58 @@ describe("pandemic base: resampleHidden", () => {
         expect((w as S).pl[me]!.hand.items, what).toContain(card);
         expect(() => h.sandboxed.apply(w, asked, ["yes"], rng(9)), what).not.toThrow();
       }
+    }
+  });
+});
+
+describe("pandemic base: the table on a phone (phone play, 2026-11-18)", () => {
+  // The web table shows the layout in about 36 columns: every line stays within 34. It names each player's role
+  // and city and shows the hands the viewer may see, and seat names are never disease colours (the web client
+  // writes a seat's player name for its id, so "Sydney is infected (1 red)" must not read as a player).
+  const WIDTH = 34;
+  const first = (p: PackHandle, s: S, seat: string): Action => {
+    const out: Step[] = [];
+    for (let i = 0; i < 12; i++) {
+      const pr = p.choices(s, seat, out);
+      if (!pr) return out;
+      if (pr.kind === "order") { out.push(pr.options.map((o) => o.id)); continue; }
+      const en = pr.options.filter((o) => !o.disabled);
+      const o = en.find((x) => /^(drive|treat|end|pass|yes|d:0)$/.test(x.id) && !(out.length === 0 && x.id === "end" && en.some((y) => y.id === "drive"))) ?? en[0]!;
+      out.push(o.id);
+    }
+    return out;
+  };
+
+  it("keeps seat names apart from the disease colours", async () => {
+    const p = await base();
+    const colours = new Set(["blue", "yellow", "black", "red", "purple"]);
+    for (const x of seats(5).map((y) => y.seat)) expect(colours.has(x), x).toBe(false);
+    expect(start(p, 4).players.some((x) => colours.has(x))).toBe(false);
+  });
+
+  it("keeps every layout line within 34 characters and shows roles, cities and the hands the viewer sees", async () => {
+    for (const n of [2, 4]) {
+      const p = await base();
+      let s = start(p, n, { openHands: n === 2 }, 20 + n);
+      const r = rng(n + 40);
+      const wide = new Set<string>();
+      for (let i = 0; i < 300 && !p.status(s).outcome; i++) {
+        for (const viewer of ["spectator", ...s.players]) {
+          const l = p.layout(p.view(s, viewer)) ?? "";
+          for (const line of l.split("\n")) if (line.length > WIDTH) wide.add(line);
+          expect(l.split("\n")[0], "the turn line in words").not.toMatch(/\((other|draw|infect|epidemic)\)/);
+          if (i === 0) {
+            for (const x of s.players) expect(l.replace(/\n +/g, " ")).toContain(`${x}: ${s.pl[x]!.role} in ${s.pl[x]!.city}`);
+            const mine = viewer === "spectator" ? null : s.pl[viewer]!.hand.items[0]!;
+            if (mine) expect(l.replace(/\n +/g, " ")).toContain(mine.slice(5));
+            if (viewer === "spectator" && n === 4) expect(l).toMatch(/2 cards \(hidden\)/);
+          }
+        }
+        const a = p.status(s).actors;
+        const x = a[r.int(a.length)]!;
+        s = act(p, s, x, first(p, s, x), 50 + i);
+      }
+      expect([...wide]).toEqual([]);
     }
   });
 });

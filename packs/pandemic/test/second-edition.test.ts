@@ -70,8 +70,8 @@ describe("2nd edition: setup", () => {
   });
 
   it("plays the introductory game with open hands, the standard and heroic games with private hands", async () => {
-    expect((await base(3, { epidemics: 4 })).s.pl.red!.hand.seenBy).toBe("all");
-    for (const epidemics of [5, 6]) expect((await base(3, { epidemics })).s.pl.red!.hand.seenBy).toEqual(["red"]);
+    expect((await base(3, { epidemics: 4 })).s.pl.green!.hand.seenBy).toBe("all");
+    for (const epidemics of [5, 6]) expect((await base(3, { epidemics })).s.pl.green!.hand.seenBy).toEqual(["green"]);
   });
 });
 

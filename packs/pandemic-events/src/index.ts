@@ -139,7 +139,19 @@ export default defineAddon<"boardcore/pandemic">({
     legend: () => "On the Brink events: 8 more events; the game uses 2 events per seat.",
     state: ({ view }) => {
       const v = view as { travelBan: string | null } | null;
-      return v?.travelBan ? `Commercial Travel Ban: the infection rate is 1 until ${v.travelBan}'s next turn.` : "";
+      return v?.travelBan ? wrap(`Commercial Travel Ban: the infection rate is 1 until ${v.travelBan}'s next turn.`) : "";
     },
   },
 });
+
+/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
+function wrap(text: string, width = 34): string {
+  const lines: string[] = [];
+  let line = "";
+  for (const w of text.split(" ")) {
+    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
+    else line = line ? `${line} ${w}` : w;
+  }
+  if (line) lines.push(line);
+  return lines.join("\n");
+}

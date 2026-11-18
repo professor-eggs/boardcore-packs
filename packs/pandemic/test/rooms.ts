@@ -3,7 +3,7 @@
 import type { Json } from "@boardcore/pack-sdk";
 import { loadBoth, readDist, seatsOf, type Handles } from "@boardcore-packs/kit";
 
-export const NAMES = ["red", "blue", "green", "yellow", "purple"];
+export const NAMES = ["green", "orange", "white", "pink", "brown"];
 export const seats = (n: number) => seatsOf(NAMES, n);
 export type AddonName = "roles" | "events" | "virulent-strain" | "mutation" | "bioterrorist";
 /** The room order Rooms keeps: the `after` lists put the challenges after the roles, events and Virulent Strain. */

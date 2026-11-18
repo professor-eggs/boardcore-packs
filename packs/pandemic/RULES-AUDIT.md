@@ -158,7 +158,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Start | 2 infection cards after the 9 infections; the first player chosen among the others; a secret start city | same | matching |
 | His turn | after each player's Infect Cities: 2 actions plus 1 free Drive/Ferry; each action at most twice (Drive 3 times) | same | matching |
 | Actions | Draw; Drive; Direct and Charter with an airport sighting (flight type hidden); Infect Locally, Infect Remotely (purple only) and Sabotage, each once a turn and only while unspotted | same | matching |
-| Hand limit | 7; one card over it goes to the infection discards (his choice) | over 7, he discards the 8th card | matching (whose choice: owner check 5) |
+| Hand limit | 7; the card that puts him over it (the 8th, just drawn) goes to the infection discards at once, without effect and with no choice | over 7, he discards the 8th card | **fixed** (2026-11-18): he chose the card before; owner check 5 resolved |
 | Spotting, capture, escape | spotted when sharing a city; capture is an action and discards his whole hand; captured: Draw or Escape only, then his turn goes on | same | matching |
 | Purple flare-out | 2 cubes back, 1 to each neighbour, no city twice | same (this challenge only) | matching |
 | End | he wins if the players lose with purple on the board; everyone loses if there is none; he's out if purple is eradicated | same | matching |
@@ -178,6 +178,8 @@ Items where a source is ambiguous, silent or contradicts itself, for the owner t
 
 1. **On the Brink edition.** The Z-Man PDF has the 2013 contents (7 role cards, 5 Petri dishes, no revised
    Operations Expert) but a 2009 copyright line. Check that your box has 5 Petri dishes and no Operations Expert card.
+   **Resolved (2026-11-18):** the owner sent the Z-Man product page; its contents list 7 roles, 8 events and 5 Petri
+   dishes, matching the 2013 edition.
 2. **City populations.** R2 shows 7 of the 48 cards, and all 7 agree. Check the other 41, especially Chicago and
    Lima (both coded 9,121,000).
 3. **First-player tie.** R2 doesn't say who goes first when two hands tie on population. Coded: the earlier seat.
@@ -185,6 +187,9 @@ Items where a source is ambiguous, silent or contradicts itself, for the owner t
    action: one is moved from anywhere on the board. The BGG threads confirm the 6-station cap for building, not
    for the Grant.
 5. **Bio-Terrorist over his hand limit.** OTB p6 says he discards the 8th card. Coded: he chooses which card goes.
+   **Resolved (2026-11-18):** the owner's On the Brink rulebook PDF (md5 424745ec…) says his hand limit is 7 and, with
+   more than 7, he must discard the 8th card to the infection discard pile, without effect. Now coded so: the card he
+   just drew goes at once, with no question (`addons.test.ts` "over his hand limit of 7").
 6. **Troubleshooter under the Commercial Travel Ban.** She looks at as many cards as "the current infection rate".
    Coded as 1 while the ban holds.
 7. **New Assignment on the Contingency Planner or the Field Operative.** Not stated. Coded: a stored event goes to
@@ -216,3 +221,39 @@ Items where a source is ambiguous, silent or contradicts itself, for the owner t
   once, and a choice or discard answer never pays.
 - **A Bio-Terrorist who starts where a pawn stands** is spotted at once.
 - **The game stops where it ends** (boardcore s11 X7).
+
+### 5a. Random-play fuzzing through the server and web client (2026-11-18)
+
+Boardcore `pnpm fuzz` on the PR #121 branch (2480df1 plus this run's public fixes), with `FUZZ_EXTRA_PACKS` pointed at
+the built base, the five On the Brink add-ons and the Medic, `FUZZ_GAMES=Pandemic`, `FUZZ_SEATS=2,3,4`,
+`FUZZ_STRICT=1`, 3 workers. Add-ons (Bio-Terrorist included) and options switched at random on the form.
+
+- Three runs, about 35 minutes: **39 episodes, 7,253 steps, 58 rooms, 30 games played to the end**. Runs 2 and 3,
+  with the fixes: 27 episodes, 5,053 steps, 45 rooms, 24 games ended, **no failure**.
+- Failure found: 1 signature in the harness's leak check, not a leak: a seat's own step options ("Drive to <city>",
+  from its own prompt) matched the Bio-Terrorist's private held cards. Checked against the seat views; fixed in the
+  public harness (a seat's own move controls are read apart).
+- Also found: rooms that are created and filled but never start, each start a bare `PackFault`: the Bio-Terrorist at 2
+  seats, and 7 epidemics without the roles add-on (115 refused starts over the runs). Same gap as public Q106.
+- Notes left (explained in words): takebacks refused across revealed information, by design.
+
+### 5b. Phone play (2026-11-18)
+
+Playwright, iPhone 13 at deviceScaleFactor 1, scripted, one phone per seat: a full 2-player base game (introductory,
+open hands) and a 3-player game with roles, events, Virulent Strain and the Bio-Terrorist (2 pawns and him). Games
+ended in losses: 8 outbreaks after a cure (2p), the Bio-Terrorist winning (3p); earlier runs lost on an empty cube
+supply and with him winning on 8 outbreaks.
+
+- Rules checked from the views and log: 4 actions a turn (no turn started otherwise); 2 cards drawn; epidemics
+  increase (rate 2, 2, 2, 3), infect 3 from the bottom, intensify (discard 12 back on the deck, 36 to 48 cards);
+  infections at the rate; outbreaks and chains (3 in one infection; the 8th ends the game); the hand limit (a
+  discard prompt at 8 cards); a cure (Scientist, 4 cards at a station); Quarantine Specialist blocking; events out of
+  turn in the windows (Forecast, One Quiet Night, Resilient Population); the Bio-Terrorist's city on no other seat's
+  table while unseen (744 checks), shown on his own; win and loss lines.
+- Fixed: the table showed no hand, role or Bio-Terrorist line and was 525 to 560 px wide in a 330 px box (now within
+  34 columns with roles, cities, visible hands, decks and the infection discard; add-on lines wrapped; `base.test.ts`
+  "the table on a phone"); seat ids were disease colours, so the web's names swap read "Sydney is infected (1 Ana)"
+  (seats are now green, orange, white, pink, brown); the turn line said "(other)" and "(infect)"; an add-on's state
+  line never reached the table (public compose fix).
+- Left: prompts name seats by id ("Offer Madrid to orange"; public Q107); the epidemic's intensify step has no log
+  line; the turn pop-up covers the board for 2 s; "(draft)" log lines for a provisional step.

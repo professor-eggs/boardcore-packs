@@ -98,10 +98,10 @@ describe("pandemic-events", () => {
   });
 
   it("holds the infection rate at 1 under a Commercial Travel Ban until its player's next turn", () => {
-    const sl = { ctb: "red", mobile: null };
+    const sl = { ctb: "green", mobile: null };
     expect(call<number>(events.contributes!.infectionRate, { value: 3, slice: sl })).toBe(1);
-    expect(call<{ slice: { ctb: string | null } }>(events.contributes!.turnStart, { slice: sl, args: { seat: "red" } }).slice.ctb).toBe(null);
-    expect(call<object>(events.contributes!.turnStart, { slice: sl, args: { seat: "blue" } })).toEqual({});
+    expect(call<{ slice: { ctb: string | null } }>(events.contributes!.turnStart, { slice: sl, args: { seat: "green" } }).slice.ctb).toBe(null);
+    expect(call<object>(events.contributes!.turnStart, { slice: sl, args: { seat: "orange" } })).toEqual({});
   });
 
   it("asks another player before Special Orders moves his pawn (G2)", async () => {
@@ -161,26 +161,26 @@ describe("pandemic-mutation", () => {
 describe("pandemic-bioterrorist", () => {
   it("takes the last seat (no pawn), deals him 2 infection cards and asks him first for his secret city", async () => {
     const { p, s } = await start({ addons: ["bioterrorist"] }, 4);
-    expect(s.players).toEqual(["red", "blue", "green"]);
-    expect(s.held.yellow!.items).toHaveLength(2);
-    expect(s.held.yellow!.seenBy).toEqual(["yellow"]);
-    expect(p.status(s).actors).toEqual(["yellow"]);
-    const t = act(p, s, "yellow", [`${BT}:c:Lima`]);
+    expect(s.players).toEqual(["green", "orange", "white"]);
+    expect(s.held.pink!.items).toHaveLength(2);
+    expect(s.held.pink!.seenBy).toEqual(["pink"]);
+    expect(p.status(s).actors).toEqual(["pink"]);
+    const t = act(p, s, "pink", [`${BT}:c:Lima`]);
     expect((t.addons[BT] as { city: string }).city).toBe("Lima");
-    expect((p.view(t, "red") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe(null);
-    expect((p.view(t, "yellow") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Lima");
+    expect((p.view(t, "green") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe(null);
+    expect((p.view(t, "pink") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Lima");
     expect(p.status(t).actors).toEqual([cur(t)]);
   });
 
   it("is spotted at once when he starts where a pawn stands: a reveal, logged as a spotting (PR #118 review)", async () => {
     const { p, s } = await start({ addons: ["bioterrorist"] }, 3);
-    const quiet = p.apply(s, "green", [`${BT}:c:Lima`], rng(3));
+    const quiet = p.apply(s, "white", [`${BT}:c:Lima`], rng(3));
     expect(quiet.reveal).toBeFalsy();
-    const r = p.apply(s, "green", [`${BT}:c:Atlanta`], rng(3));
+    const r = p.apply(s, "white", [`${BT}:c:Atlanta`], rng(3));
     expect(r.reveal).toBe(true);
     const t = r.state as S;
     expect(t.log).toContain("The Bio-Terrorist is spotted in Atlanta!");
-    expect((p.view(t, "red") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Atlanta");
+    expect((p.view(t, "green") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Atlanta");
   });
 
   it("picks a random seat when asked", async () => {
@@ -194,16 +194,16 @@ describe("pandemic-bioterrorist", () => {
   });
 
   it("wins when the players lose with purple on the board; otherwise everyone loses; a players' win is theirs", () => {
-    const sl = { seat: "yellow", city: "Lima" };
+    const sl = { seat: "pink", city: "Lima" };
     const lose = { winners: [], text: "the players lose (8 outbreaks)" };
-    expect(call<PDOutcome>(bt.contributes!.outcome, { state: { eradicated: [], cubes: { Lima: { purple: 1 } } }, slice: sl, args: { result: lose } })).toEqual({ winners: ["yellow"], text: "the Bio-Terrorist wins (8 outbreaks)" });
+    expect(call<PDOutcome>(bt.contributes!.outcome, { state: { eradicated: [], cubes: { Lima: { purple: 1 } } }, slice: sl, args: { result: lose } })).toEqual({ winners: ["pink"], text: "the Bio-Terrorist wins (8 outbreaks)" });
     expect(call<PDOutcome>(bt.contributes!.outcome, { state: { eradicated: [], cubes: {} }, slice: sl, args: { result: lose } }).winners).toEqual([]);
-    expect(call<PDOutcome>(bt.contributes!.outcome, { state: { eradicated: [], cubes: {} }, slice: sl, args: { result: { winners: ["red", "blue"], text: "won" } } }).winners).toEqual(["red", "blue"]);
+    expect(call<PDOutcome>(bt.contributes!.outcome, { state: { eradicated: [], cubes: {} }, slice: sl, args: { result: { winners: ["green", "orange"], text: "won" } } }).winners).toEqual(["green", "orange"]);
   });
 
   it("is spotted by a pawn entering his city (a reveal either way) and captured there, his hand discarded", async () => {
     const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
-    let s = act(p, s0, "green", [`${BT}:c:Washington`]);
+    let s = act(p, s0, "white", [`${BT}:c:Washington`]);
     const me = cur(s);
     s = set(s, me, { role: "Medic" });
     const r = p.apply(s, me, ["drive", "Washington"], rng(3));
@@ -211,27 +211,64 @@ describe("pandemic-bioterrorist", () => {
     s = r.state as S;
     expect(s.log).toContain(`${me} spots the Bio-Terrorist in Washington!`);
     expect((p.view(s, me) as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Washington");
-    const held = s.held.green!.items;
+    const held = s.held.white!.items;
     s = act(p, s, me, ["capture"]);
     expect((s.addons[BT] as { captured: boolean }).captured).toBe(true);
-    expect(s.held.green!.items).toEqual([]);
+    expect(s.held.white!.items).toEqual([]);
     expect(s.infDiscard.slice(-held.length)).toEqual(held);
+  });
+
+  it("over his hand limit of 7 discards the card he just drew, without effect and with no choice (OTB p6)", async () => {
+    const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
+    let s = act(p, s0, "white", [`${BT}:c:Lima`]);
+    const me = cur(s);
+    s = act(p, s, me, ["end"]);
+    for (let i = 0; i < 40 && !p.status(s).actors.includes("white"); i++) { const x = p.status(s).actors[0]!; s = act(p, s, x, ids(p, s, x).includes("pass") ? ["pass"] : [ids(p, s, x)[0]!]); }
+    expect(p.status(s).actors).toEqual(["white"]);
+    // Seven in his hand, taken from the infection deck's bottom so the top stays as dealt.
+    const deck = s.infDeck.items;
+    const seven = deck.slice(-7);
+    s = { ...s, held: { ...s.held, white: { ...s.held.white!, items: seven } }, infDeck: { ...s.infDeck, items: deck.slice(0, -7) }, infSegs: [deck.length - 7] };
+    const top = s.infDeck.items[0]!;
+    const cubes = JSON.stringify(s.cubes);
+    const r = p.apply(s, "white", [`${BT}:draw`], rng(1));
+    const t = r.state as S;
+    expect(t.held.white!.items).toEqual(seven);
+    expect(t.infDiscard[t.infDiscard.length - 1]).toBe(top);
+    expect(JSON.stringify(t.cubes)).toBe(cubes);
+    expect(t.log.join(" ")).toMatch(/over his hand limit/);
+    // No question: his next prompt is his actions, not a discard.
+    expect(p.choices(t, "white", [])?.label ?? "").not.toMatch(/Hand limit/);
   });
 
   it("takes his turn after a player's: 2 actions and a free drive, a quiet drive naming no city", async () => {
     const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
-    let s = act(p, s0, "green", [`${BT}:c:Lima`]);
+    let s = act(p, s0, "white", [`${BT}:c:Lima`]);
     const me = cur(s);
     s = act(p, s, me, ["end"]);
-    for (let i = 0; i < 40 && !p.status(s).actors.includes("green"); i++) { const x = p.status(s).actors[0]!; s = act(p, s, x, ids(p, s, x).includes("pass") ? ["pass"] : [ids(p, s, x)[0]!]); }
-    expect(p.status(s).actors).toEqual(["green"]);
-    const opts = ids(p, s, "green");
+    for (let i = 0; i < 40 && !p.status(s).actors.includes("white"); i++) { const x = p.status(s).actors[0]!; s = act(p, s, x, ids(p, s, x).includes("pass") ? ["pass"] : [ids(p, s, x)[0]!]); }
+    expect(p.status(s).actors).toEqual(["white"]);
+    const opts = ids(p, s, "white");
     expect(opts).toContain(`${BT}:drive`);
-    expect(p.choices(s, "green", [])!.label).toMatch(/2 actions left/);
-    const r = p.apply(s, "green", [`${BT}:drive`, "c:Santiago"], rng(1));
+    expect(p.choices(s, "white", [])!.label).toMatch(/2 actions left/);
+    const r = p.apply(s, "white", [`${BT}:drive`, "c:Santiago"], rng(1));
     expect(r.reveal).toBeUndefined();
     s = r.state as S;
-    expect(p.describe!(s, "green", [`${BT}:drive`, "c:Santiago"], "red")).not.toMatch(/Santiago|Lima/);
+    expect(p.describe!(s, "white", [`${BT}:drive`, "c:Santiago"], "green")).not.toMatch(/Santiago|Lima/);
     expect((s.addons[BT] as { city: string; free: number; left: number })).toMatchObject({ city: "Santiago", free: 0, left: 2 });
+  });
+});
+
+describe("pandemic add-ons: their lines under the table on a phone (phone play, 2026-11-18)", () => {
+  it("wraps the Bio-Terrorist's, the travel ban's and the virulent strain's lines within 34 columns", () => {
+    const sheet = ["Turn 3: moves from Ho Chi Minh City to Kolkata by train", "Turn 4: infects Kolkata"];
+    const lines = [
+      call<string>(bt.text!.state, { view: { seat: "pink", city: "Ho Chi Minh City", sighting: "St. Petersburg", captured: false, out: false, sheet } }),
+      call<string>(events.text!.state, { view: { travelBan: "orange" } }),
+      call<string>(vs.text!.state, { view: { color: "yellow", active: ["Slippery Slope", "Complex Molecular Structure"] } }),
+    ];
+    for (const t of lines) for (const l of t.split("\n")) expect(l.length, l).toBeLessThanOrEqual(34);
+    expect(lines[0]!.replace(/\n +/g, " ")).toContain("Bio-Terrorist (pink): in Ho Chi Minh City; last sighted at St. Petersburg.");
+    expect(lines[0]).toContain("Your sheet:");
   });
 });

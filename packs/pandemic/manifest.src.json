@@ -9,7 +9,7 @@
   "seats": {
     "min": 2,
     "max": 5,
-    "names": ["red", "blue", "green", "yellow", "purple"]
+    "names": ["green", "orange", "white", "pink", "brown"]
   },
   "options": {
     "epidemics": { "title": "Epidemic cards", "type": "integer", "default": 4, "minimum": 4, "maximum": 7, "description": "4 introductory, 5 standard, 6 heroic, 7 legendary (needs the On the Brink roles add-on)." },

@@ -79,6 +79,17 @@ function firstPlayer(s: State): number {
 }
 
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
+/** Words wrapped within 34 columns, later lines indented (a phone's table, phone play 2026-11-18). */
+function wrap(text: string, indent = "", width = 34): string[] {
+  const lines: string[] = [];
+  let line = indent;
+  for (const w of text.split(" ")) {
+    if (line.trim() && line.length + 1 + w.length > width) { lines.push(line); line = `${indent}  ${w}`; }
+    else line = line.trim() ? `${line} ${w}` : `${indent}${w}`;
+  }
+  if (line.trim()) lines.push(line);
+  return lines;
+}
 
 export default defineBase<"boardcore/pandemic">({
   points: POINTS,
@@ -460,7 +471,8 @@ export default defineBase<"boardcore/pandemic">({
 
     const heading = (v: PDView) => {
       if (v.outcome) return `Game over: ${v.outcome.text}.`;
-      const where = v.step === "actions" ? `actions, ${v.actionsLeft} left` : v.step === "window" ? "events may be played" : v.step;
+      const steps: { [k: string]: string } = { window: "events may be played", draw: "drawing cards", epidemic: "an epidemic", infect: "infecting cities", other: "between steps" };
+      const where = v.step === "actions" ? `actions, ${v.actionsLeft} left` : steps[v.step] ?? "between steps";
       return `Turn ${v.turn}: ${v.current} (${where}).`;
     };
 
@@ -566,9 +578,34 @@ export default defineBase<"boardcore/pandemic">({
           return parts.join(" ");
         },
         layout(v) {
-          const rows = CITY_NAMES.filter((c) => v.cubes[c] || v.stations.includes(c) || v.players.some((x) => v.pl[x]!.city === c)).map((c) =>
-            `${(v.stations.includes(c) ? "[R] " : "    ") + c.padEnd(18)} ${String(CITIES[c]).padEnd(7)} ${Object.entries(v.cubes[c] ?? {}).map(([k, n]) => `${k}:${n}`).join(" ").padEnd(22)} ${v.players.filter((x) => v.pl[x]!.city === c).join(" ")}`);
-          return [heading(v), `Outbreaks ${v.outbreaks}/8  rate ${v.infectionRate}  cured ${v.cured.join(",") || "-"}`, ...rows].join("\n");
+          // A phone shows about 36 columns: every line is wrapped within 34 (phone play, 2026-11-18).
+          const out: string[] = [];
+          const put = (t: string, indent = "") => out.push(...wrap(t, indent));
+          put(heading(v));
+          put(`Outbreaks ${v.outbreaks}/8, infection rate ${v.infectionRate}.`);
+          put(`Cured: ${v.cured.join(", ") || "none"}${v.eradicated.length ? `; eradicated: ${v.eradicated.join(", ")}` : ""}.`);
+          put(`Player deck ${v.playerDeck}, infection deck ${v.infectionDeck}.`);
+          if (v.infectionDiscard.length) put(`Infection discard: ${v.infectionDiscard.join(", ")}.`);
+          if (v.known.length) put(`Top of the infection deck: ${v.known.join(", ")}.`);
+          if (v.forecast.length) put(`Forecast: ${v.forecast.join(", ")}.`);
+          out.push("");
+          for (const x of v.players) {
+            const p = v.pl[x]!;
+            put(`${x}: ${p.role} in ${p.city}`);
+            const hand = p.hand.length || p.handSize === 0 ? p.hand.map(cardLabel).join(", ") || "no cards" : `${plural(p.handSize, "card")} (hidden)`;
+            put(`${hand}.`, "  ");
+            if (p.stored) put(`Stored: ${cardLabel(p.stored)}.`, "  ");
+            const samples = Object.entries(p.samples).filter(([, n]) => n > 0).map(([c, n]) => `${n} ${c}`).join(", ");
+            if (samples) put(`Samples: ${samples}.`, "  ");
+          }
+          out.push("", "Cities (R: research station)");
+          for (const c of CITY_NAMES.filter((c) => v.cubes[c] || v.stations.includes(c) || v.players.some((x) => v.pl[x]!.city === c))) {
+            const cubes = Object.entries(v.cubes[c] ?? {}).map(([k, n]) => `${n} ${k}`).join(", ");
+            const pawns = v.players.filter((x) => v.pl[x]!.city === c);
+            const row = wrap(`${c}${cubes ? `: ${cubes}` : ""}${pawns.length ? ` (${pawns.join(", ")})` : ""}`, "", 32);
+            out.push(...row.map((l, i) => (i === 0 ? (v.stations.includes(c) ? "R " : "  ") : "  ") + l));
+          }
+          return out.join("\n");
         },
       },
     };

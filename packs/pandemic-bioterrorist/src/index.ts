@@ -14,7 +14,7 @@ const HAND_LIMIT = 7;
 /** Drawing, driving and each kind of flight: at most twice a turn. Infecting and sabotage: once. */
 const TWICE = ["draw", "drive", "direct", "charter"];
 const ONCE = ["local", "remote", "sabotage"];
-/** One action each, and enough for 2 actions, the free drive and 2 discards over the hand limit, then a pass. */
+/** One action each: 2 actions and the free drive, then a pass, with steps to spare (an 8th card is discarded at once). */
 const STEPS = [1, 2, 3, 4, 5, 6];
 
 type S = PDState;
@@ -47,7 +47,6 @@ const pawnCitiesOf = (pl: { [seat: string]: { city: string } }, players: string[
 
 /** His options this step, from his slice, his hand and what the table shows. */
 function btPrompt(sl: Slice, hand: string[], deck: number, stations: string[], pawnCities: string[], partial: Action): Prompt | null {
-  if (hand.length > HAND_LIMIT) return partial.length ? null : pick(`Hand limit ${HAND_LIMIT}: discard a card (no effect)`, [...new Set(hand)].map((c) => opt(`x:${c}`, c)));
   const n = (k: string) => sl.used[k] ?? 0;
   if (partial.length === 0) {
     const noAct = sl.left <= 0 ? "no actions left" : null;
@@ -112,13 +111,6 @@ const step = (k: number): Phase => ({
     const ops: PDOp[] = [];
     const log = (text: string) => ops.push({ op: "log", text });
     const pawnCities = pawnCitiesOf(s.pl, s.players);
-    if (id.startsWith("x:")) {
-      const card = id.slice(2);
-      sl = note(sl, `discard ${card} (hand limit)`);
-      log(`The Bio-Terrorist discards ${card} (over his hand limit).`);
-      ops.push({ op: "unhold", seat: sl.seat, cards: [card] });
-      return { slice: settle(sl, hand.length - 1 > HAND_LIMIT), ops };
-    }
     if (id === "pass") {
       log("The Bio-Terrorist ends his turn.");
       return { slice: { ...note(sl, "end of turn"), done: true, left: 0, free: 0 }, ops };
@@ -134,7 +126,15 @@ const step = (k: number): Phase => ({
         sl = note(sl, "draw an infection card");
         ops.push({ op: "hold", seat: sl.seat, n: 1 });
         log("The Bio-Terrorist draws an infection card.");
-        return { slice: settle(sl, hand.length + 1 > HAND_LIMIT), ops, reveal: true };
+        if (hand.length + 1 > HAND_LIMIT) {
+          // Over his hand limit the card he just drew (the 8th) goes to the infection discards, without effect
+          // and with no choice (OTB p6).
+          const card = zones.items(s.infDeck)[0]!;
+          sl = note(sl, `discard ${card} (hand limit)`);
+          ops.push({ op: "unhold", seat: sl.seat, cards: [card] });
+          log(`The Bio-Terrorist discards ${card} (over his hand limit).`);
+        }
+        return { slice: settle(sl, false), ops, reveal: true };
       case "drive":
         use("drive", sl.free > 0);
         sl = note({ ...sl, city: arg }, `drive to ${arg}`);
@@ -260,7 +260,7 @@ export default defineAddon<"boardcore/pandemic">({
       const v = view as { seat: string; city: string | null; sighting: string | null; captured: boolean; out: boolean; sheet: string[] } | null;
       if (!v) return "";
       const where = v.out ? "out of the game" : v.captured ? `captured in ${v.city}` : v.city ? `in ${v.city}` : "unseen";
-      return `Bio-Terrorist (${v.seat}): ${where}${v.sighting ? `; last sighted at ${v.sighting}` : ""}.${v.sheet.length ? ` Your sheet: ${v.sheet.slice(-6).join("; ")}.` : ""}`;
+      return [wrap(`Bio-Terrorist (${v.seat}): ${where}${v.sighting ? `; last sighted at ${v.sighting}` : ""}.`), ...(v.sheet.length ? ["Your sheet:", ...v.sheet.slice(-6).map((x) => wrap(`${x}.`))] : [])].join("\n");
     },
   },
   // The log is public; his actions name his moves only through it.
@@ -278,4 +278,16 @@ export default defineAddon<"boardcore/pandemic">({
 function redraw(pawnCities: string[], rng: Rng): string {
   const free = CITY_NAMES.filter((c) => !pawnCities.includes(c));
   return free[rng.int(free.length)]!;
+}
+
+/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
+function wrap(text: string, width = 34): string {
+  const lines: string[] = [];
+  let line = "";
+  for (const w of text.split(" ")) {
+    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
+    else line = line ? `${line} ${w}` : w;
+  }
+  if (line) lines.push(line);
+  return lines.join("\n");
 }
