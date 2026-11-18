@@ -1,6 +1,6 @@
 {
   "name": "@boardcore-packs/seven-wonders",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "7 Wonders base on the phase runner, with typed points for its expansion add-ons.",
   "license": "UNLICENSED",
   "private": true,

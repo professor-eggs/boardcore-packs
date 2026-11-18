@@ -1,11 +1,12 @@
-# 7 Wonders (pack `boardcore/seven-wonders` 2.0.0) and its add-ons
+# 7 Wonders (pack `boardcore/seven-wonders` 2.1.0) and its add-ons
 
 Private, local-only build of 7 Wonders, **2nd edition** since 2.0.0 (1.0.0 was the 1st edition; there is no
 option for it). Since 1.0.0 the expansions are separate add-on packs of
 this base, each chosen per room: **Leaders** (`boardcore/seven-wonders-leaders`), **Cities**
 (`boardcore/seven-wonders-cities`) and the **Wonder Pack** (`boardcore/seven-wonders-wonder-pack`), each
-`addon: { base: "boardcore/seven-wonders", range: "^2.0.0" }` (each 2.0.0: their rules are as before; which
-editions of them the owner has is unconfirmed). Mechanics only: card names and numbers, no rulebook
+`addon: { base: "boardcore/seven-wonders", range: "^2.0.0" }` (the Wonder Pack 2.1.0 needs `^2.1.0`, for its
+Manneken Pis copy costs). The expansions are the 1st edition, by the owner's choice; their values were checked
+against his reference sheets on 2026-11-18 (RULES-AUDIT.md). Mechanics only: card names and numbers, no rulebook
 text or art. Not for distribution.
 
 ## Options
@@ -55,7 +56,8 @@ Each age is a round of the phase runner: `deal`, `ready`, `turn1`/`end1` ... `tu
 ## Tests
 
 `test/base.test.ts` (rules of the base), `test/second-edition.test.ts` (each 2nd-edition card and wonder change:
-cost, production, effect, chain, copies), `test/addons.test.ts` (rules of the add-ons), `test/kit-games.test.ts`
+cost, production, effect, chain, copies), `test/addons.test.ts` (rules of the add-ons),
+`test/reference-sheets.test.ts` (the values the owner's reference sheets settled), `test/kit-games.test.ts`
 and `test/kit-checks.test.ts` (the test kit: both adapters, replays, every seat count with and without each
 add-on, the leak check, interleaved rooms), `test/fixtures.test.ts` (A87: a game recorded by 0.1.0).
 
@@ -70,4 +72,5 @@ add-on, the leak check, interleaved rooms), `test/fixtures.test.ts` (A87: a game
 - Team play keeps seats individual in the result (G4). The 2-player variant is not built (the 2nd edition dropped it).
 - Simplifications: the Courtesans' Guild copies a leader's lasting and scoring effects, not one-off coins;
   masks and wild science symbols are chosen at the end for the best score; Manneken
-  Pis A copies the neighbour's stage effects even if that neighbour hasn't built that stage.
+  Pis A copies the neighbour's stage effects even if that neighbour hasn't built that stage (7w-5 says so), and
+  each of its stages costs what the copied stage costs, fixed when the boards are dealt.

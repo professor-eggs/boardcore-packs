@@ -30,7 +30,8 @@ function stageHas(s: SWState, seat: SeatId, i: number, k: string): boolean {
     if (e.k !== "copyStage") return false;
     const n = s.seats.length, at = s.seats.indexOf(seat);
     const o = s.players[s.seats[(at + (e.side === "L" ? n - 1 : 1)) % n]!]!;
-    return (WONDERS.get(o.wonder)?.[o.side][Number(e.stage)]?.eff ?? []).some((x) => x.k === k);
+    const defs = WONDERS.get(o.wonder)?.[o.side] ?? [], copied = Number(e.stage);
+    return (defs[copied < 0 ? defs.length + copied : copied]?.eff ?? []).some((x) => x.k === k);
   });
 }
 const active = (s: SWState, seat: SeatId) => s.players[seat]!.extras.filter((x) => x.off === null);

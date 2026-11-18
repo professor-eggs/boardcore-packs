@@ -53,7 +53,7 @@ type SWEff =
   | { [k: string]: SWJson; k: "noWonderRes" }
   /** Each neighbour takes n coins from the bank. */
   | { [k: string]: SWJson; k: "nbrCoins"; n: number }
-  /** The effects of a neighbour's wonder stage. */
+  /** The effects of a neighbour's wonder stage (`stage` from 0; a negative one counts from the last, -1 the last). */
   | { [k: string]: SWJson; k: "copyStage"; side: "L" | "R"; stage: number }
   | SWAddonEff;
 /** An add-on's own effect kind, `<prefix>:<name>`: the base keeps it and never reads it. */
@@ -74,6 +74,7 @@ interface SWCardDef {
   from: string[];
   eff: SWEff[];
 }
+/** A stage's cost and effects. Cost "?" on a stage that copies a neighbour's stage: that stage's cost, fixed at setup. */
 interface SWStageDef { [k: string]: SWJson; cost: string; eff: SWEff[] }
 interface SWWonderDef {
   [k: string]: SWJson;
@@ -103,7 +104,7 @@ interface SWPlayer {
   side: "A" | "B";
   /** Stage indices built, in build order. */
   built: number[];
-  /** Each stage's cost on this board's side (public). */
+  /** Each stage's cost on this board's side (public); a "?" copy cost is already the copied stage's. */
   stageCosts: string[];
   /** Card keys in the city, in build order. */
   cards: string[];

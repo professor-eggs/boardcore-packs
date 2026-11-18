@@ -10,7 +10,7 @@ import {
 import { BASE_CARDS, BASE_WONDERS } from "./data";
 import {
   applyOps, buildStage, built, cardItem, cardOf, cardWays, chosenPlan, effs, gain, has, keyAge, keyName, military, opt, pay, RES_NAME,
-  say, scoreAll, setP, settleLosses, stageDefs, stageOf, stageWays, total, wayFree, wayPrompts, wonderOf, cardOf as defOf, rightOf, leftOf,
+  say, scoreAll, setP, settleLosses, stageDefs, stageOf, stageWays, total, wayFree, wayPrompts, wonderOf, copiedStage, cardOf as defOf, rightOf, leftOf,
   type Lib, type Line, type Op, type Player, type State, type Way,
 } from "./engine";
 import { resampleBase } from "./resample";
@@ -333,6 +333,19 @@ export default defineBase<"boardcore/seven-wonders">({
             wonder: w.id, side, built: [], stageCosts: w[side].map((x) => x.cost), cards: [], colors: {}, coins: coins0 + (w.coins ?? 0),
             victories: [], defeats: 0, hand: zone<string>([], [seat]), markers: zone<string>([], [seat]), extras: [], freeUsed: {},
           };
+        });
+        // A stage costing "?" copies a neighbour's stage and costs what that stage costs (the Wonder Pack's
+        // Manneken Pis A): fixed here, once every board is dealt. A copy of a copy costs nothing.
+        ids.forEach((seat, i) => {
+          const p = players[seat]!, defs = wonderOf(lib, p.wonder)[p.side];
+          players[seat] = { ...p, stageCosts: p.stageCosts.map((cost, k) => {
+            if (cost !== "?") return cost;
+            const c = defs[k]!.eff.find((e) => e.k === "copyStage") as Extract<SWEff, { k: "copyStage" }> | undefined;
+            if (!c) return "";
+            const o = players[ids[(i + (c.side === "L" ? n - 1 : 1)) % n]!]!;
+            const copied = o.stageCosts[copiedStage(c.stage, o.stageCosts.length)];
+            return copied === undefined || copied === "?" ? "" : copied;
+          }) };
         });
         const partner: { [seat: string]: string } = {};
         // Team play: adjacent pairs in seat order (0 with 1, 2 with 3, ...).

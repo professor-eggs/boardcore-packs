@@ -1,6 +1,6 @@
 {
   "id": "boardcore/seven-wonders-leaders",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "name": "7 Wonders: Leaders",
   "description": "A leader draft before Age I, a recruitment at the start of each age, Roma, four guilds and 6 starting coins. Private local build: not for distribution.",
   "authors": ["Boardcore"],

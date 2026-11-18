@@ -64,8 +64,8 @@ export const LEADER = new Map(LEADERS.map((l) => [l.name, l]));
 const guild = (name: string, cost: string, eff: Eff): SWCardDef => ({ id: `${name}@3`, name, age: 3, color: "purple", cost, counts: [], from: [], eff: [eff] });
 export const LEADERS_GUILDS: readonly SWCardDef[] = [
   guild("Courtesans Guild", "SCGL", { k: "leaders:courtesan" }),
-  guild("Diplomats Guild", "SWGL", { k: "leaders:perNbrLeader", n: 1 }),
-  guild("Gamers Guild", "SCOG", lvp("coins3")),
+  guild("Diplomats Guild", "SWGP", { k: "leaders:perNbrLeader", n: 1 }),
+  guild("Gamers Guild", "SCWO", lvp("coins3")),
   guild("Architects Guild", "OOOCPL", { k: "perVP", n: 3, who: "nbr", colors: ["purple"] }),
 ];
 

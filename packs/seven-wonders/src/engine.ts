@@ -54,6 +54,9 @@ export function setP(s: State, seat: SeatId, f: (p: Player) => Player): State {
 }
 export const say = (s: State, line: string): State => ({ ...s, log: [...s.log, line] });
 
+/** The index a copy of stage `stage` reads on a board of `count` stages (a negative one counts from the last). */
+export const copiedStage = (stage: number, count: number) => (stage < 0 ? count + stage : stage);
+
 /** A built stage's effects; a copy of a neighbour's stage is that stage's (never another copy). */
 export function stageEffects(lib: Lib, s: State, seat: SeatId, i: number): Eff[] {
   const effs = stageDefs(lib, s.players[seat]!)[i]?.eff ?? [];
@@ -61,7 +64,8 @@ export function stageEffects(lib: Lib, s: State, seat: SeatId, i: number): Eff[]
     if (e.k !== "copyStage") return [e];
     const c = e as Extract<Eff, { k: "copyStage" }>;
     const o = s.players[c.side === "L" ? leftOf(s, seat) : rightOf(s, seat)]!;
-    return (stageDefs(lib, o)[c.stage]?.eff ?? []).filter((x) => x.k !== "copyStage");
+    const defs = stageDefs(lib, o);
+    return (defs[copiedStage(c.stage, defs.length)]?.eff ?? []).filter((x) => x.k !== "copyStage");
   });
 }
 
@@ -280,7 +284,9 @@ export function stageWays(lib: Lib, s: State, seat: SeatId): Way[] {
   if (!open.length) return [{ id: "wonder", label: "Build a wonder stage", disabled: "your wonder is finished", plans: [], coins: 0 }];
   return open.map((i) => {
     const item: Item = { type: "stage", name: `${p.wonder} stage ${i + 1}`, age: s.age, color: "wonder", free: null };
-    const w = waysFor(lib, s, seat, item, stageDefs(lib, p)[i]!.cost);
+    const printed = stageDefs(lib, p)[i]!.cost;
+    // "?": a copy of a neighbour's stage, at the cost fixed at setup (SWStageDef).
+    const w = waysFor(lib, s, seat, item, printed === "?" ? p.stageCosts[i] ?? "" : printed);
     return { id: open.length > 1 ? `wonder:${i}` : "wonder", label: `Build ${p.wonder} stage ${i + 1}`, disabled: w.plans.length ? null : "you can't pay for it", plans: w.plans, coins: w.coins };
   });
 }

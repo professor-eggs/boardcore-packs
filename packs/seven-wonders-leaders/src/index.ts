@@ -162,6 +162,9 @@ const draftPhase = (k: number, anchor: { before?: string; after?: string }): Pha
   },
 });
 
+/** A leader in play the Courtesans' Guild may copy: never Esteban (7w-1, 7w-3). */
+const copyable = (e: SWExtra) => e.from === "leaders" && e.off === null && !count(e.eff, "leaders:esteban");
+
 /** Before the end of a turn (and the war, and Age I's first turn): the Courtesans' Guild and Roma's extra leader. */
 const askPhase = (name: string, before: string): Phase => ({
   name, kind: "auto", before,
@@ -170,7 +173,7 @@ const askPhase = (name: string, before: string): Phase => ({
     if (!sl.askCopy.length && !sl.askExtra.length) return {};
     const ask: { kind: string; seat: SeatId; args: Json; default: string[] }[] = [];
     for (const x of sl.askCopy) {
-      const first = nbrs(s.seats, x).flatMap((y) => s.players[y]!.extras.filter((e) => e.from === "leaders" && e.off === null).map((e) => `c:${y}:${e.name}`))[0];
+      const first = nbrs(s.seats, x).flatMap((y) => s.players[y]!.extras.filter(copyable).map((e) => `c:${y}:${e.name}`))[0];
       if (first) ask.push({ kind: "copy", seat: x, args: null, default: [first] });
     }
     for (const x of sl.askExtra) if ((sl.hands[x] ?? []).length) ask.push({ kind: "extra", seat: x, args: null, default: ["skip"] });
@@ -328,7 +331,7 @@ export default defineAddon<"boardcore/seven-wonders">({
     copy: {
       choices: ({ view, seat, partial }) => {
         if (partial.length) return null;
-        const options = nbrs(view.seats, seat).flatMap((y) => view.players[y]!.extras.filter((e) => e.from === "leaders" && e.off === null).map((e) => opt(`c:${y}:${e.name}`, `Copy ${y}'s ${leaderText(e.name)}`)));
+        const options = nbrs(view.seats, seat).flatMap((y) => view.players[y]!.extras.filter(copyable).map((e) => opt(`c:${y}:${e.name}`, `Copy ${y}'s ${leaderText(e.name)}`)));
         return { kind: "pick", label: "Courtesans' Guild: copy a neighbour's leader", options };
       },
       answer: ({ seat, action }) => {
