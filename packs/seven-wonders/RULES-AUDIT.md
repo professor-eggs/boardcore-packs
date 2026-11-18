@@ -27,7 +27,7 @@ Statuses:
 - **blocked**: the source defines it but it can't be built here; the reason is given.
 - **not covered**: no supplied source defines it, so it can't be confirmed either way (UNVERIFIED).
 
-**Still not in any source.** Player-count copy lists for base cards (which copies appear at 3, 4, … players). Some wonder stage costs that neither 7w-5 nor the photos show clearly. The Mourners Guild's resource cost (7w-5 p9 leaves the cost cell empty). Archery Range's resource cost (7w-5 p6 only prints the chain). Those stay UNVERIFIED in `src/data.ts`.
+**Still not in any source.** Player-count copy lists for base cards (which copies appear at 3, 4, … players). The stage costs of the base boards, Rome, Petra and Byzantium (7w-5 prints effects only; the Wonder Pack costs are from the photos since 2026-11-18). The Mourners Guild's resource cost (7w-5 p9 leaves the cost cell empty). Archery Range's resource cost (7w-5 p6 only prints the chain). Those stay UNVERIFIED in `src/data.ts`.
 
 Cost and chain values that *are* in 7w-5, 7w-2/3 or the photos are treated as confirmed and the UNVERIFIED mark was removed.
 
@@ -73,6 +73,7 @@ Cost and chain values that *are* in 7w-5, 7w-2/3 or the photos are treated as co
 | Leaders: recruiting each age (recruit, build a stage with the leader, or discard for 3) | `recruit` phase | sheet | matching |
 | Leaders goodies: Louis, Stevie, Esteban | option `leaderPromos` | aid p2 | **added** |
 | Esteban: once a game, freeze the passing; everyone plays a 2nd card from the same hand | `leaders.ts` turn decorator | aid p2 | **added**. Allowed only while hands hold 3 or more cards; the sheet doesn't say what happens with 2 |
+| Courtesans' Guild can't copy Esteban | `copyable` in the Leaders add-on (options and default) | 7w-1, 7w-3 | **fixed (2026-11-18)**: Esteban was offered |
 | Stevie: build a wonder stage paying 1 coin per resource; Stevie stays as its marker | `leaderWays` "stevie:i" | aid p2 | **added** |
 | Louis: 7 VP minus your victory tokens (count, not value) | `leaderVP` louis | aid p2 | **added** |
 | Catan goodie (Island of Catan board, its leader) | none | aid p2 | **blocked**: the sheet gives the board's trade effect but no stage costs or effects, so a playable board can't be built. Not part of the requested expansions |
@@ -163,8 +164,8 @@ The Effect column is the engine's encoding. **Players** (copy counts) are still 
 | Magistrates Guild | 3 | purple | WWWSL | players+2 guilds | - | perVP n:1 who:nbr colors:[blue] | aid p1 Guilds | matching |
 | Builders Guild | 3 | purple | SSCCG | players+2 guilds | - | perVP n:1 who:all stages:true | aid p1 Guilds | matching |
 | Courtesans Guild (leaders) | 3 | purple | SCGL | players+2 guilds | - | courtesan | aid p1 Guilds; cost 7w-5 p8 | **fixed**: cost was 2 clay + loom + glass |
-| Diplomats Guild (leaders) | 3 | purple | SWGL | players+2 guilds | - | perLeaderNbrVP n:1 | aid p1 Guilds | matching |
-| Gamers Guild (leaders) | 3 | purple | SCOG | players+2 guilds | - | leaderVP what:coins3 | aid p1 Guilds/General (1 VP per 3 coins) | matching |
+| Diplomats Guild (leaders) | 3 | purple | SWGP | players+2 guilds | - | perLeaderNbrVP n:1 | aid p1 Guilds; cost 7w-5 p9 | **fixed (2026-11-18)**: cost was stone + wood + glass + loom |
+| Gamers Guild (leaders) | 3 | purple | SCWO | players+2 guilds | - | leaderVP what:coins3 | aid p1 Guilds/General (1 VP per 3 coins); cost 7w-5 p9 | **fixed (2026-11-18)**: cost was stone + clay + ore + glass |
 | Architects Guild (leaders) | 3 | purple | OOOCPL | players+2 guilds | - | nbrGuildsVP n:3 | aid p1 Guilds | matching |
 | Counterfeiters Guild (cities) | 3 | purple | OOOLG | players+2 guilds | - | vp n:5; loss n:3 | aid p1; cost 7w-5 p8 | **fixed**: cost was 2 ore + glass + papyrus |
 | Guild of Shadows (cities) | 3 | purple | SSWP | players+2 guilds | - | perVP n:1 who:nbr colors:[black] | aid p1 Guilds; cost 7w-5 p9 | **fixed**: cost was 2 wood + clay + loom |
@@ -267,35 +268,36 @@ Starting resources and effects are confirmed from 7w-5 and (for the Wonder Pack)
 | Byzantium (cities) | A |  | 3 | WWWG | vp n:7 | aid p1 General | matching |
 | Byzantium (cities) | B | S (7w-5 p6 says Papyrus; kept as Stone, the same face as side A of one board) | 1 | CLP | vp n:3; diplomacy | aid p1 General | matching |
 | Byzantium (cities) | B |  | 2 | WWG | vp n:4; diplomacy | aid p1 General | matching |
-| Great Wall (wonderPack) | A | C (photos); stages in any order (7w-5 p2, photos) | 1 | SSO (UNVERIFIED) | coins n:8 | photos; 7w-5 p2 | **fixed**: starting resource was wood |
-| Great Wall (wonderPack) | A |  | 2 | CGP | sci s:* | photos; 7w-5 p2 | **fixed**: cost was 2 clay + wood; effect confirmed |
-| Great Wall (wonderPack) | A |  | 3 | SSS | wallShields n:2 | photos; 7w-5 p2 | **fixed**: cost was 2 ore + stone; effect confirmed |
-| Great Wall (wonderPack) | A |  | 4 | GLP (UNVERIFIED) | discardBuild | photos; 7w-5 p2 | matching (effect confirmed; cost still unverified) |
-| Great Wall (wonderPack) | B | C (photos); stages in any order | 1 | SSO (UNVERIFIED) | coins n:8; nbrCoins n:2 | photos; 7w-5 p2 | **fixed**: starting resource was wood; effect confirmed |
-| Great Wall (wonderPack) | B |  | 2 | CCW (UNVERIFIED: photos show 2 clay plus one other) | mask | photos; 7w-5 p2 | matching (effect confirmed) |
-| Great Wall (wonderPack) | B |  | 3 | OOS (UNVERIFIED) | wallSkip (and others pay 2, already in the hook) | photos; 7w-5 p2 | matching (effect confirmed, including the 2-coin loss already implemented) |
-| Great Wall (wonderPack) | B |  | 4 | GLP (UNVERIFIED) | blackMarket | photos; 7w-5 p2 | matching (effect confirmed) |
-| Stonehenge (wonderPack) | A | S (photos, 7w-5) | 1 | SC | vp n:3 | photos | **fixed**: cost was 2 stone; the photo shows stone + clay |
-| Stonehenge (wonderPack) | A |  | 2 | CCC | vp n:5 | photos | matching (cost confirmed) |
-| Stonehenge (wonderPack) | A |  | 3 | SSSS | stoneVP n:2 | aid p2; photos | matching (cost confirmed) |
-| Stonehenge (wonderPack) | B | S | 1 | SSS | stoneCoins n:1; stoneVP n:1 | aid p2; photos | matching (cost confirmed) |
-| Stonehenge (wonderPack) | B |  | 2 | CCCC | revealColor | aid p2; photos | matching (cost confirmed) |
-| Abu Simbel (wonderPack) | A | P | 1 | SS | vp n:3 | aid p1 General | matching |
-| Abu Simbel (wonderPack) | A |  | 2 | PPL | vp n:5 | aid p1 General | matching |
-| Abu Simbel (wonderPack) | A |  | 3 | SSSS | entomb | aid p2 Wonder Pack | matching |
-| Abu Simbel (wonderPack) | B | P | 1 | SSSL | entomb | aid p2 Wonder Pack | matching |
-| Abu Simbel (wonderPack) | B |  | 2 | PPPPG | entomb | aid p2 Wonder Pack | matching |
-| Manneken Pis (wonderPack) | A | none; +4 coins | 1 | WW | copyStage side:L stage:0 | aid p2 Wonder Pack | matching |
-| Manneken Pis (wonderPack) | A |  | 2 | SSS | copyStage side:R stage:1 | aid p2 Wonder Pack | matching |
-| Manneken Pis (wonderPack) | A |  | 3 | OOOO | copyStage side:L stage:2 | aid p2 Wonder Pack | matching |
-| Manneken Pis (wonderPack) | B | none; +4 coins | 1 | WWSSCCOO | coins n:7; shields n:1; vp n:7 | aid p1 General | matching |
+| Great Wall (wonderPack) | A | L (photos, 7w-5 p2); stages in any order (7w-5 p2, photos) | 1 | WW | coins n:8 | photos; 7w-5 p2 | **fixed (2026-11-18)**: starting resource was clay; cost was 2 stone + ore |
+| Great Wall (wonderPack) | A |  | 2 | CGP | sci s:* | photos; 7w-5 p2 | matching |
+| Great Wall (wonderPack) | A |  | 3 | SSS | wallShields n:2 | photos; 7w-5 p2 | matching |
+| Great Wall (wonderPack) | A |  | 4 | OOO | discardBuild | photos; 7w-5 p2 | **fixed (2026-11-18)**: cost was glass + loom + papyrus |
+| Great Wall (wonderPack) | B | L (photos, 7w-5 p2); stages in any order | 1 | WP | coins n:8; nbrCoins n:2 | photos; 7w-5 p2 | **fixed (2026-11-18)**: cost was 2 stone + ore |
+| Great Wall (wonderPack) | B |  | 2 | CCO | mask | photos; 7w-5 p2 | **fixed (2026-11-18)**: cost was 2 clay + wood |
+| Great Wall (wonderPack) | B |  | 3 | WWP | wallSkip (and others pay 2, already in the hook) | photos; 7w-5 p2 | **fixed (2026-11-18)**: cost was 2 ore + stone |
+| Great Wall (wonderPack) | B |  | 4 | SS | blackMarket | photos; 7w-5 p2 | **fixed (2026-11-18)**: cost was glass + loom + papyrus |
+| Stonehenge (wonderPack) | A | W (photos, 7w-5 p2) | 1 | CO | vp n:3 | photos | **fixed (2026-11-18)**: starting resource was stone; cost was stone + clay |
+| Stonehenge (wonderPack) | A |  | 2 | CCP | vp n:5 | photos | **fixed (2026-11-18)**: cost was 3 clay |
+| Stonehenge (wonderPack) | A |  | 3 | WWWL | stoneVP n:2 | aid p2; photos | **fixed (2026-11-18)**: cost was 4 stone |
+| Stonehenge (wonderPack) | B | W | 1 | OOO | stoneCoins n:1; stoneVP n:1 | aid p2; photos | **fixed (2026-11-18)**: cost was 3 stone |
+| Stonehenge (wonderPack) | B |  | 2 | CCCP | revealColor | aid p2; photos | **fixed (2026-11-18)**: cost was 4 clay |
+| Abu Simbel (wonderPack) | A | P (photos, 7w-5 p8) | 1 | SC | vp n:3 | aid p1 General; photos | **fixed (2026-11-18)**: cost was 2 stone |
+| Abu Simbel (wonderPack) | A |  | 2 | WO | vp n:5 | aid p1 General; photos | **fixed (2026-11-18)**: cost was 2 papyrus + loom |
+| Abu Simbel (wonderPack) | A |  | 3 | SSGL | entomb | aid p2 Wonder Pack; photos | **fixed (2026-11-18)**: cost was 4 stone |
+| Abu Simbel (wonderPack) | B | P | 1 | CCL | entomb | aid p2 Wonder Pack; photos | **fixed (2026-11-18)**: cost was 3 stone + loom |
+| Abu Simbel (wonderPack) | B |  | 2 | WWG | entomb | aid p2 Wonder Pack; photos | **fixed (2026-11-18)**: cost was 4 papyrus + glass |
+| Manneken Pis (wonderPack) | A | none; +4 coins | 1 | ? (the copied stage's cost) | copyStage side:L stage:0 | aid p2 Wonder Pack; photos | **fixed (2026-11-18)**: cost was 2 wood; the photo prints "?" |
+| Manneken Pis (wonderPack) | A |  | 2 | ? (the copied stage's cost) | copyStage side:R stage:1 | aid p2 Wonder Pack; photos | **fixed (2026-11-18)**: cost was 3 stone |
+| Manneken Pis (wonderPack) | A |  | 3 | ? (the copied stage's cost) | copyStage side:L stage:-1 (the left board's last stage) | aid p2 Wonder Pack ("last stage"); photos | **fixed (2026-11-18)**: cost was 4 ore; it copied stage 3, which a 2- or 4-stage board misreads |
+| Manneken Pis (wonderPack) | B | none; +4 coins | 1 | WSCOGLP | coins n:7; shields n:1; vp n:7 | aid p1 General; photos | **fixed (2026-11-18)**: cost was 2 each of wood, stone, clay, ore |
 
 Notes:
 
-- The Great Wall's effects and starting resource (clay) are now covered by 7w-5 and the photos. Some of its stage costs are still unverified.
+- The Great Wall's effects are covered by 7w-5 and the photos. Since 2026-11-18 every Wonder Pack starting
+  resource and stage cost is from the photos (see "Checked against the owner's reference sheets").
 - Rome side A free recruiting is confirmed by 7w-5 p3. The aid's −2 / −1 discount is side B. Stage costs are still unverified.
 - 7w-5 p4 lists Olympia B as Ore and p6 lists Byzantium B as Papyrus. Both would disagree with the other face of the same board; those starting resources were left as Wood and Stone.
-- Abu Simbel and Manneken Pis stage costs were not read clearly enough from the photos and stay UNVERIFIED; their effects and starting resources/coins match the photos and aid p2.
+- Abu Simbel and Manneken Pis stage costs are now read from the photos (2026-11-18); their effects and starting resources/coins match the photos and aid p2.
 
 ## Leaders
 
@@ -368,11 +370,12 @@ Also confirmed (costs unchanged, now sourced from 7w-2 / 7w-3 / 7w-5): Alexander
 - Archery Range's resource cost (7w-5 only prints the chain).
 - Mourners Guild's resource cost (7w-5 p9 leaves the cell empty).
 - Wonder stage costs for the base boards, Rome, Petra and Byzantium (7w-5 lists effects, not costs).
-- Some Wonder Pack stage costs: Great Wall A stages 1 and 4, Great Wall B all four costs (effects are confirmed), Abu Simbel, Manneken Pis.
+- ~~Some Wonder Pack stage costs~~: resolved from the photos on 2026-11-18.
 - 2-player expert variant: still blocked (concise only says "see rules"; seat minimum is 3).
 - Catan goodie board: still blocked (no stage costs).
 - Extra 7w-1 promo leaders listed above: not implemented.
-- **Owner to confirm against the physical cards** (PR #118 review), both overtaken by the 2nd edition:
+- **Owner to confirm against the physical cards** (PR #118 review), both overtaken by the 2nd edition
+  (2026-11-18: still open; the 1st-edition sheets settle neither for 2.0.0, see "2nd edition: owner to confirm"):
   - Spies Guild's cost: 1.0.0 coded `SSSG` (3 stone + 1 glass); the review read it as 3 clay + 1 glass. The 2e
     article also says the 1st edition's cost had clay ("reduced by 1 clay"). 2.0.0 codes `CCG`: see
     "2nd edition: owner to confirm" below.
@@ -513,6 +516,18 @@ gone from `points.d.ts`; no add-on used them.
 
 The article gives no number for these; the code keeps the value named, and Xavier's cards decide.
 
+**Status after the reference sheets (2026-11-18): all still open.** Every sheet is 1st edition (2011 to 2015),
+so none prints a 2nd-edition-only card or the 2nd-edition Olympia. Per item:
+
+- Ludus: not covered (2nd-edition-only card; on no sheet).
+- Castrum: not covered (2nd-edition-only card; on no sheet).
+- Decorators Guild: not covered (2nd-edition-only card; on no sheet).
+- Spies Guild: not covered for the 2nd edition. 7w-5 p10 (1st edition) gives 3 stone + glass, the value 1.0.0
+  coded, which contradicts the PR #118 reading of the 1st-edition card (3 clay + glass) and doesn't fit the
+  article's "reduced by 1 clay". `CCG` stays.
+- Olympia B stage 1: not covered. 7w-5 p4 and aid p2 show only the 1st-edition board (raw goods at 1 coin);
+  the 2nd-edition "first card of each Age" reading stays.
+
 - **Ludus cost**: the article says only "inexpensive to build". Coded `SSO` (2 stone + ore), the 1st-edition
   Arena's cost (the 7+ Arena is one of the copies it replaced). Chain: none coded.
 - **Ludus victory points**: the article gives the coins (3 per red card, from "12-18 coins" for 4 to 6 military
@@ -547,6 +562,75 @@ checks in both adapters).
   two-stage board; Stevie, Imhotep and the Cities wonder-stage effects read the new stage costs.
 - The Scientist persona (`seven-wonders-scientist`) is 2.0.0 with range `^2.0.0`; its science card names are
   unchanged, and its prior no longer looks for the removed Olympia way.
+
+## Checked against the owner's reference sheets (2026-11-18)
+
+Xavier sent 13 files (2026-11-18). They are the references this audit already used, under new file names, plus
+one more symbol sheet. Editions: all are 1st edition (dated 2011 to 2015). The base is coded as the 2nd edition,
+so where a sheet's base value differs from the code and the 2nd-edition table above explains it, it was noted and
+left. The expansions are coded as the 1st edition (Xavier's choice), so their mismatches were fixed, test first
+(`test/reference-sheets.test.ts`).
+
+| File | Short name above | Edition | What it covers |
+|---|---|---|---|
+| concise reference (pdf) | concise | 1st (2011) | base setup, turn, trading, military, scoring |
+| player aid (pdf) | aid p1 / p2 | 1st (2015) | symbols of the base, Leaders, Cities, Wonder Pack, goodies |
+| wonder boards (pdf) | 7w-5 | 1st (2013) | every board's effects and starting resource; every card's cost, chain and effect; leaders |
+| leaders summary (pdf) | 7w-1 | 1st (2019) | leader effects, with later promos |
+| leaders effects-costs (pdf) | 7w-2 | 1st (2011) | base leaders, costs and effects |
+| leaders table (pdf) | 7w-3 | 1st (2015) | leaders with Cities and promos, costs and effects |
+| leaders symbols-effects (pdf) | 7w-4 | 1st (2011) | base leaders, costs and effects |
+| Wonder Pack side A and side B (jpg) | photos | 1st (Wonder Pack) | the four boards: starting resource, stage costs and effects |
+| Cities + Leaders cheat sheet (jpg) | sheet | 1st | setup, 8 players, leader draft, debt, diplomacy, team play |
+| card-and-parts list (rtf) | parts | Cities 1st (2012, 2015 printings) | names of every Cities card, leader, guild and part |
+| card-and-parts list (doc) | (new) "symbols" | 1st | not a parts list: the effect symbols in words (trade, free builds, copies, losses, discounts) |
+
+**Fixed** (expansions, 1st edition both sides):
+
+- Wonder Pack, from the photos (starting resources also 7w-5 p2 and p8): the Great Wall makes loom (was clay) and
+  Stonehenge wood (was stone); every stage cost of the Great Wall, Stonehenge, Abu Simbel and Manneken Pis B, as in
+  the Wonders table. The cost symbols were read by colour and shape against 7w-5's symbol key (p2): grey block
+  stone, dark nugget ore, green logs wood, orange bricks clay, octagons for loom (magenta), glass (blue) and
+  papyrus (tan). The photos are small; the readings are consistent across all eight boards (for example the
+  stage costs that were already confirmed, Great Wall A stages 2 and 3, read the same way).
+- Manneken Pis A: each stage prints "?" for its cost. Coded as the copied stage's cost, fixed when the boards are
+  dealt (base 2.1.0: a stage cost "?" with a `copyStage` effect). Its third stage copies the left board's **last**
+  stage (aid p2), not its third (7w-5 p5 says "Stage 3"; aid p2 is the one that names boards of 2 and 4 stages
+  correctly): `copyStage` takes a negative stage counted from the last.
+- Leaders guilds (7w-5 p9): the Diplomats' Guild costs stone, wood, glass, papyrus (was loom for papyrus); the
+  Gamers' Guild costs stone, clay, wood, ore (was ore + glass for wood + ore).
+- Leaders: the Courtesans' Guild can't copy Esteban (7w-1, 7w-3); he was offered.
+
+**Confirmed, nothing to change:**
+
+- Every leader's cost and effect (45 coded: 36 Leaders, 6 Cities, 3 promos) against 7w-1, 7w-2, 7w-3, 7w-4 and
+  7w-5 p11-12, with the disagreements already noted in the Leaders section (Hammurabi, Nefertiti, Nero) decided
+  the same way. Stevie's price ignores Imhotep (7w-1): it reads the printed stage cost. Esteban and Louis have no
+  printed cost on 7w-5; 7w-3 gives 5 and 4, as coded.
+- Every Cities black card (27), guild (3) and leader (6): names and ages against the parts list, costs and effects
+  against 7w-5 and aid p1, debt and diplomacy rules against the sheet and the symbols sheet (debt only when another
+  seat makes you pay, may be taken anyway, settled last; a held diplomacy token is spent at the age's end; masks
+  copy different cards). The Leaders guilds' other costs (Courtesans, Architects) match 7w-5.
+- Petra, Byzantium and Roma: effects and starting resources as in the Wonders table.
+- Wonder Pack effects and starting coins (Manneken Pis +4) against the photos, aid p2 and 7w-5.
+- The base boards (7w-5, 1st edition): Rhodes, Ephesus, Halicarnassus, Giza and Alexandria's starting resources and
+  effects match. Babylon (clay, 3 stages on B), Olympia (wood on A, ore on B, the 1st-edition free build, trade and
+  guild copy) are the 1st edition: expected, left as the 2nd edition. 7w-5 prints no stage costs.
+- Base cards (7w-5, 1st edition): every Age I to III cost and chain matches the 1st-edition values the 2nd-edition
+  table above starts from; the differences are exactly that table's (Well for Pawn Shop, Altar, Theater, Temple,
+  Statue, Pantheon, Gardens, Fortifications, Builders Guild, Spies Guild, the Strategists Guild).
+
+**Not covered by any sheet:**
+
+- Copy counts per player count. The parts list is the Cities list and has none (one black card a seat and age,
+  as coded); no other sheet lists them. The base's counts stay UNVERIFIED.
+- Archery Range's resource cost (7w-5 prints only the chain) and the Mourners Guild's cost (blank on 7w-5).
+- The five 2nd-edition owner items (Ludus, Castrum, Decorators Guild, Spies Guild, Olympia B stage 1): see
+  "2nd edition: owner to confirm" above.
+
+**Noted, not changed** (the 2015 Cities printing, parts list): its mask mark says the Counterfeiters Guild, the
+Guild of Shadows, Aspasia, Caligula, Darius and Diocletian need Cities, so Berenice, Semiramis and the Mourners
+Guild could be played without it. Here all Cities content comes with the Cities add-on.
 
 ## Testing record
 
