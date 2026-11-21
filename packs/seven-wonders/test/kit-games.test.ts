@@ -1,26 +1,28 @@
-// The built packs through Boardcore's test kit (11 §5, D79): random games of every seat count, the base alone,
-// with each add-on and with all of them. A set of rooms plays in both adapters with equal hashes every ply and
-// each BGN replayed in both (timings printed for CONTRACT-GAPS.md); every room plays in the trusted adapter.
+// The built pack through Boardcore's test kit (11 §5, D79): random games of every seat count, the base game alone
+// and with every mix of the expansions' options. A set of games plays in both adapters with equal hashes every ply
+// and each BGN replayed in both (timings printed for CONTRACT-GAPS.md); every mix plays in the trusted adapter.
 import { describe, expect, it } from "vitest";
 import { playRandom } from "@boardcore/testkit";
 import { playBoth, runLine } from "@boardcore-packs/kit";
-import { label, room, seats, type Room } from "./rooms";
+import { label, MIXES, room, seats, type Room } from "./rooms";
 
-const BASE: Room = { addons: [] };
-const LEADERS: Room = { addons: ["leaders"], promos: true };
-const CITIES: Room = { addons: ["cities"] };
-const WP: Room = { addons: ["wonder-pack"] };
-const ALL: Room = { addons: ["leaders", "cities", "wonder-pack"], promos: true };
+const BASE: Room = {};
+const LEADERS: Room = { leaders: true, leaderPromos: true };
+const WP: Room = { wonderPack: true };
+const ALL: Room = { leaders: true, leaderPromos: true, cities: true, wonderPack: true };
 
 const BOTH: [number, Room][] = [
   [3, BASE],
-  [4, { addons: [], options: { sideB: true } }],
-  [7, { addons: [], options: { randomSides: true } }],
+  [4, { sideB: true }],
+  [7, { randomSides: true }],
   [4, LEADERS],
-  [6, { addons: ["cities"], options: { teamPlay: true } }],
+  [6, { cities: true, teamPlay: true }],
   [5, WP],
+  [5, { leaders: true, cities: true }],
+  [6, { leaders: true, wonderPack: true, sideB: true }],
+  [7, { cities: true, wonderPack: true, randomSides: true }],
   [3, ALL],
-  [8, { ...ALL, options: { teamPlay: true, sideB: true } }],
+  [8, { ...ALL, teamPlay: true, sideB: true }],
 ];
 
 describe("seven-wonders in the test kit, both adapters", () => {
@@ -38,11 +40,13 @@ describe("seven-wonders in the test kit, both adapters", () => {
   }
 });
 
-describe("seven-wonders in the test kit, every seat count and room (trusted)", () => {
-  for (const r of [BASE, LEADERS, CITIES, WP, ALL]) {
-    it(`plays 3 to ${r.addons.includes("cities") ? 8 : 7} seats to an outcome: ${label(r, 0).replace(/^0 seats, /, "")}`, async () => {
+describe("seven-wonders in the test kit, every seat count and option mix (trusted)", () => {
+  // Every mix of the three expansions (the promo leaders with Leaders), at every seat count it takes.
+  for (const mix of MIXES) {
+    const r: Room = mix.leaders ? { ...mix, leaderPromos: true } : mix;
+    const max = r.cities ? 8 : 7;
+    it(`plays 3 to ${max} seats to an outcome: ${label(r, 0).replace(/^0 seats, /, "")}`, async () => {
       const h = await room(r);
-      const max = r.addons.includes("cities") ? 8 : 7;
       for (let n = 3; n <= max; n++) for (const pickSeed of [1, 2]) {
         const g = playRandom(h.trusted, { seats: seats(n), options: h.options, pickSeed, maxPlies: 3000 });
         expect(g.match.data.suspended, label(r, n)).toBe(null);
@@ -51,8 +55,17 @@ describe("seven-wonders in the test kit, every seat count and room (trusted)", (
     }, 240_000);
   }
 
-  it("refuses 8 seats without Cities, also with the other add-ons", async () => {
-    const h = await room({ addons: ["leaders", "wonder-pack"] });
+  it("plays team play at 4, 6 and 8 seats with every expansion on", async () => {
+    const h = await room({ ...ALL, teamPlay: true, randomSides: true });
+    for (const n of [4, 6, 8]) {
+      const g = playRandom(h.trusted, { seats: seats(n), options: h.options, pickSeed: n, maxPlies: 3000 });
+      expect(g.match.data.suspended, `${n} seats`).toBe(null);
+      expect(g.match.data.outcome, `${n} seats`).not.toBe(null);
+    }
+  }, 240_000);
+
+  it("refuses 8 seats without Cities, also with the other expansions", async () => {
+    const h = await room({ leaders: true, wonderPack: true });
     expect(() => h.trusted.setup({ options: h.options, seats: seats(8), rng: { int: () => 0 } })).toThrow(/Cities/);
   });
 });

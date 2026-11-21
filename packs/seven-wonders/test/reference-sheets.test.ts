@@ -1,13 +1,14 @@
 // The owner's reference sheets (2026-11-18): the values they settle for the 1st-edition expansions, as data and
-// through the composed packs (trusted adapter). Mechanics only; sources per row in ../RULES-AUDIT.md
+// through the built pack with the expansion's option on (trusted adapter). Mechanics only; sources per row in ../RULES-AUDIT.md
 // "Checked against the owner's reference sheets (2026-11-18)".
 import { describe, expect, it } from "vitest";
 import type { Json, Rng } from "@boardcore/pack-sdk";
 import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
-import leaders from "../../seven-wonders-leaders/src/index";
-import { LEADERS_GUILDS } from "../../seven-wonders-leaders/src/data";
-import { WP_WONDERS } from "../../seven-wonders-wonder-pack/src/data";
+import { leaders } from "../src/expansions/leaders";
+import { LEADERS_GUILDS } from "../src/expansions/leaders-data";
+import { WP_WONDERS } from "../src/expansions/wonder-pack-data";
+import { makeLib } from "../src/kernel";
 import { room, seats } from "./rooms";
 
 type S = SWState;
@@ -15,7 +16,6 @@ const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 const start = (p: PackHandle, options: { [k: string]: Json }, n: number, seed: number) => p.setup({ options, seats: seats(n), rng: rng(seed) }) as S;
 const board = (id: string) => WP_WONDERS.find((w) => w.id === id)!;
 const costs = (id: string, side: "A" | "B") => board(id)[side].map((x) => x.cost);
-const call = <T>(f: unknown, input: object): T => (f as (x: object) => T)(input);
 const left = (s: S, x: string) => s.seats[(s.seats.indexOf(x) + s.seats.length - 1) % s.seats.length]!;
 const right = (s: S, x: string) => s.seats[(s.seats.indexOf(x) + 1) % s.seats.length]!;
 
@@ -45,9 +45,9 @@ describe("Wonder Pack boards (photos of sides A and B; starting resources also 7
 });
 
 describe("Manneken Pis A in play", () => {
-  /** A 3-seat Wonder Pack room where red has Manneken Pis A. */
+  /** A 3-seat game with the Wonder Pack where red has Manneken Pis A. */
   async function manneken() {
-    const h = await room({ addons: ["wonder-pack"] });
+    const h = await room({ wonderPack: true });
     for (let seed = 1; seed < 400; seed++) {
       const s = start(h.trusted, { ...h.options, sideB: false, randomSides: false }, 3, seed);
       if (s.players.red!.wonder === "Manneken Pis") return { p: h.trusted, s };
@@ -96,9 +96,9 @@ describe("Leaders (7w-5 guild costs; 7w-1 and 7w-3 on Esteban)", () => {
 
   it("the Courtesans' Guild cannot copy Esteban", () => {
     const ext = (name: string, k: `${string}:${string}`): SWExtra => ({ from: "leaders", name, cost: 5, eff: [{ k }], off: null });
-    const p = (extras: SWExtra[]) => ({ extras });
-    const view = { seats: ["a", "b", "c"], players: { a: p([]), b: p([ext("Esteban", "leaders:esteban"), ext("Nero", "leaders:nero")]), c: p([]) } };
-    const pr = call<{ options: { id: string }[] }>(leaders.interrupts!.copy!.choices, { view, seat: "a", partial: [], slice: null });
+    const p = (extras: SWExtra[]) => ({ extras }) as SWPlayer;
+    const s = { seats: ["a", "b", "c"], players: { a: p([]), b: p([ext("Esteban", "leaders:esteban"), ext("Nero", "leaders:nero")]), c: p([]) } };
+    const pr = leaders.questions!(makeLib([leaders])).copy!.choices(s as unknown as SWState, { kind: "copy", seat: "a", args: null, default: [] }, [])!;
     expect(pr.options.map((o) => o.id)).toEqual(["c:b:Nero"]);
   });
 });

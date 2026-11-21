@@ -4,7 +4,7 @@
 // P papyrus (manufactured, grey). A cost is resource letters with an optional coin prefix: "$2SC" = 2 coins,
 // a stone and a clay. Sources: ../RULES-AUDIT.md. Since 2.2.0 every base card's cost, copies, chain and effect,
 // and every base stage, match 2nd-edition sources; only Babylon B's stages have no photo yet.
-// Add-ons add their cards and boards through the `cards` and `wonders` registries (11 §10).
+// The expansions' cards and boards are in ./expansions/*-data.ts.
 
 type Eff = SWEff;
 const P = (any: string): Eff => ({ k: "prod", any, trade: true });

@@ -1,26 +1,17 @@
-// The base rules: effects, payments, building, military and scoring. Pure functions of the state and the
-// room's content (`Lib`: the composed card and wonder registries and the base's point invokers), so an
-// add-on reaches these rules only through the points the base declares (points.d.ts).
-import { compareStrings, contents, idiv, withItems, type Invokers, type Option, type Prompt, type SeatId, type Step } from "@boardcore/pack-sdk";
+// The rules: effects, payments, building, military and scoring. Pure functions of the state and the game's
+// content (`Lib`: every card and board of this mix of expansions, and the expansion modules switched on, which
+// the rules call where an expansion changes them: ./kernel.ts).
+import { compareStrings, contents, idiv, withItems, type Option, type PhaseCtx, type Prompt, type SeatId, type Step } from "@boardcore/pack-sdk";
 import { parseCost } from "./data";
+import type { Lib, State } from "./kernel";
 
-export type State = SWState;
+export type { Lib, State };
 export type Player = SWPlayer;
 export type Eff = SWEff;
 export type Item = SWItem;
 export type Line = SWLine;
 export type Plan = SWPlan;
 export type Way = SWWay;
-export type Op = SWOp;
-export type Pts = Invokers<"boardcore/seven-wonders">;
-
-/** The room's content and points, made once when the pack is loaded (a composed registry is fixed). */
-export interface Lib {
-  cards: Map<string, SWCardDef>;
-  wonders: Map<string, SWWonderDef>;
-  sets: string[];
-  pts: Pts;
-}
 
 export const RES = "WSCOGLP";
 export const RAW = "WSCO";
@@ -342,16 +333,17 @@ export function perCount(s: State, seat: SeatId, e: { who: SWWho; colors?: strin
 export const cityOf = (lib: Lib, s: State, seat: SeatId): SWCityCard[] =>
   s.players[seat]!.cards.map((key) => { const d = cardOf(lib, key); return { key, color: d.color, eff: d.eff }; });
 
-/** Immediate effects of something just built (base kinds), then the onBuild point for the add-ons' kinds. */
+/** Immediate effects of something just built (base kinds), then each expansion's own kinds (`onBuild`). */
 export function built(lib: Lib, s: State, seat: SeatId, list: Eff[], item: Item): State {
   for (const e of list) {
     if (e.k === "coins") s = gain(s, seat, e.n);
     else if (e.k === "perCoins") s = gain(s, seat, e.n * perCount(s, seat, e));
     else if (e.k === "nbrCoins") for (const x of nbrs(s, seat)) s = gain(s, x, e.n);
-    else if (e.k === "discardBuild") s = { ...s, pending: [...s.pending, { seat, kind: "discardBuild" }] };
+    else if (e.k === "discardBuild") s = { ...s, pending: [...s.pending, { seat, kind: DISCARD_BUILD }] };
   }
-  const ops = lib.pts.onBuild(s, { seat, item, effs: list, city: cityOf(lib, s, seat) });
-  return applyOps(lib, s, ops);
+  const b = { seat, item, effs: list, city: cityOf(lib, s, seat) };
+  for (const m of lib.mods) if (m.onBuild) s = m.onBuild(lib, s, b);
+  return s;
 }
 
 /** Builds a card into a city (already paid for), with its effects. */
@@ -371,55 +363,74 @@ export function buildStage(lib: Lib, s: State, seat: SeatId, st: number, marker:
   return built(lib, s, seat, stageEffects(lib, s, seat, st), { type: "stage", name: `${p.wonder} stage ${st + 1}`, age: s.age, color: "wonder", free: null });
 }
 
-/** Applies an add-on's operations in order (11 §10 "What an add-on may change"). */
-export function applyOps(lib: Lib, s: State, ops: readonly Op[]): State {
-  for (const o of ops) {
-    const seat = String((o as { seat?: string }).seat ?? "");
-    if (o.op !== "log" && !s.players[seat]) throw new Error(`an operation ${o.op} for ${seat}, who isn't a seat`);
-    switch (o.op) {
-      case "coins":
-        s = o.n >= 0 ? gain(s, seat, o.n) : setP(s, seat, (p) => ({ ...p, coins: Math.max(0, p.coins + o.n) }));
-        break;
-      case "pay":
-        s = pay(s, seat, o.coins, { L: o.L, R: o.R, B: o.B });
-        if (s.players[seat]!.coins < 0) throw new Error(`${seat} can't pay ${o.coins + o.L + o.R + o.B} coins`);
-        break;
-      case "loss":
-        s = { ...s, losses: { ...s.losses, [seat]: (s.losses[seat] ?? 0) + o.n } };
-        break;
-      case "clearLoss": {
-        const losses = { ...s.losses };
-        delete losses[seat];
-        s = { ...s, losses };
-        break;
-      }
-      case "grant":
-        s = setP(s, seat, (p) => ({ ...p, extras: [...p.extras, { ...o.extra, off: null }] }));
-        s = built(lib, s, seat, o.extra.eff, { type: "leader", name: o.extra.name, age: s.age, color: "leader", free: null });
-        break;
-      case "off":
-        s = setP(s, seat, (p) => ({ ...p, extras: p.extras.map((x) => (x.name === o.name && x.off === null ? { ...x, off: o.why } : x)) }));
-        break;
-      case "stage":
-        if (!openStages(lib, s.players[seat]!).includes(o.stage)) throw new Error(`${seat} can't build stage ${o.stage + 1}`);
-        s = buildStage(lib, s, seat, o.stage, o.marker);
-        break;
-      case "log":
-        s = say(s, String(o.text));
-        break;
-      default:
-        throw new Error(`no operation ${String((o as { op: string }).op)}`);
-    }
-  }
+/** Coins to the bank outside a payment plan (never below none). */
+export const spend = (s: State, seat: SeatId, n: number): State => setP(s, seat, (p) => ({ ...p, coins: Math.max(0, p.coins - n) }));
+
+/** A payment that must be affordable: coins to the bank and a plan's coins to the neighbours and the bank. */
+export function payFor(s: State, seat: SeatId, coins: number, plan: Plan): State {
+  s = pay(s, seat, coins, plan);
+  if (s.players[seat]!.coins < 0) throw new Error(`${seat} can't pay ${coins + plan.L + plan.R + plan.B} coins`);
   return s;
 }
 
-/** Settles the coin losses the base's way (pay what you can), unless an add-on fills the `lossRule` slot. */
-export function settleLosses(lib: Lib, s: State): State {
-  if (!Object.keys(s.losses).length || lib.pts.lossRule(s) !== "pay") return s;
+/** Coins a seat must lose, settled later (`settleLosses`). */
+export const lose = (s: State, seat: SeatId, n: number): State => ({ ...s, losses: { ...s.losses, [seat]: (s.losses[seat] ?? 0) + n } });
+
+/** Puts effects in play for a seat (a leader recruited, or the copy of one): its immediate effects run, then `onBuild`. */
+export function grant(lib: Lib, s: State, seat: SeatId, extra: SWExtra): State {
+  s = setP(s, seat, (p) => ({ ...p, extras: [...p.extras, { ...extra, off: null }] }));
+  return built(lib, s, seat, extra.eff, { type: "leader", name: extra.name, age: s.age, color: "leader", free: null });
+}
+
+/** Turns a granted extra's effects off (`why` is kept, as "entomb"). */
+export const turnOff = (s: State, seat: SeatId, name: string, why: string): State =>
+  setP(s, seat, (p) => ({ ...p, extras: p.extras.map((x) => (x.name === name && x.off === null ? { ...x, off: why } : x)) }));
+
+/** Builds a wonder stage that is open to the seat (already paid for), with `marker` under it. */
+export function buildOpenStage(lib: Lib, s: State, seat: SeatId, st: number, marker: string): State {
+  if (!openStages(lib, s.players[seat]!).includes(st)) throw new Error(`${seat} can't build stage ${st + 1}`);
+  return buildStage(lib, s, seat, st, marker);
+}
+
+export const DISCARD_BUILD = "discardBuild";
+
+/**
+ * Asks the questions builds have raised (`pending`): the discard-pile builds, then each expansion's kinds in
+ * its own order (a copy, an extra leader, an entombing). Called where a phase resolves or begins, when the queue
+ * is empty, so each question's default answers its prompt when it is asked; and from inside an answer
+ * (`answering`), where a module may keep a question pending until the next phase begins.
+ */
+export function askPending(lib: Lib, s: State, ctx: PhaseCtx, answering = false): State {
+  if (!s.pending.length) return s;
+  let discard = s.discard;
+  for (const p of s.pending) {
+    if (p.kind !== DISCARD_BUILD) continue;
+    ctx.ask({ kind: p.kind, seat: p.seat, args: null, default: ["skip"] });
+    // The seat looks through the discard pile while it is asked (its view shows it).
+    if (discard.seenBy !== "all" && !discard.seenBy.includes(p.seat)) discard = { ...discard, seenBy: [...discard.seenBy, p.seat] };
+  }
+  const later: State["pending"] = [];
+  for (const m of lib.mods) for (const kind of Object.keys(m.asks ?? {})) {
+    const asked: SeatId[] = [];
+    for (const p of s.pending) {
+      if (p.kind !== kind || asked.includes(p.seat)) continue;
+      asked.push(p.seat);
+      const q = m.asks![kind]!(s, p.seat, answering);
+      if (q === "later") later.push(p);
+      else if (q) ctx.ask(q);
+    }
+  }
+  return { ...s, discard, pending: later };
+}
+
+/** Settles the coin losses: an expansion's way (Cities asks each seat), else each seat pays what it can. */
+export function settleLosses(lib: Lib, s: State, ctx: PhaseCtx): State {
+  if (!Object.keys(s.losses).length) return s;
+  const own = lib.mods.find((m) => m.losses);
+  if (own) return own.losses!(s, ctx);
   for (const x of s.seats) {
     const n = s.losses[x] ?? 0;
-    if (n > 0) s = setP(s, x, (p) => ({ ...p, coins: Math.max(0, p.coins - n) }));
+    if (n > 0) s = spend(s, x, n);
   }
   return { ...s, losses: {} };
 }
@@ -428,10 +439,12 @@ export function settleLosses(lib: Lib, s: State): State {
 
 export function military(lib: Lib, s: State): State {
   const value = s.age === 1 ? 1 : s.age === 2 ? 3 : 5;
-  const seats = lib.pts.conflictSeats(s, s.seats.slice()).filter((x) => s.seats.includes(x));
+  let seats = s.seats.slice();
+  for (const m of lib.mods) if (m.conflictSeats) seats = m.conflictSeats(s, seats);
   const own: { [seat: string]: number } = {};
   for (const x of s.seats) own[x] = ofKind(effs(lib, s, x), "shields").reduce((t, e) => t + e.n, 0);
-  const shields = lib.pts.shields(s, own);
+  let shields = own;
+  for (const m of lib.mods) if (m.shields) shields = m.shields(s, shields);
   const pairs: [SeatId, SeatId][] = [];
   if (seats.length === 2) pairs.push([seats[0]!, seats[1]!]);
   else if (seats.length > 2) for (let i = 0; i < seats.length; i++) pairs.push([seats[i]!, seats[(i + 1) % seats.length]!]);
@@ -443,7 +456,7 @@ export function military(lib: Lib, s: State): State {
     const tokens = team ? (s.partner[a] === b ? 0 : 2) : 1;
     return { a, b, winner, value, tokens, defeatTo: winner === null ? null : winner === a ? b : a, bonus: {} };
   });
-  fights = lib.pts.conflicts(s, fights);
+  for (const m of lib.mods) if (m.conflicts) fights = m.conflicts(s, fights);
   const log: string[] = [];
   for (const c of fights) {
     if (c.tokens <= 0) continue;
@@ -525,10 +538,15 @@ function scoreArgs(lib: Lib, s: State): SWScoreArgs {
   return { effects, city, markers };
 }
 
-/** Every seat's scoring lines: the base's, then each add-on's (the `score` point). */
+/** Every seat's scoring lines: the base's, then each expansion's. */
 export function scoreAll(lib: Lib, s: State): { [seat: string]: Line[] } {
   const out: { [seat: string]: Line[] } = {};
   for (const x of s.seats) out[x] = baseLines(lib, s, x);
-  for (const part of lib.pts.score(s, scoreArgs(lib, s))) for (const x of s.seats) for (const l of part[x] ?? []) if (l.vp) out[x]!.push({ cat: String(l.cat), vp: l.vp });
+  const args = scoreArgs(lib, s);
+  for (const m of lib.mods) {
+    if (!m.score) continue;
+    const part = m.score(s, args);
+    for (const x of s.seats) for (const l of part[x] ?? []) if (l.vp) out[x]!.push({ cat: String(l.cat), vp: l.vp });
+  }
   return out;
 }

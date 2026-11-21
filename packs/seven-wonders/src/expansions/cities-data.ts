@@ -1,7 +1,6 @@
 // The Cities content as data (mechanics only): three guilds, 27 black cards (9 an age), Petra and Byzantium.
-// Names from the Cities parts list; costs, points and effects from the references in the base's
-// RULES-AUDIT.md (Mourners' cost UNVERIFIED). Effects the base reads are its own kinds; this add-on's are
-// `cities:<name>`. A copy of the base's small builders: an add-on imports nothing but the SDK.
+// Names from the Cities parts list; costs, points and effects from the references in ../../RULES-AUDIT.md
+// (Mourners' cost UNVERIFIED). Effects the base rules read are their own kinds; this module's are `cities:<name>`.
 type Eff = SWEff;
 const vp = (n: number): Eff => ({ k: "vp", n });
 const sh = (n: number): Eff => ({ k: "shields", n });

@@ -1,25 +1,30 @@
-// The rooms the tests play: the base alone or with its add-ons, built and composed as Rooms composes them
-// (base defaults, add-on presets in the room's order, then the creator's values). Handles are made once per room.
+// The games the tests play: the built pack with a mix of its options, filled as Rooms fills them (the manifest's
+// defaults, then the creator's values). Handles are made once per mix.
 import type { Json } from "@boardcore/pack-sdk";
 import { loadBoth, readDist, seatsOf, type Handles } from "@boardcore-packs/kit";
 
 export const NAMES = ["red", "blue", "green", "yellow", "purple", "orange", "teal", "pink"];
 export const seats = (n: number) => seatsOf(NAMES, n);
-export type AddonName = "leaders" | "cities" | "wonder-pack";
-const dist = (name: string) => readDist(new URL(`../../${name}/dist/`, import.meta.url));
+export const EXPANSIONS = ["leaders", "cities", "wonderPack"] as const;
+export type ExpansionName = (typeof EXPANSIONS)[number];
 const cache = new Map<string, Promise<Handles>>();
 
-/** A room: its add-ons in the room's order (leaders, cities, wonder pack), base options and the Leaders promos. */
-export interface Room { addons: AddonName[]; options?: { [k: string]: Json }; promos?: boolean }
-export const label = (r: Room, n: number) => `${n} seats, ${r.addons.length ? r.addons.join(" + ") : "base"}${r.options && Object.keys(r.options).length ? ` ${JSON.stringify(r.options)}` : ""}${r.promos ? " (promos)" : ""}`;
+/** A room's options: the expansions switched on (and the promo leaders), and the base options. */
+export type Room = { [option: string]: Json };
+export const label = (r: Room, n: number) => {
+  const on = EXPANSIONS.filter((x) => r[x] === true);
+  const rest = Object.keys(r).filter((k) => !(EXPANSIONS as readonly string[]).includes(k) && r[k] !== false);
+  return `${n} seats, ${on.length ? on.join(" + ") : "base"}${rest.length ? ` (${rest.join(", ")})` : ""}`;
+};
 
-export function room(r: Room): Promise<Handles> {
-  const key = JSON.stringify(r);
+/** Every mix of the three expansions: none, each alone, each pair, all three. */
+export const MIXES: Room[] = [0, 1, 2, 3, 4, 5, 6, 7].map((bits) => Object.fromEntries(EXPANSIONS.filter((_, i) => bits & (1 << i)).map((x) => [x, true])));
+
+export function room(r: Room = {}): Promise<Handles> {
+  const key = JSON.stringify(Object.keys(r).sort().map((k) => [k, r[k]]));
   let h = cache.get(key);
   if (!h) {
-    const order: AddonName[] = ["leaders", "cities", "wonder-pack"];
-    const addons = order.filter((a) => r.addons.includes(a));
-    h = loadBoth(dist("seven-wonders"), addons.map((a) => dist(`seven-wonders-${a}`)), r.options ?? {}, r.promos ? { "boardcore/seven-wonders-leaders": { promos: true } } : {});
+    h = loadBoth(readDist(new URL("../dist/", import.meta.url)), [], r);
     cache.set(key, h);
   }
   return h;

@@ -19,6 +19,11 @@ Checked against the references Xavier supplied. Short names used below:
 **Since 2.0.0 the base is the 2nd edition.** The Rules, Cards and Wonders tables below are the 1st-edition audit
 (1.0.0); where the 2nd edition changed a row, "2nd edition (2.0.0)" at the end of this file supersedes it.
 
+**Since 3.0.0 the three expansions are options of this pack** (`leaders`, `cities`, `wonderPack`), not add-on
+packs: their rules live in `src/expansions/`. Sections written before that name the add-ons and
+`addons.test.ts`; read "the Leaders add-on" as the `leaders` option and the test file as `expansions.test.ts`.
+No rule or card value changed in the fold; "3.0.0: the expansions as options" lists what did.
+
 Statuses:
 
 - **matching**: the code already did what the source says.
@@ -697,6 +702,32 @@ left. The expansions are coded as the 1st edition (Xavier's choice), so their mi
 Guild of Shadows, Aspasia, Caligula, Darius and Diocletian need Cities, so Berenice, Semiramis and the Mourners
 Guild could be played without it. Here all Cities content comes with the Cities add-on.
 
+## 3.0.0: the expansions as options (2026-11-21)
+
+Boardcore drops add-on packs, so Leaders, Cities and the Wonder Pack were folded into this pack as options.
+Every card, cost, copy count, leader, board and rule above is unchanged, and every rule test from the base and
+the three add-ons passes against the one pack (the add-on tests rewritten to switch options).
+
+- **Options.** `leaders`, `leaderPromos`, `cities`, `wonderPack` join `sideB`, `randomSides`, `teamPlay`. The
+  refused mixes are in the README's "Option rules" (8 seats without Cities, team play at an odd count, promo
+  leaders without Leaders).
+- **Starting coins.** The `startCoins` option is gone: 3 coins, or 6 with Leaders (sheet), as the Leaders
+  add-on's preset did. A room can no longer pick another number.
+- **Content that needs two expansions**, as before: the six Cities leaders are dealt only with both `leaders`
+  and `cities`; Abu Simbel is in the box only with `leaders`; the Cities guilds that count leaders score
+  nothing without Leaders.
+- **When a question is asked.** A build that raises a question (the discard-pile build, the Courtesans' Guild's
+  copy, Roma's extra leader, Abu Simbel's entombing) is now asked as soon as the pick that built it resolves, in
+  that order. With add-ons each was asked from the add-on's own phase, so two cases moved: what a recruitment
+  raises is asked before the age's cards are dealt (a discard-pile build used to come after the deal, a debt
+  choice after the first turn), and a discard-pile build raised by an extra leader is asked at once (it used to
+  come after the hands passed). No source orders these against the deal; the new order is the one a table plays
+  (finish the recruitment, then deal).
+- **A copy waits for an entombing.** If a seat is to copy a neighbour's leader while that neighbour has an
+  entombing to choose, the copy is asked after it, so the leader copied is one still in play.
+- **Ids and state.** Option ids lost the add-on prefix; the expansions' state is `state.leaders`, `state.cities`,
+  `state.wonderPack`. A 2.x game with add-ons doesn't replay on 3.0.0.
+
 ## Testing record
 
 ### 5a. Random-play fuzzing through the server and web client (2026-11-17)
@@ -734,3 +765,13 @@ seat), and a full 3-player game with Leaders and Cities, one phone and two Scien
   row showed option ids ("c:0 → build → Pay 2 to the right"), a web fix in public 2480df1.
 - Left: the board names seats by colour (red, blue) while the log and results use player names; "VP" is
   abbreviated; the turn pill covers the room code for two seconds.
+
+### Test kit after the fold (2026-11-21, 3.0.0)
+
+`pnpm check` on the folded pack: the numbers are in `CONTRACT-GAPS.md` ("3.0.0"). In short: 11 rooms in both
+adapters with equal hashes every ply; every seat count for each of the eight mixes of expansions in the trusted
+adapter; the leak check (two worlds, D82's resampled view, quiet actions) on 13 trusted games covering all eight
+mixes, 459 states, 2,448 worlds, 5,847 quiet actions, no findings, and once in the sandbox; the Scientist
+playing a whole game with each mix.
+
+

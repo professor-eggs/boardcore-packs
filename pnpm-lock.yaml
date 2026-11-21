@@ -105,18 +105,6 @@ importers:
         specifier: link:../../boardcore/packages/testkit
         version: link:../../boardcore/packages/testkit
 
-  packs/seven-wonders-cities:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
-  packs/seven-wonders-leaders:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
   packs/seven-wonders-scientist:
     dependencies:
       '@boardcore/pack-sdk':
@@ -141,12 +129,6 @@ importers:
       '@boardcore/testkit':
         specifier: link:../../boardcore/packages/testkit
         version: link:../../boardcore/packages/testkit
-
-  packs/seven-wonders-wonder-pack:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
 
   tools/kit:
     dependencies:

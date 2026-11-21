@@ -1,6 +1,6 @@
 // The owner's demo game (08 S11 "Demo", S11 part 8b): a person plays the draft game against Scientist on 8b's
-// defaults, through Rooms on the lab host, the base, its add-ons and the persona installed as a server installs them
-// and searched sandboxed. The person's moves are seeded picks from the room's own prompts. A whole game takes
+// defaults, through Rooms on the lab host, the game (with Cities on) and the persona installed as a server installs
+// them and searched sandboxed. The person's moves are seeded picks from the room's own prompts. A whole game takes
 // minutes, so it runs only with BOARDCORE_DEMO=1; the result is in boardcore's docs/s11-attack.md "Part 8b results".
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -30,10 +30,9 @@ describe.runIf(process.env.BOARDCORE_DEMO === "1")("the owner's demo game agains
     const h = await s3Host({ fourDice: sample("four-dice"), lantern: sample("lantern-bids"), holdFast: sample("hold-fast"), quickjs: defaultLoader });
     const install = async (text: string) => (await h.run(h.library.install(text).pipe(Effect.orDie))).hash;
     const base = await install(ours("seven-wonders"));
-    const cities = await install(ours("seven-wonders-cities"));
     const persona = await install(ours("seven-wonders-scientist"));
     const ann: Caller & { token: string | null } = { deviceKey: "d".repeat(64), token: null };
-    const c = val(await h.run(h.rooms.create(ann, key(), { pack: base, addons: [cities], name: "Ann", material: "ann-material-for-the-demo", seats: 3, options: {}, settings: { personaThink: 0 } } as never)), "create");
+    const c = val(await h.run(h.rooms.create(ann, key(), { pack: base, addons: [], name: "Ann", material: "ann-material-for-the-demo", seats: 3, options: { cities: true }, settings: { personaThink: 0 } } as never)), "create");
     ann.token = c.token;
     for (const seat of ["blue", "green"]) val(await h.run(h.rooms.addBot(c.room, ann, key(), { seat, kind: "persona", persona })), `add ${seat}`);
     val(await h.run(h.rooms.start(c.room, ann, key())), "start");

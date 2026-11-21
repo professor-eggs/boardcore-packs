@@ -14,7 +14,15 @@ const dist = (name: string) => readDist(new URL(`../../${name}/dist/`, import.me
 const NAMES = ["red", "blue", "green", "yellow", "purple", "orange", "teal", "pink"];
 const seats = (n: number) => NAMES.slice(0, n).map((seat) => ({ seat, team: null }));
 const scientist = () => verifyPersonaDist(new URL("../dist/", import.meta.url));
-const allAddons = () => composed(dist("seven-wonders"), ["leaders", "cities", "wonder-pack"].map((a) => dist(`seven-wonders-${a}`)), { teamPlay: true }, { "boardcore/seven-wonders-leaders": { promos: true } });
+/** The draft game with a mix of its options (the expansions are options of the pack since 3.0.0). */
+const game = (options: { [k: string]: Json } = {}) => composed(dist("seven-wonders"), [], options);
+const EVERYTHING = { leaders: true, leaderPromos: true, cities: true, wonderPack: true };
+const everything = () => game({ ...EVERYTHING, teamPlay: true });
+/** Every mix of the three expansions (the promo leaders with Leaders). */
+const MIXES = [0, 1, 2, 3, 4, 5, 6, 7].map((bits) => ({
+  ...(bits & 1 ? { leaders: true, leaderPromos: true } : {}), ...(bits & 2 ? { cities: true } : {}), ...(bits & 4 ? { wonderPack: true } : {}),
+}) as { [k: string]: Json });
+const mixName = (o: { [k: string]: Json }) => ["leaders", "cities", "wonderPack"].filter((x) => o[x] === true).join(" + ") || "base";
 // The lowest settings: a test plays, the bench measures.
 const LOW = { playouts: 50 };
 
@@ -24,7 +32,7 @@ interface SwState { [k: string]: Json; turn: number; age: number; players: { [se
 describe("Scientist (8b, private)", () => {
   it("passes install's checks with its own settings, in range for the base", async () => {
     const p = await scientist();
-    expect(p.manifest.persona).toEqual({ pack: "boardcore/seven-wonders", range: "^2.0.0" });
+    expect(p.manifest.persona).toEqual({ pack: "boardcore/seven-wonders", range: "^3.0.0" });
     // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
     const base = dist("seven-wonders").manifest as { id: string; version: string };
     expect(p.manifest.persona.pack).toBe(base.id);
@@ -32,9 +40,9 @@ describe("Scientist (8b, private)", () => {
     expect(personaSettings(p.manifest)).toMatchObject({ playouts: expect.any(Number), worlds: expect.any(Number), cutoff: expect.any(Number) });
   });
 
-  it("N66: a seeded game at 8 seats with every add-on is the same in both adapters, its searches measured", async () => {
+  it("N66: a seeded game at 8 seats with every expansion is the same in both adapters, its searches measured", async () => {
     const p = await scientist();
-    const room = await allAddons();
+    const room = await everything();
     const moves: SelfplayMove[] = [];
     const play = (trust: "trusted" | "sandboxed") => selfplayGame({
       runtime: kit.runtime, ...room, seats: seats(8), trust, baseSeed: "8b-private", game: 1, maxPlies: 2,
@@ -57,7 +65,7 @@ describe("Scientist (8b, private)", () => {
   }, 600_000);
 
   it("N27: worlds have no history, so the cards a seat passed on are redrawn (Q67): weaker, never a leak", async () => {
-    const room = await composed(dist("seven-wonders"));
+    const room = await game();
     const h = await kit.load(room.pack, "trusted", room.with);
     let m: Match = start(h, { options: room.with.options, seats: seats(5), hostSecret: "n27", materials: NAMES.slice(0, 5) }, 0).match;
     const st = () => m.data.state as SwState;
@@ -95,7 +103,7 @@ describe("Scientist (8b, private)", () => {
 
   it("N46: seven persona seats at one pick share the host's gate of 2; seats the cap reaches at the gate play their fallback inside the deadline", async () => {
     const p = await scientist();
-    const room = await allAddons();
+    const room = await everything();
     const h = await kit.load(room.pack, "sandboxed", room.with);
     const m = start(h, { options: room.with.options, seats: seats(8), hostSecret: "n46", materials: NAMES }, 0).match;
     const state = m.data.state;
@@ -132,4 +140,25 @@ describe("Scientist (8b, private)", () => {
     expect(atGate + capped).toBeGreaterThan(0);
     h.dispose();
   }, 120_000);
+});
+
+// TESTING.md step 4, with the expansions as options (3.0.0): the persona reads only the base's view (cities, coins,
+// science, the scores), so every mix must play to the end with no failed search and no fallback.
+describe("Scientist plays whole games with each option mix", () => {
+  const whole = async (options: { [k: string]: Json }, trust: "trusted" | "sandboxed", n = 3) => {
+    const p = await scientist();
+    const t0 = Date.now();
+    const r = await selfplayGame({ runtime: kit.runtime, ...(await game(options)), seats: seats(n), trust, baseSeed: "options", game: 1, lineup: Array.from({ length: n }, () => ({ persona: p, ...LOW })) });
+    console.log(`Scientist, ${n} seats, ${mixName(options)}, ${trust}: ${r.plies} plies in ${((Date.now() - t0) / 1000).toFixed(1)} s; scores ${JSON.stringify(r.scores)}`);
+    return r;
+  };
+  for (const options of MIXES) {
+    it(`plays a whole game to an outcome: ${mixName(options)}`, async () => {
+      const r = await whole(options, "trusted");
+      expect(r.stopped).toBe(null);
+      expect(r.winners!.length).toBeGreaterThan(0);
+      expect(Object.keys(r.scores!)).toHaveLength(3);
+      for (const x of r.seats) expect([x.searches > 0, x.failedSearches, x.fallbacks]).toEqual([true, 0, 0]);
+    }, 600_000);
+  }
 });

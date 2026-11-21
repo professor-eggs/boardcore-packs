@@ -1,9 +1,9 @@
-// The Wonder Pack's boards as data (mechanics only). Effects from the references in the base's RULES-AUDIT.md;
+// The Wonder Pack's boards as data (mechanics only). Effects from the references in ../../RULES-AUDIT.md;
 // starting resources and stage costs from the photos of both sides (and 7w-5 for the starting resources):
 // Abu Simbel entombs a leader for twice its cost; Stonehenge scores per stone symbol on brown cards and turns up
 // the card under its second B stage; Manneken Pis copies its neighbours' stages, each A stage costing what the
-// copied stage costs ("?", read by the base at setup); the Great Wall builds its stages in any order. This
-// add-on's own kinds are `wp:<name>`.
+// copied stage costs ("?", read by the base rules at setup); the Great Wall builds its stages in any order. This
+// module's own kinds are `wp:<name>`.
 type Eff = SWEff;
 const vp = (n: number): Eff => ({ k: "vp", n });
 const sh = (n: number): Eff => ({ k: "shields", n });

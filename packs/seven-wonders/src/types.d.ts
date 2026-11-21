@@ -1,6 +1,6 @@
-// boardcore/seven-wonders 2.x (the 2nd edition): the published point declarations (11 §10 "Typed declarations"). A global
-// script with no import of its own: an add-on's build includes this file and `defineAddon<"boardcore/seven-wonders">`
-// checks every contribution against it. A changed signature is a new major version of the base.
+// boardcore/seven-wonders 3.x (the 2nd edition, its expansions as options): the shapes the pack's modules share
+// (effects, cards, boards, the state and the view). A global script with no import of its own, so the rules, the
+// expansion modules and the tests name them without importing.
 type SWJson = import("@boardcore/pack-sdk").Json;
 type SWZone<T extends SWJson> = import("@boardcore/pack-sdk").Zone<T>;
 
@@ -9,9 +9,9 @@ type SWSci = "c" | "g" | "t";
 type SWWho = "self" | "nbr" | "all";
 
 /**
- * One effect of a card, a wonder stage or board, or a granted extra (a leader). The base interprets these
- * kinds; an add-on's own kinds are named `<prefix>:<name>` and only add-ons read them (through the
- * arguments of `onBuild` and `score`, or a seat's `extras`).
+ * One effect of a card, a wonder stage or board, or a granted extra (a leader). The base rules interpret these
+ * kinds; an expansion's own kinds are named `<prefix>:<name>` (`leaders:`, `cities:`, `wp:`) and only its
+ * module reads them (in `onBuild` and `score`, or from a seat's `extras`).
  */
 type SWEff =
   | { [k: string]: SWJson; k: "prod"; any: string; trade: boolean }
@@ -55,9 +55,9 @@ type SWEff =
   | { [k: string]: SWJson; k: "nbrCoins"; n: number }
   /** The effects of a neighbour's wonder stage (`stage` from 0; a negative one counts from the last, -1 the last). */
   | { [k: string]: SWJson; k: "copyStage"; side: "L" | "R"; stage: number }
-  | SWAddonEff;
-/** An add-on's own effect kind, `<prefix>:<name>`: the base keeps it and never reads it. */
-interface SWAddonEff { [k: string]: SWJson; k: `${string}:${string}` }
+  | SWOwnEff;
+/** An expansion's own effect kind, `<prefix>:<name>`: the base rules keep it and never read it. */
+interface SWOwnEff { [k: string]: SWJson; k: `${string}:${string}` }
 
 interface SWCardDef {
   [k: string]: SWJson;
@@ -68,7 +68,7 @@ interface SWCardDef {
   color: SWColor;
   /** Resource letters (WSCO raw, GLP manufactured), with an optional coin prefix: "$2SC". */
   cost: string;
-  /** Base cards: one copy at each of these seat counts and up. Cards added by `decks`: []. */
+  /** Base cards: one copy at each of these seat counts and up. Cards an expansion deals (`decks`): []. */
   counts: number[];
   /** Cards that make this one free (the chain). */
   from: string[];
@@ -81,7 +81,7 @@ interface SWWonderDef {
   id: string;
   /** The board's starting resource letter ("" for none). */
   base: string;
-  /** Only dealt when every set named here is in the room (the `sets` registry). */
+  /** Only dealt when every set named here is in the game (`sets`). */
   needs?: string[];
   /** Extra starting coins. */
   coins?: number;
@@ -92,10 +92,7 @@ interface SWWonderDef {
   A: SWStageDef[];
   B: SWStageDef[];
 }
-/** A set of content in the room ("base", "leaders", ...): wonders and add-ons read the list. */
-interface SWSet { [k: string]: SWJson; id: string }
-
-/** Effects granted to a seat by an add-on (a leader in play): public, part of the seat's effects unless `off`. */
+/** Effects granted to a seat (a leader in play, or the copy of one): public, part of the seat's effects unless `off`. */
 interface SWExtra { [k: string]: SWJson; from: string; name: string; cost: number; eff: SWEff[]; off: string | null }
 
 interface SWPlayer {
@@ -124,7 +121,7 @@ interface SWPlayer {
 interface SWState {
   [k: string]: SWJson;
   seats: string[];
-  /** The `sets` registry's ids. */
+  /** The content in the game: "base", then the expansions switched on ("leaders", "cities", "wonderPack"). */
   sets: string[];
   age: number;
   /** The turn last played in this age (0 before the first). */
@@ -133,9 +130,9 @@ interface SWState {
   /** The age decks, face down. */
   decks: SWZone<string>[];
   discard: SWZone<string>;
-  /** The base's own questions waiting to be asked (a discard-pile build raised by an add-on's operation). */
+  /** Questions a build raised, waiting to be asked (a discard-pile build, a copy, an extra leader, an entombing). */
   pending: { [k: string]: SWJson; seat: string; kind: string }[];
-  /** Coins each seat must lose (settled by the `lossRule` slot). */
+  /** Coins each seat must lose: paid as far as it can, or (Cities) asked as a debt choice. */
   losses: { [seat: string]: number };
   /** Coins taken from the bank this turn, and who bought from which side ("seat>L"). */
   gained: { [seat: string]: number };
@@ -144,8 +141,26 @@ interface SWState {
   partner: { [seat: string]: string };
   /** What the last action showed everyone. */
   log: string[];
+  /** Each expansion's own state, present when its option is on. */
+  leaders?: SWLeaders;
+  cities?: SWCities;
+  wonderPack?: SWWonderPack;
   run: import("@boardcore/pack-sdk").Run;
 }
+
+type SWHands = { [seat: string]: string[] };
+/** Leaders: hidden but for the counts. */
+interface SWLeaders {
+  [k: string]: SWJson;
+  /** The draft hands (before Age I), the leaders each seat holds, the undealt leaders, and each seat's used ones (face down). */
+  draft: SWHands; hands: SWHands; box: string[]; out: SWHands;
+  /** Esteban: who used him, and the turn the hands don't pass. */
+  used: string[]; frozen: { [k: string]: SWJson; age: number; turn: number } | null;
+}
+/** Cities: debt and diplomacy tokens (public), and who sits this age's conflicts out. */
+interface SWCities { [k: string]: SWJson; debt: { [seat: string]: number }; diplomacy: { [seat: string]: number }; absent: string[]; spent: string[] }
+/** The Wonder Pack: the age each Great Wall seat skips, and who sits this age's conflicts out. */
+interface SWWonderPack { [k: string]: SWJson; skip: { [seat: string]: number }; absent: string[] }
 
 interface SWWay { [k: string]: SWJson; id: string; label: string; disabled: string | null; plans: SWPlan[]; coins: number }
 interface SWPlan { [k: string]: SWJson; L: number; R: number; B: number }
@@ -159,6 +174,7 @@ interface SWView {
   [k: string]: SWJson;
   viewer: string;
   seats: string[];
+  sets: string[];
   age: number;
   turn: number;
   run: import("@boardcore/pack-sdk").RunView;
@@ -171,9 +187,16 @@ interface SWView {
   hand: string[];
   pick: SWJson;
   discard: string[];
-  /** The viewer's ways to build a wonder stage now (an add-on offers them with its own card). */
-  stageWays: SWWay[];
   scores: { [seat: string]: SWLine[] } | null;
+  /** Leaders: the viewer's own leaders and draft hand, and everyone's counts. */
+  leaders?: {
+    [k: string]: SWJson;
+    hand: string[]; draft: string[];
+    handSizes: { [seat: string]: number }; draftSizes: { [seat: string]: number }; outSizes: { [seat: string]: number }; box: number;
+    esteban: string[]; frozen: SWLeaders["frozen"];
+  };
+  /** Cities: each seat's debt and diplomacy tokens. */
+  cities?: { [k: string]: SWJson; debt: { [seat: string]: number }; diplomacy: { [seat: string]: number } };
 }
 
 /** What was just built. */
@@ -194,60 +217,4 @@ interface SWScoreArgs {
   effects: { [seat: string]: SWEff[] };
   city: { [seat: string]: SWCityCard[] };
   markers: { [seat: string]: string[] };
-}
-
-/** The operations an add-on's effect may ask the base for (phases, events). */
-type SWOp =
-  /** Coins from (n > 0, counted as taken from the bank) or to the bank. */
-  | { [k: string]: SWJson; op: "coins"; seat: string; n: number }
-  /** A payment: coins to the bank, and L, R, B to the left neighbour, the right one and the bank. */
-  | { [k: string]: SWJson; op: "pay"; seat: string; coins: number; L: number; R: number; B: number }
-  | { [k: string]: SWJson; op: "loss"; seat: string; n: number }
-  | { [k: string]: SWJson; op: "clearLoss"; seat: string }
-  /** Puts effects in play for a seat (a leader recruited): its immediate effects run, then `onBuild`. */
-  | { [k: string]: SWJson; op: "grant"; seat: string; extra: SWExtra }
-  /** Turns a granted extra's effects off (`why` is kept, as "entomb"). */
-  | { [k: string]: SWJson; op: "off"; seat: string; name: string; why: string }
-  /** Builds a wonder stage (paid by a "pay" first), with `marker` under it; its effects run, then `onBuild`. */
-  | { [k: string]: SWJson; op: "stage"; seat: string; stage: number; marker: string }
-  | { [k: string]: SWJson; op: "log"; text: string };
-
-interface BoardcorePoints {
-  "boardcore/seven-wonders": {
-    state: SWState;
-    view: SWView;
-    options: { sideB: boolean; randomSides: boolean; teamPlay: boolean; startCoins: number };
-    points: {
-      /** Every card that can be in a deck (the base's and the add-ons'). */
-      cards: { shape: "registry"; entry: SWCardDef };
-      /** Every wonder board. */
-      wonders: { shape: "registry"; entry: SWWonderDef };
-      /** The sets of content in the room. */
-      sets: { shape: "registry"; entry: SWSet };
-      /** Each age (a round): deal, ready, turn1/end1 ... turn7/end7, last, war; questions through the queue. */
-      phases: { shape: "phases"; op: SWOp };
-      /** Setup and resampling: the card ids of each age deck before the guilds are chosen and the decks shuffled. */
-      decks: { shape: "modifier"; value: string[][]; args: { seats: number } };
-      /** The most seats this room can seat. */
-      maxSeats: { shape: "modifier"; value: number };
-      /** After anything is built (a card, a stage, a leader), before the next build. */
-      onBuild: { shape: "event"; args: SWBuild; op: SWOp };
-      /** At the end of a turn, after its questions, before the hands pass. */
-      endTurn: { shape: "event"; args: { turn: number }; op: SWOp };
-      /** At the end of an age, before its conflicts. */
-      ageEnd: { shape: "event"; args: { age: number }; op: SWOp };
-      /** Who takes part in this age's conflicts. */
-      conflictSeats: { shape: "modifier"; value: string[] };
-      /** Each seat's shields in this age's conflicts. */
-      shields: { shape: "modifier"; value: { [seat: string]: number } };
-      /** This age's conflicts, before their tokens are handed out (`tokens` 0: no fight). */
-      conflicts: { shape: "modifier"; value: SWConflict[] };
-      /** Whether the hands pass at the end of this turn. */
-      passes: { shape: "modifier"; value: boolean; args: { turn: number } };
-      /** How coin losses are settled: "pay" (the base: pay what you can) or "keep" (an add-on settles them). */
-      lossRule: { shape: "slot"; result: string };
-      /** Extra scoring lines per seat. */
-      score: { shape: "scoring"; result: { [seat: string]: SWLine[] }; args: SWScoreArgs };
-    };
-  };
 }

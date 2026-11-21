@@ -45,3 +45,23 @@ eighth seat, one adds four boards). Pinned engine: `e0c5d98`.
 11. **Tooling:** `pnpm setup` is pnpm's own command (it edits the shell profile), so a consuming repository's
     setup script must be run as `pnpm run setup`; and that script's `git submodule update` resets a moved
     submodule pointer unless it is staged first.
+
+## After add-on packs were removed (2026-11-21)
+
+The game is now one pack with its three expansions as boolean options. Items 1, 2, 3, 4, 7 and 9 above are
+moot. Items 5 (as a rule for any `begin`), 6, 8, 10 and 11 stand. New, all generic:
+
+12. **A phase order is fixed per runner.** A game whose phases depend on its options builds one runner per mix
+    of options at load (here 8) and picks one from the state in every handler; a phase used in one round only
+    stays in every round with no seats (item 6). Option: an order computed from the state or the round.
+13. **Option validity is checked only at start (Q106).** "This seat count needs that option" and "this option
+    needs that one" can't be said in a manifest, so the pack throws in `setup` and the room is already full.
+    Three rule shapes cover this game: a seat maximum that depends on an option; an option that needs an even
+    seat count; an option that requires another.
+14. **An option can't set another option's default.** What an add-on's preset did (a different starting
+    amount when an expansion is on) has no equivalent; the pack derives the number and drops the option.
+15. **A queued question's default is fixed when asked.** Two queued questions that touch the same thing need
+    the pack to order them by hand. Option: build the default when the question reaches the front.
+16. **`describe` and `choices` don't get the options.** The view has to carry which expansions are on.
+17. **One hash for the game and all its expansions.** A fix in one expansion changes the hash of rooms that
+    don't use it.
