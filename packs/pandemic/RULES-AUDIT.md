@@ -261,3 +261,53 @@ supply and with him winning on 8 outbreaks.
   line never reached the table (public compose fix).
 - Left: prompts name seats by id ("Offer Madrid to orange"; public Q107); the epidemic's intensify step has no log
   line; the turn pop-up covers the board for 2 s; "(draft)" log lines for a provisional step.
+
+## Fold into one pack (3.0.0, 2026-11-21)
+
+The owner decided to remove add-on packs. The five On the Brink modules are options of this pack (`roles`,
+`events`, `virulentStrain`, `mutation`, `bioterrorist`, `bioterroristSeat`); the five add-on packs are gone.
+
+- **No rule changed with the fold.** Before the old packs were removed, 3.0.0 was played against 2.0.0 composed
+  with its add-ons, both in the trusted adapter, on the same seeds and the same random choices: 16 rooms (the
+  base at 2, 3 and 4 seats, each module alone, the Bio-Terrorist at 3, 4 and 5 seats and with a random seat, all
+  four with Mutation and with the Bio-Terrorist, roles with events), 6 games each, 15,066 plies. At every ply the
+  state (but for where the slices and the runner's phase list live), every seat's and the spectator's view, each
+  module's view, the legal actions, the reveal flag and the log line were equal. Only the Bio-Terrorist's action
+  ids differ: the composer's prefix is gone.
+- **One rule fixed after that, test first:** the Field Operative returns samples outside her own turn (the
+  "Roles" table above). Six tests in `second-edition.test.ts`, five of them failing before the change.
+- **Option rules:** `setup` refuses Mutation with the Bio-Terrorist, the Bio-Terrorist at 2 seats, 5 players
+  without the roles and 7 epidemics without the roles, each with its reason (README "Option rules";
+  `options.test.ts`). The add-ons' presets (5 epidemics with a challenge) are gone: an option can't preset another.
+- **Tests:** `addons.test.ts` is `options.test.ts`; the test that the add-ons' map copies equal the base's went
+  with the copies. Pandemic has 107 tests: base 16, options 26, second-edition 20, kit games 17, kit checks 13
+  (the two-worlds leak check and the D82 resampled view over every module mix, trusted and once sandboxed),
+  resampled worlds 3, fixtures 1, PR #118 4, Medic 7 (3 as before, 4 over the option mixes); 93 before.
+- **Kit numbers** (this commit): 9 rooms in both adapters with equal hashes and both replays; leak check over 11
+  trusted games, 1,032 states and 4,177 worlds, no findings, none excused, and the same report sandboxed;
+  resampled worlds 2,603 worlds and 43,006 actions, no faults.
+- **Medic 3.0.0** (range `^3.0.0`): install's checks, the seeded game equal in both adapters, and the first 24
+  plies of four option mixes (no module at 2 seats, roles + events + Virulent Strain + Mutation at 4, the same
+  with the Bio-Terrorist at 3, the Bio-Terrorist alone at 4) with no failed search and no fallback. **It doesn't
+  finish a game:** at 2 seats with no module, 50 playouts, it stopped at the 4,000-ply limit; from about ply 200
+  one Medic asks the other for a card (Share Knowledge), is refused, which costs no action, and asks again. The
+  same game does the same on 2.0.0 with Medic 2.0.0, so the fold didn't bring it. Not changed here: stopping it is
+  either a rule (an ask refused once can't be repeated that turn) or the persona's, for the owner to choose.
+
+### 5a again. Random-play fuzzing through the server and web client (2026-11-21)
+
+Public boardcore at `a6cea2c` (as built there), `FUZZ_EXTRA_PACKS` pointed at this pack and the Medic,
+`FUZZ_GAMES=Pandemic`, `FUZZ_SEATS=2,3,4,5`, `FUZZ_STRICT=1`, 3 workers, `FUZZ_MINUTES=10`. Every option switched
+at random on the create form.
+
+- **17 episodes, 3,042 steps, 26 rooms, 10 games played to the end, 14 minutes.** No console error, dead screen,
+  negative clock or hidden-information leak.
+- **2 episodes failed with one signature, in the public web client, not this pack:** in a room not yet started
+  (`Ready`), the admin's desktop pressed "Advise" and `GET /api/rooms/<room>` answered 401 `BadToken`, with no
+  words on the page. No pack call is involved. Reproduced by the shrinker; to be reported on the public side.
+- **129 refused starts** noted, each `409 PackFault` with an empty reason on the page: the option rules above
+  (2.0.0's run counted 115 for two of them). The pack gives its reason; the server doesn't show it. Same gap as
+  public Q106.
+- 4 takebacks refused across hidden information, by design.
+- 5b (phone play) was not run again.
+

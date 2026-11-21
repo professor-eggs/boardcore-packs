@@ -37,7 +37,7 @@ describe("pandemic: hidden information", () => {
     const h = await room({ mods: ["roles", "events", "virulentStrain", "bioterrorist"] });
     const o = { seats: seats(4), options: h.options, seed: 21, every: 6, perActor: 1 };
     const s = kitLeakCheck(h.sandboxed, o);
-    console.log(`leak check, sandboxed, 4 seats, roles + events + virulent-strain + bioterrorist: ${s.states} states, ${s.worlds} worlds, ${s.quietActions} quiet actions`);
+    console.log(`leak check, sandboxed, 4 seats, roles + events + virulentStrain + bioterrorist: ${s.states} states, ${s.worlds} worlds, ${s.quietActions} quiet actions`);
     expect(s.findings).toEqual([]);
     expect(s).toEqual(kitLeakCheck(h.trusted, o));
   }, 600_000);
