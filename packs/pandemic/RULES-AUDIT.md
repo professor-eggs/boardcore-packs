@@ -112,7 +112,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Archivist | hand limit 8; once a turn, as an action, takes her city's card from the player discards | same | OTB p8 | matching |
 | Containment Specialist | on entering a city, 1 cube off each colour with 2 or more; also when moved by others; before Mobile Hospital | same | OTB p2, p8 | matching |
 | Epidemiologist | once during her turn, not an action, any city card from a player in her city who agrees | same | OTB p8 | **fixed**: with no actions left, the take was no longer offered. A role's free ability now stays on offer after the last action. 2E. |
-| Field Operative | once a turn, as an action, a cube from her city onto the card; 3 samples stand in for 2 cards; samples may go back to the supply at any time | same | OTB p8 | **fixed**: returning samples with no actions left was not offered (same cause as the Epidemiologist). Still **blocked** outside her own turn: the windows offer events only (CONTRACT-GAPS.md, 2.0.0). |
+| Field Operative | once a turn, as an action, a cube from her city onto the card; 3 samples stand in for 2 cards; samples may go back to the supply at any time | same | OTB p8 | **fixed**: returning samples with no actions left was not offered (same cause as the Epidemiologist). **Fixed** (3.0.0, 2026-11-21, test first): she is offered the return outside her own turn too, wherever an event may be played: in each response window (not the one inside an epidemic), when the current player waits, and with her hand-limit discard. Holding a sample makes her an actor of those windows (public: the samples lie on her role card). Left: no window opens inside another player's actions unless he waits, nor in the Bio-Terrorist's turn (CONTRACT-GAPS.md N3). |
 | Generalist | 5 actions | same | OTB p8 | matching |
 | Troubleshooter | at the start of her turn, looks at as many infection cards as the rate; a Direct Flight shows the card and keeps it (also through Special Orders, not when moved by others) | same | OTB p3, p8 | matching |
 | Borrowed Time | +2 actions, played during your own actions; not straight after drawing it | same | OTB p2 | matching |
@@ -172,7 +172,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 
 | Item | Why |
 |---|---|
-| The Field Operative returning samples outside her own turn | The response windows offer events only (CONTRACT-GAPS.md, 2.0.0). She may return them at any point of her own turn. |
+| The Field Operative returning samples in the middle of another player's actions, or in the Bio-Terrorist's turn | No window opens there (CONTRACT-GAPS.md N3); the current player may wait for her. Everywhere else she may (3.0.0). |
 | The Lab challenge | It belongs to *In the Lab*, not On the Brink. Not built. |
 | Solo, Survival, scenarios and puzzles | Separate Z-Man downloads, not built (the pack has one pawn per seat). |
 

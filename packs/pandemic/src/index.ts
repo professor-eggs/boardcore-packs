@@ -140,19 +140,41 @@ function make(modIds: readonly ModId[]) {
     if (ops.length === 1 && ops[0]!.op === "consent") return applyOps(s, L, [{ ...ops[0]!, ops: [spend, ...(ops[0]!.ops as Op[])] } as Op], fx);
     return applyOps(s, L, [spend, ...ops], fx);
   };
+  /**
+   * What a seat may do that is no action and no card, wherever an event may be played (a window, a wait, a
+   * hand-limit discard): a module's `anyTime` actions (the Field Operative returning her samples). Whether a
+   * seat has one is public (the samples lie on her role card), so it may make her a window's actor.
+   */
+  const freeOptions = (s: State, seat: SeatId): Option[] => {
+    if (!s.players.includes(seat) || s.outcome) return [];
+    return pts.actions(s, { seat }).flat().filter((a) => a.anyTime).map((a) => opt(a.id, a.label, a.disabled ?? null));
+  };
+  const isEv = (step: Step | undefined) => String(step).startsWith("ev:");
+  /** The next prompt of an event or a free ability begun in a window, a wait or a discard. */
+  const playSteps = (s: State, seat: SeatId, partial: Step[]): Prompt | null =>
+    isEv(partial[0]) ? eventSteps(s, seat, partial) : pts.steps(s, { id: String(partial[0]), seat, rest: partial.slice(1) })?.prompt ?? null;
+  /** Plays an event, or a free ability the seat is offered now. */
+  const play = (s: State, seat: SeatId, action: Action, fx: Fx): State => {
+    if (isEv(action[0])) return playEvent(s, seat, action, fx);
+    const id = String(action[0]);
+    if (!freeOptions(s, seat).some((o) => o.id === id && !o.disabled)) throw new Error(`no action ${id}`);
+    return applyOps(s, L, pts.act(s, { id, seat, rest: action.slice(1) }), fx);
+  };
   const eventPrompt = (s: State, seat: SeatId, partial: Step[], where: "turn" | "window" | "epidemic", label: string): Prompt | null => {
-    if (partial.length) return String(partial[0]).startsWith("ev:") ? eventSteps(s, seat, partial) : null;
-    return pick(label, eventOptions(s, seat, where));
+    if (partial.length) return where === "window" || isEv(partial[0]) ? playSteps(s, seat, partial) : null;
+    return pick(label, [...eventOptions(s, seat, where), ...(where === "window" ? freeOptions(s, seat) : [])]);
   };
 
   /**
    * Who is offered a window, from public information only (G1): with open hands, the seats holding an event
    * they may play; with closed hands, every pawn seat with cards while some event card is still unaccounted
-   * for (not in the discards, out of the game or stored face up), and any seat with a stored event.
+   * for (not in the discards, out of the game or stored face up), and any seat with a stored event. Outside an
+   * epidemic, also any seat with a free ability (`freeOptions`).
    */
   const responders = (s: State, epidemic: boolean): SeatId[] => {
     if (s.outcome) return [];
-    if (s.openHands) return s.players.filter((x) => eventOptions(s, x, epidemic ? "epidemic" : "window").some((o) => !o.disabled));
+    const free = (x: SeatId) => !epidemic && freeOptions(s, x).some((o) => !o.disabled);
+    if (s.openHands) return s.players.filter((x) => eventOptions(s, x, epidemic ? "epidemic" : "window").some((o) => !o.disabled) || free(x));
     const stored = s.players.filter((x) => s.pl[x]!.stored !== null && (!epidemic || L.events.get(s.pl[x]!.stored!.slice(6))?.inEpidemic));
     let open: boolean;
     if (epidemic) {
@@ -162,7 +184,7 @@ function make(modIds: readonly ModId[]) {
       const known = [...s.playerDiscard, ...s.removed].filter(isEvent).length + s.players.filter((x) => s.pl[x]!.stored).length;
       open = s.nEvents - known > 0;
     }
-    return s.players.filter((x) => stored.includes(x) || (open && s.pl[x]!.hand.items.length > 0));
+    return s.players.filter((x) => stored.includes(x) || (open && s.pl[x]!.hand.items.length > 0) || free(x));
   };
 
   // ---- The actions phase ---------------------------------------------------------------------------------
@@ -232,7 +254,7 @@ function make(modIds: readonly ModId[]) {
     seats: (s) => (open(s) ? responders(s, epidemic) : []),
     begin: (s) => (open(s) ? { ...s, step: epidemic ? "epidemic" : "window" } : s),
     choices: (s, seat, partial) => eventPrompt(s, seat, partial, epidemic ? "epidemic" : "window", epidemic ? "Epidemic: before the infection discards are shuffled back" : "Play an event"),
-    apply: (s, seat, action, ctx) => playEvent(s, seat, action, fxOf(ctx)),
+    apply: (s, seat, action, ctx) => (epidemic ? playEvent(s, seat, action, fxOf(ctx)) : play(s, seat, action, fxOf(ctx))),
   });
 
   const special = (id: string): Phase<State> => ({
@@ -352,14 +374,14 @@ function make(modIds: readonly ModId[]) {
     interrupts: {
       discard: {
         choices: (s, q, partial) => {
-          if (partial.length) return String(partial[0]).startsWith("ev:") ? eventSteps(s, q.seat, partial) : null;
+          if (partial.length) return String(partial[0]).startsWith("d:") ? null : playSteps(s, q.seat, partial);
           const hand = handOf(s, q.seat);
-          return { kind: "pick", label: `Too many cards (limit ${handLimit(s, L, q.seat)}): discard one or play an event`, options: [...hand.map((k, i) => opt(`d:${i}`, `Discard ${cardLabel(k)}`)), ...eventOptions(s, q.seat, "window")] };
+          return { kind: "pick", label: `Too many cards (limit ${handLimit(s, L, q.seat)}): discard one or play an event`, options: [...hand.map((k, i) => opt(`d:${i}`, `Discard ${cardLabel(k)}`)), ...eventOptions(s, q.seat, "window"), ...freeOptions(s, q.seat)] };
         },
         answer: (s, q, action, ctx) => {
           const fx = fxOf(ctx);
           const id = String(action[0]);
-          if (id.startsWith("ev:")) s = playEvent(s, q.seat, action, fx);
+          if (!id.startsWith("d:")) s = play(s, q.seat, action, fx);
           else {
             const card = fx.zones.items(s.pl[q.seat]!.hand)[Number(id.slice(2))]!;
             s = say(discardFrom(s, q.seat, card), `${q.seat} discards ${cardLabel(card)}.`);
@@ -421,10 +443,10 @@ function make(modIds: readonly ModId[]) {
       },
       respond: {
         choices: (s, q, partial) => {
-          if (partial.length) return String(partial[0]).startsWith("ev:") ? eventSteps(s, q.seat, partial) : null;
-          return { kind: "pick", label: `${cur(s)} waits: play an event, or pass`, options: [...eventOptions(s, q.seat, "window"), opt("pass", "Pass")] };
+          if (partial.length) return partial[0] === "pass" ? null : playSteps(s, q.seat, partial);
+          return { kind: "pick", label: `${cur(s)} waits: play an event, or pass`, options: [...eventOptions(s, q.seat, "window"), ...freeOptions(s, q.seat), opt("pass", "Pass")] };
         },
-        answer: (s, q, action, ctx) => (action[0] === "pass" ? s : playEvent(s, q.seat, action, fxOf(ctx))),
+        answer: (s, q, action, ctx) => (action[0] === "pass" ? s : play(s, q.seat, action, fxOf(ctx))),
       },
     },
   });

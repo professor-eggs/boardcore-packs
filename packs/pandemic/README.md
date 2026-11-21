@@ -73,7 +73,9 @@ before `next`. Once the game is over the runner stops.
 information: with open hands, the holders; with closed hands, every player with cards while an event card is
 unaccounted for (not in the discards, out of the game or stored), plus any seat with a stored event. Every actor
 gets the same prompt shape and the runner's Pass, with a 30-second phase deadline. During his actions the
-current player may wait for the others' events (`call`): each other player is asked in seat order.
+current player may wait for the others' events (`call`): each other player is asked in seat order. A free
+ability that is no card (the Field Operative returning her samples) is offered in the same places, and its
+holder is an actor of the windows outside an epidemic: the samples on her role card are public.
 
 **Questions to a seat (G2).** A take (Share Knowledge, the Epidemiologist) asks the other seat for a card from
 its own hand, or to refuse; a give, a Dispatcher or Airlift move of another pawn, Special Orders and New

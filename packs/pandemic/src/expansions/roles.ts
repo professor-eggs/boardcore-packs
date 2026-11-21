@@ -52,7 +52,7 @@ const roles: Module = {
       if (has(s, seat, "Field Operative")) {
         const fo = s.pl[seat]!;
         if (!used(s, seat, "sample") && cubesHere(s, here(s, seat)).length) out.push({ id: "sample", label: "Move a cube here onto your role card as a sample", cost: 1 });
-        if (Object.values(fo.samples).some((n) => n > 0)) out.push({ id: "returnSamples", label: "Return samples to the supply (free)", cost: 0 });
+        if (Object.values(fo.samples).some((n) => n > 0)) out.push({ id: "returnSamples", label: "Return samples to the supply (free)", cost: 0, anyTime: true });
       }
       return out;
     },

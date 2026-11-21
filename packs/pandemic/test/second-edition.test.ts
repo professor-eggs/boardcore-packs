@@ -208,3 +208,91 @@ describe("audit fixes (2.0.0)", () => {
     expect(s.actionsLeft).toBe(4);
   });
 });
+
+describe("audit fix (3.0.0): the Field Operative returns samples at any time", () => {
+  /** Two players with the roles on, closed hands, no event card anywhere: nobody has a window but for her samples. */
+  const fo = async (samples: { [c: string]: number }, options: { [k: string]: Json } = {}) => {
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2, options);
+    const me = cur(s0), her = other(s0);
+    const cards = (x: string) => s0.pl[x]!.hand.items.filter((k) => k.startsWith("city:"));
+    const s = { ...hand(hand(set(set(s0, me, { role: "Medic" }), her, { role: "Field Operative", samples }), me, cards(me)), her, cards(her)), nEvents: 0 };
+    return { p, s: deck(s, ["city:Lima", "city:Cairo", "city:Tokyo", "city:Paris"].filter((k) => !cards(me).includes(k) && !cards(her).includes(k))), me, her };
+  };
+
+  it("offers her the return in another player's turn, in the window before the draw; the samples go back to the supply", async () => {
+    const { p, s: s0, me, her } = await fo({ red: 2 });
+    let s = act(p, s0, me, ["end"]);
+    expect(s.run.order[s.run.at]).toBe("beforeDraw");
+    expect(p.status(s).actors).toEqual([her]);
+    expect(ids(p, s, her)).toEqual(["returnSamples", "pass"]);
+    expect(ids(p, s, her, ["returnSamples"])).toEqual(["red"]);
+    const supply = s.supply.red!;
+    s = act(p, s, her, ["returnSamples", "red"]);
+    expect(s.pl[her]!.samples.red).toBe(0);
+    expect(s.supply.red).toBe(supply + 2);
+    expect(s.log.join(" ")).toMatch(/returns 2 red samples/);
+    expect(cur(s)).toBe(me);
+  });
+
+  it("makes her an actor of the windows before each infection card too, and of none once she holds no sample", async () => {
+    const { p, s: s0, me, her } = await fo({ blue: 1 });
+    let s = act(p, s0, me, ["end"]);
+    s = act(p, s, her, ["pass"]);
+    expect(s.run.order[s.run.at]).toBe("w1");
+    expect(p.status(s).actors).toEqual([her]);
+    s = act(p, s, her, ["returnSamples", "blue"]);
+    // The play reopens the window for her; with nothing left to return she only passes, and has no later window.
+    expect(ids(p, s, her)).toEqual(["pass"]);
+    s = act(p, s, her, ["pass"]);
+    expect(cur(s)).toBe(her);
+    expect(s.step).toBe("actions");
+  });
+
+  it("gives a player without samples no window (public information: the samples lie on her role card)", async () => {
+    const { p, s: s0, me, her } = await fo({});
+    const s = act(p, s0, me, ["end"]);
+    expect(cur(s)).toBe(her);
+    expect(s.step).toBe("actions");
+  });
+
+  it("lets the current player wait for her (the wait asks her; she returns or passes)", async () => {
+    const { p, s: s0, me, her } = await fo({ red: 3 });
+    expect(ids(p, s0, me)).toContain("call");
+    let s = act(p, s0, me, ["call"]);
+    expect(p.status(s).actors).toEqual([her]);
+    expect(ids(p, s, her)).toEqual(["returnSamples", "pass"]);
+    s = act(p, s, her, ["returnSamples", "red"]);
+    expect(s.pl[her]!.samples.red).toBe(0);
+    expect(p.status(s).actors).toEqual([me]);
+    expect(s.actionsLeft).toBe(4);
+  });
+
+  it("with open hands too, and never between an epidemic's infection and its intensify", async () => {
+    const { p, s: s0, me, her } = await fo({ red: 1 }, { openHands: true });
+    let s = act(p, s0, me, ["end"]);
+    expect(p.status(s).actors).toEqual([her]);
+    expect(ids(p, s, her)).toEqual(["returnSamples", "pass"]);
+    // An epidemic drawn: the window inside it is for the events allowed there only.
+    s = deck(s, ["epidemic", "city:Lima"]);
+    s = act(p, s, her, ["pass"]);
+    expect(s.rateIdx).toBe(1);
+    expect(s.run.order[s.run.at]).not.toBe("epidemic1");
+    expect(s.pl[her]!.samples.red).toBe(1);
+  });
+
+  it("offers it with her hand-limit discard as well", async () => {
+    const { p, s: s0, me, her } = await fo({ red: 1 });
+    const eight = ["city:Paris", "city:Lima", "city:Tokyo", "city:Osaka", "city:Seoul", "city:Cairo", "city:Delhi", "city:Milan"];
+    let s = hand(s0, her, eight);
+    s = act(p, deck(s, ["city:Madrid", "city:Essen"]), me, ["end"]);
+    s = act(p, s, her, ["pass"]);
+    expect(s.run.questions.map((q) => q.kind)).toEqual(["discard"]);
+    expect(ids(p, s, her)).toContain("returnSamples");
+    s = act(p, s, her, ["returnSamples", "red"]);
+    expect(s.pl[her]!.samples.red).toBe(0);
+    // Still over her limit: the discard is asked again.
+    expect(s.run.questions.map((q) => q.kind)).toEqual(["discard"]);
+    expect(ids(p, s, her)).not.toContain("returnSamples");
+  });
+});
+

@@ -36,3 +36,22 @@ location). Pinned engine: `e0c5d98`.
    knowledge (deck segments known as sets, the top cards each seat has seen, pile sizes) in hashed state for the
    resampler only; teams can't be drawn at setup (Q68 (d)); an everyone-loses outcome shows as a shared first
    place.
+
+## After the modules became options (2026-11-21)
+
+Add-on packs were removed; the five modules are options of the one pack. Of the list above: 5, 6 and 7 are moot
+(no points, no add-on effects, no one-against-all add-on), and so are 8's first two (point calls copying the
+state, a phase beginning inside setup). 1 to 4 and the rest of 8 stand. New, as generic gaps:
+
+9. **An option can't need, exclude or bound another.** One pack, five switchable modules: two exclude each other,
+   one needs at least 3 seats, the top seat count needs one module and so does the top value of an integer option.
+   The manifest can say none of it, so `setup` throws and the room learns at start, its options already fixed.
+   This is Q106 with option-to-option rules beside seat counts. Option: `requires`, `conflicts` and seat bounds
+   per option, checked at create.
+10. **A default can't depend on another option.** Three modules used to preset one integer option to a higher
+    value, still editable. An option has one default and `setup` can't tell a default from a choice. Option: an
+    "auto" value the pack resolves.
+11. **Measured gain.** With plain calls in place of points, a sandboxed move (prompt, view, apply) with every
+    module on costs what the base alone costs: 18.3 ms became 10.6 ms in the largest room, 9.5 against 9.1 ms
+    with no module.
+
