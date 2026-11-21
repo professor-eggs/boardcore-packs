@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const out = process.argv[2] ?? "local-packs";
 mkdirSync(out, { recursive: true });
-for (const name of ["seven-wonders", "pandemic", "pandemic-roles", "pandemic-events", "pandemic-virulent-strain", "pandemic-mutation", "pandemic-bioterrorist"]) {
+for (const name of ["seven-wonders", "pandemic"]) {
   const manifest = JSON.parse(readFileSync(join(root, `packs/${name}/dist/manifest.json`), "utf8"));
   const bundle = readFileSync(join(root, `packs/${name}/dist/bundle.mjs`), "utf8");
   writeFileSync(join(out, `${name}.json`), JSON.stringify({ manifest, bundle }));

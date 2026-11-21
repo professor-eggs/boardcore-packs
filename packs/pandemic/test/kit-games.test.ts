@@ -1,23 +1,23 @@
 // The built packs through Boardcore's test kit (11 §5, D79): random games of every seat count, the base alone,
-// with each add-on and with all of them. A set of rooms plays in both adapters with equal hashes every ply and
+// with each On the Brink option and with all of them. A set of rooms plays in both adapters with equal hashes every ply and
 // each BGN replayed in both (timings printed for CONTRACT-GAPS.md); every room plays in the trusted adapter.
 import { describe, expect, it } from "vitest";
 import { playRandom } from "@boardcore/testkit";
 import { playBoth, runLine } from "@boardcore-packs/kit";
 import { label, room, seats, type Room } from "./rooms";
 
-const BASE: Room = { addons: [] };
-const ROLES: Room = { addons: ["roles"] };
-const EVENTS: Room = { addons: ["events"] };
-const VS: Room = { addons: ["virulent-strain"] };
-const MUTATION: Room = { addons: ["mutation"] };
-const BT: Room = { addons: ["bioterrorist"] };
-const ALL_MUTATION: Room = { addons: ["roles", "events", "virulent-strain", "mutation"] };
-const ALL_BT: Room = { addons: ["roles", "events", "virulent-strain", "bioterrorist"] };
+const BASE: Room = { mods: [] };
+const ROLES: Room = { mods: ["roles"] };
+const EVENTS: Room = { mods: ["events"] };
+const VS: Room = { mods: ["virulentStrain"] };
+const MUTATION: Room = { mods: ["mutation"] };
+const BT: Room = { mods: ["bioterrorist"] };
+const ALL_MUTATION: Room = { mods: ["roles", "events", "virulentStrain", "mutation"] };
+const ALL_BT: Room = { mods: ["roles", "events", "virulentStrain", "bioterrorist"] };
 
 const BOTH: [number, Room][] = [
-  [2, { addons: [], options: { epidemics: 4 } }],
-  [4, { addons: [], options: { epidemics: 6 } }],
+  [2, { mods: [], options: { epidemics: 4 } }],
+  [4, { mods: [], options: { epidemics: 6 } }],
   [5, ROLES],
   [3, EVENTS],
   [4, VS],
@@ -43,7 +43,7 @@ describe("pandemic in the test kit, both adapters", () => {
       expect(g.suspended).toEqual({ trusted: null, sandboxed: null });
       expect(g.firstDifference).toBe(null);
       expect(g.replay).toEqual({ trusted: null, sandboxed: null });
-      outcomeOk(g.outcome as { winners: string[]; text: string }, n, r.addons.includes("bioterrorist"));
+      outcomeOk(g.outcome as { winners: string[]; text: string }, n, r.mods.includes("bioterrorist"));
     }, 240_000);
   }
 });
@@ -56,7 +56,7 @@ describe("pandemic in the test kit, every seat count and room (trusted)", () => 
       for (let n = min; n <= max; n++) for (const pickSeed of [1, 2]) {
         const g = playRandom(h.trusted, { seats: seats(n), options: h.options, pickSeed, maxPlies: 4000 });
         expect(g.match.data.suspended, label(r, n)).toBe(null);
-        outcomeOk(g.match.data.outcome as { winners: string[]; text: string } | null, n, r.addons.includes("bioterrorist"));
+        outcomeOk(g.match.data.outcome as { winners: string[]; text: string } | null, n, r.mods.includes("bioterrorist"));
       }
     }, 240_000);
   }

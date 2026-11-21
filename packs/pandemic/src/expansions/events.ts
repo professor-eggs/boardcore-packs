@@ -1,11 +1,15 @@
-// Pandemic: On the Brink's eight events, an add-on of boardcore/pandemic 2.x. They join the `events` registry and
-// the game uses 2 events per seat (`eventCount`; the Bio-Terrorist's seat counts). Each is played through the base's `eventCheck`, `steps` and
-// `act`: the base spends the card and applies the operations, and an event that acts on another player's pawn or
-// role asks that player first (a `consent`, G2; refused, the card stays in hand). Commercial Travel Ban and
-// Mobile Hospital keep their state in this add-on's slice (`infectionRate`, `turnStart`, `onEnter`); Rapid
+// On the Brink's eight events (the option `events`). They join the base's events and the game uses 2 events per
+// seat (`eventCount`; the Bio-Terrorist's seat counts). Each is played through the kernel's `eventCheck`, `steps`
+// and `act` hooks (../kernel.ts): the base spends the card and applies the operations, and an event that acts on
+// another player's pawn or role asks that player first (a `consent`, G2; refused, the card stays in hand).
+// Commercial Travel Ban and Mobile Hospital keep their state in this module's slice (`infectionRate`, `turnStart`, `onEnter`); Rapid
 // Vaccine Deployment reads the base's `justCured`; Special Orders uses the base's `grant`. Mechanics only.
-import { defineAddon, type Json, type Option, type Prompt, type SeatId, type Step } from "@boardcore/pack-sdk";
-import { ADJ, CITY_NAMES } from "./map";
+import type { Json, Prompt, SeatId, Step } from "@boardcore/pack-sdk";
+import { ADJ, CITY_NAMES } from "../data";
+import { opt, pick } from "../engine";
+import type { Module } from "../kernel";
+import type { PDOp, PDState } from "../types";
+import { wrap } from "./wrap";
 
 const EVENTS = ["Borrowed Time", "Commercial Travel Ban", "Mobile Hospital", "New Assignment", "Rapid Vaccine Deployment", "Re-examined Research", "Remote Treatment", "Special Orders"];
 type S = PDState;
@@ -13,9 +17,7 @@ interface Slice { [k: string]: Json; ctb: SeatId | null; mobile: number | null }
 const EMPTY: Slice = { ctb: null, mobile: null };
 const sliceOf = (j: Json): Slice => (j as Slice | null) ?? EMPTY;
 
-const opt = (id: string, label: string, disabled?: string | null): Option => (disabled ? { id, label, disabled } : { id, label });
-const pick = (label: string, options: Option[]): Prompt | null => (options.length ? { kind: "pick", label, options } : null);
-const P = (p: Prompt | null) => ({ prompt: p as unknown as Json });
+const P = (p: Prompt | null) => ({ prompt: p });
 const cur = (s: S) => s.players[s.current]!;
 const cubesIn = (s: S, city: string, c: string) => s.cubes[city]?.[c] ?? 0;
 const cityOf = (k: string) => k.slice(5);
@@ -108,7 +110,8 @@ function act(s: S, seat: SeatId, id: string, rest: Step[], sl: Slice): { slice?:
   }
 }
 
-export default defineAddon<"boardcore/pandemic">({
+const events: Module = {
+  id: "events",
   contributes: {
     events: EVENTS.map((id) => ({ id })),
     eventCount: ({ value, args }) => Math.min(value, 2 * args.seats),
@@ -134,7 +137,6 @@ export default defineAddon<"boardcore/pandemic">({
   },
   setup: () => EMPTY,
   view: ({ slice }) => ({ travelBan: sliceOf(slice).ctb, mobileHospital: sliceOf(slice).mobile }),
-  describe: ({ view }) => (view.log.length ? view.log.join(" ") : null),
   text: {
     legend: () => "On the Brink events: 8 more events; the game uses 2 events per seat.",
     state: ({ view }) => {
@@ -142,16 +144,5 @@ export default defineAddon<"boardcore/pandemic">({
       return v?.travelBan ? wrap(`Commercial Travel Ban: the infection rate is 1 until ${v.travelBan}'s next turn.`) : "";
     },
   },
-});
-
-/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
-function wrap(text: string, width = 34): string {
-  const lines: string[] = [];
-  let line = "";
-  for (const w of text.split(" ")) {
-    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
-    else line = line ? `${line} ${w}` : w;
-  }
-  if (line) lines.push(line);
-  return lines.join("\n");
-}
+};
+export default events;

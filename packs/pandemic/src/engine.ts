@@ -1,22 +1,25 @@
 // Pandemic base game: state helpers, cubes and outbreaks, moving pawns, cards, cures, epidemics, infection and
-// the operations add-ons return (PDOp in points.d.ts). Add-ons reach the base only through the points declared
-// in index.ts; none edits this file. Mechanics only.
-import { shuffle, withItems, type Prompt, type Rng, type SeatId, type Option, type Zones, type QuestionInput, type Invokers } from "@boardcore/pack-sdk";
+// the operations a module's handler returns (PDOp in types.ts). The On the Brink modules (./expansions) reach
+// the base only through the kernel's hooks (./kernel.ts), handed in as `L.pts`; none edits this file, and this
+// file imports none of them. Mechanics only.
+import { shuffle, withItems, type Json, type Prompt, type Rng, type SeatId, type Option, type Zones, type QuestionInput } from "@boardcore/pack-sdk";
 import { ADJ, CITIES, OUTBREAK_LIMIT, RATES } from "./data";
+import type { Hooks } from "./kernel";
+import type { PDOp, PDOutcome, PDPl, PDState } from "./types";
 
 export type State = PDState;
 export type Op = PDOp;
 export type Pl = PDPl;
 
-/** What the base knows after compose: its invokers and the registries it read once. */
+/** What the base knows for one set of modules: the kernel's hooks, and the roles and events in the game. */
 export interface Lib {
-  pts: Invokers<"boardcore/pandemic">;
+  pts: Hooks;
   roles: string[];
   events: Map<string, { id: string; inEpidemic?: boolean }>;
   baseEvents: Set<string>;
 }
 
-/** The effects context: the call's zone reader and its question queue (absent for an add-on phase's operations). */
+/** The effects context: the call's zone reader and its question queue (absent for a module phase's operations). */
 export interface Fx { zones: Zones; ask(q: QuestionInput): void; rng: Rng | null }
 
 export const opt = (id: string, label: string, disabled?: string | null): Option => (disabled ? { id, label, disabled } : { id, label });
@@ -45,7 +48,7 @@ export const currentRate = (s: State, L: Lib) => L.pts.infectionRate(s, RATES[s.
 
 // ---- The end --------------------------------------------------------------------------------------------
 
-/** Ends the game with the base's result, unless an add-on's `outcome` point replaces it (a lone winner). */
+/** Ends the game with the base's result, unless a module's `outcome` hook replaces it (a lone winner). */
 export function finish(s: State, L: Lib, result: PDOutcome): State {
   if (s.outcome) return s;
   const out = L.pts.outcome(s, { result }) ?? result;
@@ -129,7 +132,7 @@ export function checkEradicated(s: State, c: string): State {
 /**
  * Infects one city from an infection card: 1 cube of its colour (a modifier may say 2), and in the infection
  * step 1 more of each `follows` disease already there. An epidemic puts 3 cubes of the card's colour only.
- * A card that is no city is the add-ons' (`infectCard`).
+ * A card that is no city is a module's (`infectCard`).
  */
 export function infectCity(s: State, L: Lib, card: string, why: "infect" | "epidemic", fx: Fx | null): State {
   if (!CITIES[card]) {
@@ -255,7 +258,7 @@ export function epidemicInfect(s: State, L: Lib, card: string, fx: Fx): State {
   s = t;
   if (bottom !== null) s = infectCity(s, L, bottom, "epidemic", fx);
   if (s.outcome) return s;
-  return applyOps(s, L, L.pts.epidemic(s, { step: "infected", card }), fx);
+  return applyOps(s, L, L.pts.epidemic(s, { step: "infected", card }, fx.rng), fx);
 }
 
 /** Epidemic step 3: the discards are shuffled onto the top of the infection deck (a segment of their own). */
@@ -264,18 +267,19 @@ export function intensify(s: State, L: Lib, fx: Fx): State {
   const pile = shuffle(fx.rng!, s.infDiscard);
   const deck = fx.zones.items(s.infDeck);
   s = { ...s, infDeck: withItems(s.infDeck, [...pile, ...deck]), infSegs: [...(pile.length ? [pile.length] : []), ...s.infSegs], infKnown: {}, infDiscard: [], epidemicCard: null };
-  return applyOps(s, L, L.pts.epidemic(s, { step: "intensified", card }), fx);
+  return applyOps(s, L, L.pts.epidemic(s, { step: "intensified", card }, fx.rng), fx);
 }
 
 // ---- Operations ------------------------------------------------------------------------------------------
 
 const noFx = (what: string): never => { throw new Error(`the operation ${what} needs an action's context (it asks a seat)`); };
 
-/** Applies add-on operations in order (11 §10 "What an add-on may change"). */
-export function applyOps(s: State, L: Lib, ops: readonly PDJsonOp[], fx: Fx | null): State {
+/** Applies operations in order. A module's new slice (the kernel's `slice`) is kept even once the game is over. */
+export function applyOps(s: State, L: Lib, ops: readonly Json[], fx: Fx | null): State {
   for (const raw of ops) {
-    if (s.outcome) return s;
     const o = raw as Op;
+    if (o.op === "slice") { s = { ...s, slices: { ...s.slices, [o.mod]: o.slice } }; continue; }
+    if (s.outcome) return s;
     switch (o.op) {
       case "log": s = say(s, o.text); break;
       case "place": s = place(s, L, o.city, o.color, o.n); break;
@@ -367,4 +371,3 @@ export function applyOps(s: State, L: Lib, ops: readonly PDJsonOp[], fx: Fx | nu
   }
   return s;
 }
-type PDJsonOp = import("@boardcore/pack-sdk").Json;

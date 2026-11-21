@@ -1,8 +1,8 @@
 {
   "id": "boardcore/pandemic",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "name": "Pandemic",
-  "description": "Pandemic, 2nd edition (2013). Cooperative: cure four diseases before outbreaks overrun the world. On the Brink's roles, events, Virulent Strain, Mutation and the Bio-Terrorist are add-on packs. Private local build: not for distribution.",
+  "description": "Pandemic, 2nd edition (2013). Cooperative: cure four diseases before outbreaks overrun the world. On the Brink (2013 edition) is built in as options: its roles, events, Virulent Strain, Mutation and the Bio-Terrorist. Private local build: not for distribution.",
   "authors": ["Boardcore"],
   "licence": "UNLICENSED",
   "contract": 1,
@@ -12,11 +12,17 @@
     "names": ["green", "orange", "white", "pink", "brown"]
   },
   "options": {
-    "epidemics": { "title": "Epidemic cards", "type": "integer", "default": 4, "minimum": 4, "maximum": 7, "description": "4 introductory, 5 standard, 6 heroic, 7 legendary (needs the On the Brink roles add-on)." },
-    "openHands": { "title": "Open hands", "type": "boolean", "default": false, "description": "Everyone sees every hand. Always on in the introductory game (4 epidemics); optional otherwise." }
+    "epidemics": { "title": "Epidemic cards", "type": "integer", "default": 4, "minimum": 4, "maximum": 7, "description": "4 introductory, 5 standard, 6 heroic, 7 legendary (needs the On the Brink roles)." },
+    "openHands": { "title": "Open hands", "type": "boolean", "default": false, "description": "Everyone sees every hand. Always on in the introductory game (4 epidemics); optional otherwise." },
+    "roles": { "title": "On the Brink: roles", "type": "boolean", "default": false, "description": "Six more roles (Archivist, Containment Specialist, Epidemiologist, Field Operative, Generalist, Troubleshooter), a 5th player and the legendary game (7 epidemics)." },
+    "events": { "title": "On the Brink: events", "type": "boolean", "default": false, "description": "Eight more events; the game uses 2 events per seat." },
+    "virulentStrain": { "title": "Virulent Strain challenge", "type": "boolean", "default": false, "description": "Its 8 epidemic cards replace the normal ones; the first names the strain. Set Epidemic cards to 5 for the standard game." },
+    "mutation": { "title": "Mutation challenge", "type": "boolean", "default": false, "description": "A fifth, purple disease. Not with the Bio-Terrorist. Set Epidemic cards to 5 for the standard game." },
+    "bioterrorist": { "title": "Bio-Terrorist challenge", "type": "boolean", "default": false, "description": "One seat, without a pawn, plays against the others with a secret location and the purple disease. Needs 3 to 5 seats. Not with Mutation. Set Epidemic cards to 5 for the standard game." },
+    "bioterroristSeat": { "title": "Who is the Bio-Terrorist", "type": "string", "default": "last", "enum": ["last", "random"], "labels": { "last": "The last seat (a volunteer)", "random": "A random seat" }, "description": "Only with the Bio-Terrorist challenge." }
   },
   "hiddenInformation": true,
   "complexity": 2,
-  "tags": ["cooperative", "hand-management", "set-collection", "point-to-point-movement"],
+  "tags": ["cooperative", "hand-management", "set-collection", "point-to-point-movement", "one-vs-all"],
   "playtime": { "min": 45, "max": 60 }
 }

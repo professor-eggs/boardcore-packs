@@ -10,13 +10,15 @@ const dist = (name: string) => readDist(new URL(`../../${name}/dist/`, import.me
 const NAMES = ["green", "orange", "white", "pink", "brown"];
 const seats = (n: number) => NAMES.slice(0, n).map((seat) => ({ seat, team: null }));
 const medic = () => verifyPersonaDist(new URL("../dist/", import.meta.url));
-const room = () => composed(dist("pandemic"), ["roles", "events", "virulent-strain", "mutation"].map((a) => dist(`pandemic-${a}`)), { epidemics: 5 });
+/** The pack with these On the Brink options on, 5 epidemics (closed hands). */
+const mix = (...mods: string[]) => composed(dist("pandemic"), [], { epidemics: 5, ...Object.fromEntries(mods.map((m) => [m, true])) });
+const room = () => mix("roles", "events", "virulentStrain", "mutation");
 
 describe("Medic (8b, private)", () => {
   it("passes install's checks, in range for the base", async () => {
     const p = await medic();
-    expect(p.manifest.persona).toEqual({ pack: "boardcore/pandemic", range: "^2.0.0" });
-    // In range for the base as built: the base's own id and version, as a room's add-bot checks (12 §18 "Adding one").
+    expect(p.manifest.persona).toEqual({ pack: "boardcore/pandemic", range: "^3.0.0" });
+    // In range for the pack as built (3.0.0, the modules folded in): its id and version, as a room's add-bot checks (12 §18 "Adding one").
     const base = dist("pandemic").manifest as { id: string; version: string };
     expect(p.manifest.persona.pack).toBe(base.id);
     expect(inRange(p.manifest.persona.range, base.version)).toBe(true);
@@ -55,4 +57,21 @@ describe("Medic (8b, private)", () => {
     console.log(`N48: ${rec.plies} plies, ${searched} searched (${Math.round((100 * searched) / rec.plies)}%), the rest a single legal action played without a search`);
     expect(searched).toBeLessThan(rec.plies);
   }, 600_000);
+
+  // The option mixes (the modules were add-on packs up to 2.0.0): every seat a Medic, the Bio-Terrorist's seat
+  // included, with no failed search and no fallback over the first plies. Not to the end: a Medic doesn't finish a
+  // game (RULES-AUDIT.md, "Fold into one pack": it asks again and again for a card the other Medic refuses, which
+  // costs no action; the same on 2.0.0). MEDIC_FULL=1 plays on to 4,000 plies.
+  const full = process.env.MEDIC_FULL === "1";
+  for (const [n, mods] of [[2, []], [4, ["roles", "events", "virulentStrain", "mutation"]], [3, ["roles", "events", "virulentStrain", "bioterrorist"]], [4, ["bioterrorist"]]] as [number, string[]][]) {
+    it(`plays with every seat a Medic: ${n} seats, ${mods.join(" + ") || "no module"}`, async () => {
+      const p = await medic();
+      const r = await mix(...mods);
+      const lineup = Array.from({ length: n }, () => ({ persona: p, playouts: 50 }));
+      const rec = await selfplayGame({ runtime: kit.runtime, ...r, seats: seats(n), lineup, trust: "trusted", baseSeed: "fold-3.0.0", game: 1, maxPlies: full ? 4000 : 24 });
+      console.log(`Medic, ${n} seats, ${mods.join(" + ") || "no module"}: ${rec.plies} plies, winners ${JSON.stringify(rec.winners)}, ${rec.stopped ?? "ended"}`);
+      expect(rec.plies).toBeGreaterThan(0);
+      for (const x of rec.seats) expect([x.failedSearches, x.fallbacks]).toEqual([0, 0]);
+    }, 3_600_000);
+  }
 });

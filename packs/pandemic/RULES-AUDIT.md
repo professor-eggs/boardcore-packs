@@ -1,9 +1,13 @@
 # Pandemic pack: rules audit (2nd edition)
 
 The owner plays **Pandemic, 2nd edition (Z-Man, 2013)** with **On the Brink, 2013 edition**. Since 2.0.0 the
-base and every add-on are checked against those editions only; there is no option for the 1st edition (2008). This
+base and every On the Brink module are checked against those editions only; there is no option for the 1st edition (2008). This
 file replaces the 1.0.0 audit. That audit cited the owner's PDFs, which turned out to be the same 2nd-edition
 books, so its rows are folded in below. Mechanics only: names and numbers, never rulebook text.
+
+Since 3.0.0 (2026-11-21) the five On the Brink modules are options of this one pack, no longer add-on packs. No
+rule changed with the fold (see "Fold into one pack" in the testing record); "add-on" in the dated records below
+means the module as it was packaged then.
 
 ## Sources
 
@@ -28,7 +32,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 |---|---|---|---|---|---|
 | City cards | 48, 12 per colour | 48 city cards, 4 colours | R2 p1 | same | matching, 2E |
 | Events (base) | Airlift, Forecast, Government Grant, One Quiet Night, Resilient Population | 5 event cards (59 player cards = 48 + 6 epidemics + 5 events) | R2 p1, p7 | same count | matching, 2E |
-| Epidemic cards | 4-6 (7 with the roles add-on) | 6 in the box, of which 4, 5 or 6 are used; a 7th comes with On the Brink | R2 p3, OTB p2 | same | matching, 2E |
+| Epidemic cards | 4-6 (7 with the `roles` option) | 6 in the box, of which 4, 5 or 6 are used; a 7th comes with On the Brink | R2 p3, OTB p2 | same | matching, 2E |
 | Roles (base) | 7: Contingency Planner, Dispatcher, Medic, Operations Expert, Quarantine Specialist, Researcher, Scientist | 7 role cards with these names | R2 p1, p8 | 5 roles (no Contingency Planner, no Quarantine Specialist) | matching, 2E |
 | Map connections | the `data.ts` edges | the board pictures: every link visible in R2 p2-p4 agrees, and the wrap-around Sydney–Los Angeles link is named | R2 p2-p4 | same map | matching |
 | Populations | `POPULATION`, all 48 | printed on the city cards; the 7 shown in R2 agree (Essen 575,000; Khartoum 4,887,000; Bogota 8,702,000; Chicago 9,121,000; Moscow 15,512,000; New York 20,464,000; Manila 20,767,000) | R2 p2-p7 | not used for the first player | matching (the other 41 are owner check 2) |
@@ -46,7 +50,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Roles at setup | the Quarantine Specialist and Medic don't block setup cubes | the Quarantine Specialist doesn't affect setup cubes | R2 p8 | no Quarantine Specialist | matching, 2E |
 | Roles dealt | at random; unused roles kept for New Assignment | shuffle the roles, deal 1 face up each, the rest out of the game (On the Brink's New Assignment draws on them) | R2 p2, OTB p2 | same | matching |
 | Hands by seats | 2→4, 3→3, 4→2, 5→2 | same; 5 players with On the Brink | R2 p2, OTB p2 | same | matching |
-| Difficulty | 4 introductory, 5 standard, 6 heroic, 7 legendary (roles add-on) | same; at the 7th epidemic the rate stays at 4 | R2 p3, OTB p2 | same | matching |
+| Difficulty | 4 introductory, 5 standard, 6 heroic, 7 legendary (`roles` option) | same; at the 7th epidemic the rate stays at 4 | R2 p3, OTB p2 | same | matching |
 | Player deck | piles as equal as possible, 1 epidemic each, smaller piles at the bottom | same | R2 p3 | same | matching |
 | First player | the highest city population in hand (a tie goes to the earlier seat) | the highest city population goes first | R2 p3 | the player most recently sick | matching, 2E (the tie is owner check 3) |
 | Open hands | open with 4 epidemics; private with 5 or 6, with open hands as an option | introductory: cards face up; standard and heroic: private, open hands allowed for experienced groups | R2 p7 | | matching, 2E |
@@ -103,12 +107,12 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 
 | Item | Coded | 2013 edition | Source | Status |
 |---|---|---|---|---|
-| 5 players, legendary | roles add-on: a 5th seat with 2 cards; 7 epidemics, the rate stays at 4 | same | OTB p2 | matching |
+| 5 players, legendary | `roles` option: a 5th seat with 2 cards; 7 epidemics, the rate stays at 4 | same | OTB p2 | matching |
 | Event count | 2 per seat from the 13 (the Bio-Terrorist's seat counts); the rest unseen | same | OTB p2, p5 | matching |
 | Archivist | hand limit 8; once a turn, as an action, takes her city's card from the player discards | same | OTB p8 | matching |
 | Containment Specialist | on entering a city, 1 cube off each colour with 2 or more; also when moved by others; before Mobile Hospital | same | OTB p2, p8 | matching |
 | Epidemiologist | once during her turn, not an action, any city card from a player in her city who agrees | same | OTB p8 | **fixed**: with no actions left, the take was no longer offered. A role's free ability now stays on offer after the last action. 2E. |
-| Field Operative | once a turn, as an action, a cube from her city onto the card; 3 samples stand in for 2 cards; samples may go back to the supply at any time | same | OTB p8 | **fixed**: returning samples with no actions left was not offered (same cause as the Epidemiologist). Still **blocked** outside her own turn: the windows offer events only (CONTRACT-GAPS.md, 2.0.0). |
+| Field Operative | once a turn, as an action, a cube from her city onto the card; 3 samples stand in for 2 cards; samples may go back to the supply at any time | same | OTB p8 | **fixed**: returning samples with no actions left was not offered (same cause as the Epidemiologist). **Fixed** (3.0.0, 2026-11-21, test first): she is offered the return outside her own turn too, wherever an event may be played: in each response window (not the one inside an epidemic), when the current player waits, and with her hand-limit discard. Holding a sample makes her an actor of those windows (public: the samples lie on her role card). Left: no window opens inside another player's actions unless he waits, nor in the Bio-Terrorist's turn (CONTRACT-GAPS.md N3). |
 | Generalist | 5 actions | same | OTB p8 | matching |
 | Troubleshooter | at the start of her turn, looks at as many infection cards as the rate; a Direct Flight shows the card and keeps it (also through Special Orders, not when moved by others) | same | OTB p3, p8 | matching |
 | Borrowed Time | +2 actions, played during your own actions; not straight after drawing it | same | OTB p2 | matching |
@@ -154,7 +158,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Item | Coded | 2013 edition | Status |
 |---|---|---|---|
 | Seats | 3 or 4 counting him; 5 allowed; not with Mutation | same (5 not recommended) | matching |
-| Choosing him | add-on option: the last seat (a volunteer) or a random one | at random, by the role card, or a volunteer | matching |
+| Choosing him | the option `bioterroristSeat`: the last seat (a volunteer) or a random one | at random, by the role card, or a volunteer | matching |
 | Start | 2 infection cards after the 9 infections; the first player chosen among the others; a secret start city | same | matching |
 | His turn | after each player's Infect Cities: 2 actions plus 1 free Drive/Ferry; each action at most twice (Drive 3 times) | same | matching |
 | Actions | Draw; Drive; Direct and Charter with an airport sighting (flight type hidden); Infect Locally, Infect Remotely (purple only) and Sabotage, each once a turn and only while unspotted | same | matching |
@@ -168,7 +172,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 
 | Item | Why |
 |---|---|
-| The Field Operative returning samples outside her own turn | The response windows offer events only (CONTRACT-GAPS.md, 2.0.0). She may return them at any point of her own turn. |
+| The Field Operative returning samples in the middle of another player's actions, or in the Bio-Terrorist's turn | No window opens there (CONTRACT-GAPS.md N3); the current player may wait for her. Everywhere else she may (3.0.0). |
 | The Lab challenge | It belongs to *In the Lab*, not On the Brink. Not built. |
 | Solo, Survival, scenarios and puzzles | Separate Z-Man downloads, not built (the pack has one pawn per seat). |
 
@@ -189,7 +193,7 @@ Items where a source is ambiguous, silent or contradicts itself, for the owner t
 5. **Bio-Terrorist over his hand limit.** OTB p6 says he discards the 8th card. Coded: he chooses which card goes.
    **Resolved (2026-11-18):** the owner's On the Brink rulebook PDF (md5 424745ec…) says his hand limit is 7 and, with
    more than 7, he must discard the 8th card to the infection discard pile, without effect. Now coded so: the card he
-   just drew goes at once, with no question (`addons.test.ts` "over his hand limit of 7").
+   just drew goes at once, with no question (`options.test.ts` "over his hand limit of 7").
 6. **Troubleshooter under the Commercial Travel Ban.** She looks at as many cards as "the current infection rate".
    Coded as 1 while the ban holds.
 7. **New Assignment on the Contingency Planner or the Field Operative.** Not stated. Coded: a stored event goes to
@@ -257,3 +261,53 @@ supply and with him winning on 8 outbreaks.
   line never reached the table (public compose fix).
 - Left: prompts name seats by id ("Offer Madrid to orange"; public Q107); the epidemic's intensify step has no log
   line; the turn pop-up covers the board for 2 s; "(draft)" log lines for a provisional step.
+
+## Fold into one pack (3.0.0, 2026-11-21)
+
+The owner decided to remove add-on packs. The five On the Brink modules are options of this pack (`roles`,
+`events`, `virulentStrain`, `mutation`, `bioterrorist`, `bioterroristSeat`); the five add-on packs are gone.
+
+- **No rule changed with the fold.** Before the old packs were removed, 3.0.0 was played against 2.0.0 composed
+  with its add-ons, both in the trusted adapter, on the same seeds and the same random choices: 16 rooms (the
+  base at 2, 3 and 4 seats, each module alone, the Bio-Terrorist at 3, 4 and 5 seats and with a random seat, all
+  four with Mutation and with the Bio-Terrorist, roles with events), 6 games each, 15,066 plies. At every ply the
+  state (but for where the slices and the runner's phase list live), every seat's and the spectator's view, each
+  module's view, the legal actions, the reveal flag and the log line were equal. Only the Bio-Terrorist's action
+  ids differ: the composer's prefix is gone.
+- **One rule fixed after that, test first:** the Field Operative returns samples outside her own turn (the
+  "Roles" table above). Six tests in `second-edition.test.ts`, five of them failing before the change.
+- **Option rules:** `setup` refuses Mutation with the Bio-Terrorist, the Bio-Terrorist at 2 seats, 5 players
+  without the roles and 7 epidemics without the roles, each with its reason (README "Option rules";
+  `options.test.ts`). The add-ons' presets (5 epidemics with a challenge) are gone: an option can't preset another.
+- **Tests:** `addons.test.ts` is `options.test.ts`; the test that the add-ons' map copies equal the base's went
+  with the copies. Pandemic has 107 tests: base 16, options 26, second-edition 20, kit games 17, kit checks 13
+  (the two-worlds leak check and the D82 resampled view over every module mix, trusted and once sandboxed),
+  resampled worlds 3, fixtures 1, PR #118 4, Medic 7 (3 as before, 4 over the option mixes); 93 before.
+- **Kit numbers** (this commit): 9 rooms in both adapters with equal hashes and both replays; leak check over 11
+  trusted games, 1,032 states and 4,177 worlds, no findings, none excused, and the same report sandboxed;
+  resampled worlds 2,603 worlds and 43,006 actions, no faults.
+- **Medic 3.0.0** (range `^3.0.0`): install's checks, the seeded game equal in both adapters, and the first 24
+  plies of four option mixes (no module at 2 seats, roles + events + Virulent Strain + Mutation at 4, the same
+  with the Bio-Terrorist at 3, the Bio-Terrorist alone at 4) with no failed search and no fallback. **It doesn't
+  finish a game:** at 2 seats with no module, 50 playouts, it stopped at the 4,000-ply limit; from about ply 200
+  one Medic asks the other for a card (Share Knowledge), is refused, which costs no action, and asks again. The
+  same game does the same on 2.0.0 with Medic 2.0.0, so the fold didn't bring it. Not changed here: stopping it is
+  either a rule (an ask refused once can't be repeated that turn) or the persona's, for the owner to choose.
+
+### 5a again. Random-play fuzzing through the server and web client (2026-11-21)
+
+Public boardcore at `a6cea2c` (as built there), `FUZZ_EXTRA_PACKS` pointed at this pack and the Medic,
+`FUZZ_GAMES=Pandemic`, `FUZZ_SEATS=2,3,4,5`, `FUZZ_STRICT=1`, 3 workers, `FUZZ_MINUTES=10`. Every option switched
+at random on the create form.
+
+- **17 episodes, 3,042 steps, 26 rooms, 10 games played to the end, 14 minutes.** No console error, dead screen,
+  negative clock or hidden-information leak.
+- **2 episodes failed with one signature, in the public web client, not this pack:** in a room not yet started
+  (`Ready`), the admin's desktop pressed "Advise" and `GET /api/rooms/<room>` answered 401 `BadToken`, with no
+  words on the page. No pack call is involved. Reproduced by the shrinker; to be reported on the public side.
+- **129 refused starts** noted, each `409 PackFault` with an empty reason on the page: the option rules above
+  (2.0.0's run counted 115 for two of them). The pack gives its reason; the server doesn't show it. Same gap as
+  public Q106.
+- 4 takebacks refused across hidden information, by design.
+- 5b (phone play) was not run again.
+

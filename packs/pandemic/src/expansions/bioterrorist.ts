@@ -1,13 +1,17 @@
-// Pandemic: On the Brink's Bio-Terrorist challenge, an add-on of boardcore/pandemic 2.x (11 §10 "one against
-// all": the base declares hidden information, an `outcome` point that may name a lone winner, the seats that get
-// a pawn and every other point this mode needs). One seat (the last, as a volunteer, or a random one; `pawnSeats`)
-// gets no pawn and plays against the others: a secret location in this add-on's slice, infection cards as his
-// hand (the base's `held` zone, seen by him only), airport sightings, spotting and capture, the purple disease
-// with flare-outs (an outbreak of purple first takes 2 purple back), and his own win. His turn comes after each
-// player's: up to 6 one-action phases before the base's `next`, with 2 actions and a free drive. Not with
-// Mutation (a manifest conflict). Mechanics only.
-import { defineAddon, type Action, type Json, type Option, type Prompt, type Rng, type SeatId } from "@boardcore/pack-sdk";
-import { ADJ, CITIES, CITY_NAMES } from "./map";
+// On the Brink's Bio-Terrorist challenge (the option `bioterrorist`; 3 to 5 seats, not with Mutation: setup
+// refuses both). One against all: the pack declares hidden information, the `outcome` hook may name a lone
+// winner, and `pawnSeats` says which seats get a pawn. One seat (the last, as a volunteer, or a random one: the
+// option `bioterroristSeat`) gets no pawn and plays against the others: a secret location in this module's slice,
+// infection cards as his hand (the base's `held` zone, seen by him only), airport sightings, spotting and
+// capture, the purple disease with flare-outs (an outbreak of purple first takes 2 purple back), and his own
+// win. His turn comes after each player's: up to 6 one-action phases before the base's `next`, with 2 actions
+// and a free drive. Mechanics only.
+import type { Action, Json, Option, Prompt, Rng, SeatId } from "@boardcore/pack-sdk";
+import { ADJ, CITIES, CITY_NAMES } from "../data";
+import { opt, pick } from "../engine";
+import type { ModPhase, Module } from "../kernel";
+import type { PDOp, PDState } from "../types";
+import { wrap } from "./wrap";
 
 const PURPLE = "purple";
 const HAND_LIMIT = 7;
@@ -36,8 +40,6 @@ interface Slice {
 const btSeat = (s: S): SeatId => s.seats.find((x) => !s.players.includes(x))!;
 const fresh = (seat: SeatId): Slice => ({ seat, city: null, captured: false, left: 0, free: 0, used: {}, done: true, sighting: null, sheet: [], turn: 0 });
 const sliceOf = (j: Json, s?: S | null): Slice => (j as Slice | null) ?? fresh(s ? btSeat(s) : "");
-const opt = (id: string, label: string, disabled?: string | null): Option => (disabled ? { id, label, disabled } : { id, label });
-const pick = (label: string, options: Option[]): Prompt | null => (options.length ? { kind: "pick", label, options } : null);
 const onBoard = (cubes: { [city: string]: { [c: string]: number } }, c: string) => Object.values(cubes).reduce((t, m) => t + (m[c] ?? 0), 0);
 const isOut = (eradicated: string[]) => eradicated.includes(PURPLE);
 /** He is on the board for everyone: captured, or in a city with a pawn. */
@@ -82,9 +84,7 @@ function btPrompt(sl: Slice, hand: string[], deck: number, stations: string[], p
 /** His turn ends once nothing is left to do (the free drive can't be used while captured). */
 const settle = (sl: Slice, over: boolean): Slice => (!over && sl.left <= 0 && (sl.free <= 0 || sl.captured) ? { ...sl, done: true } : sl);
 
-type Phase = NonNullable<NonNullable<Parameters<typeof defineAddon<"boardcore/pandemic">>[0]["contributes"]>["phases"]>[number];
-
-const step = (k: number): Phase => ({
+const step = (k: number): ModPhase => ({
   name: `bt${k}`, kind: "turns", before: "next",
   seats: ({ state, slice }) => {
     const s = state!, sl = sliceOf(slice, s);
@@ -97,10 +97,11 @@ const step = (k: number): Phase => ({
     if (k !== 1 || s.outcome || isOut(s.eradicated) || sl.city === null) return {};
     return { slice: { ...sl, left: 2, free: 1, used: {}, done: false, turn: sl.turn + 1 } };
   },
-  choices: ({ view, slice, seat, partial }) => {
+  // His own held cards and what the table shows.
+  choices: ({ state, slice, seat, partial }) => {
     const sl = sliceOf(slice);
     if (sl.done || seat !== sl.seat) return null;
-    return btPrompt(sl, view.pl[seat]?.held ?? [], view.infectionDeck, view.stations, pawnCitiesOf(view.pl, view.players), partial);
+    return btPrompt(sl, state.held[seat]?.items ?? [], state.infDeck.items.length, state.stations, pawnCitiesOf(state.pl, state.players), partial);
   },
   apply: ({ state, slice, action, zones }) => {
     const s = state!;
@@ -187,33 +188,33 @@ const step = (k: number): Phase => ({
   },
 });
 
-export default defineAddon<"boardcore/pandemic">({
+const start: ModPhase = {
+  // Before the first turn he deals himself 2 infection cards and picks his secret starting city.
+  name: "start", kind: "turns", before: "actions", rounds: [1],
+  seats: ({ state, slice }) => (sliceOf(slice, state).city === null ? [btSeat(state!)] : []),
+  begin: ({ state }) => ({ slice: fresh(btSeat(state!)), ops: [{ op: "hold", seat: btSeat(state!), n: 2 }, { op: "log", text: "The Bio-Terrorist draws 2 infection cards." }] }),
+  choices: ({ partial }) => (partial.length ? null : pick("Choose your secret starting city", CITY_NAMES.map((c) => opt(`c:${c}`, c)))),
+  apply: ({ slice, state, action }) => {
+    const city = String(action[0]).slice(2);
+    const sl = note({ ...sliceOf(slice, state), city }, `start in ${city}`);
+    const ops: PDOp[] = [{ op: "log", text: "The Bio-Terrorist takes up a position." }];
+    // Starting where a pawn stands, he is spotted at once: the commit names his city, so it is a reveal,
+    // logged as any other spotting (PR #118 second review).
+    if (pawnCitiesOf(state!.pl, state!.players).includes(city)) return { slice: sl, ops: [...ops, { op: "log", text: `The Bio-Terrorist is spotted in ${city}!` }], reveal: true };
+    return { slice: sl, ops };
+  },
+};
+
+const bioterrorist: Module = {
+  id: "bioterrorist",
+  phases: [start, ...STEPS.map(step)],
   contributes: {
     diseases: [{ id: PURPLE, cubes: 12, cure: "any", follows: true, flare: 2 }],
     // The seat without a pawn: the last (a volunteer) or a random one.
     pawnSeats: ({ value, options, rng }) => {
-      const bt = options.seat === "random" ? value[rng!.int(value.length)]! : value[value.length - 1]!;
+      const bt = options.bioterroristSeat === "random" ? value[rng!.int(value.length)]! : value[value.length - 1]!;
       return value.filter((x) => x !== bt);
     },
-    phases: [
-      {
-        // Before the first turn he deals himself 2 infection cards and picks his secret starting city.
-        name: "start", kind: "turns", before: "actions", rounds: [1],
-        seats: ({ state, slice }) => (sliceOf(slice, state).city === null ? [btSeat(state!)] : []),
-        begin: ({ state }) => ({ slice: fresh(btSeat(state!)), ops: [{ op: "hold", seat: btSeat(state!), n: 2 }, { op: "log", text: "The Bio-Terrorist draws 2 infection cards." }] }),
-        choices: ({ partial }) => (partial.length ? null : pick("Choose your secret starting city", CITY_NAMES.map((c) => opt(`c:${c}`, c)))),
-        apply: ({ slice, state, action }) => {
-          const city = String(action[0]).slice(2);
-          const sl = note({ ...sliceOf(slice, state), city }, `start in ${city}`);
-          const ops: PDOp[] = [{ op: "log", text: "The Bio-Terrorist takes up a position." }];
-          // Starting where a pawn stands, he is spotted at once: the commit names his city, so it is a reveal,
-          // logged as any other spotting (PR #118 second review).
-          if (pawnCitiesOf(state!.pl, state!.players).includes(city)) return { slice: sl, ops: [...ops, { op: "log", text: `The Bio-Terrorist is spotted in ${city}!` }], reveal: true };
-          return { slice: sl, ops };
-        },
-      },
-      ...STEPS.map(step),
-    ],
     // Capture: a player in his city (so he is spotted) takes him; his hand goes to the infection discards.
     actions: ({ state, slice, args }) => {
       const s = state!, sl = sliceOf(slice, s);
@@ -244,7 +245,7 @@ export default defineAddon<"boardcore/pandemic">({
       return { winners: [], text: `everyone loses ${why}` };
     },
   },
-  setup: ({ slice, state }) => slice ?? fresh(btSeat(state)),
+  setup: ({ state }) => fresh(btSeat(state)),
   view: ({ slice, view, viewer }) => {
     const sl = sliceOf(slice);
     const me = viewer === sl.seat;
@@ -263,8 +264,6 @@ export default defineAddon<"boardcore/pandemic">({
       return [wrap(`Bio-Terrorist (${v.seat}): ${where}${v.sighting ? `; last sighted at ${v.sighting}` : ""}.`), ...(v.sheet.length ? ["Your sheet:", ...v.sheet.slice(-6).map((x) => wrap(`${x}.`))] : [])].join("\n");
     },
   },
-  // The log is public; his actions name his moves only through it.
-  describe: ({ view }) => (view.log.length ? view.log.join(" ") : "The Bio-Terrorist acts."),
   // For anyone but him: his city redrawn among the cities without a pawn while he is unseen, his sheet hidden.
   resampleHidden: ({ state, slice, seat, rng }) => {
     const sl = sliceOf(slice, state);
@@ -273,21 +272,10 @@ export default defineAddon<"boardcore/pandemic">({
     const city = spotted(sl, pawnCities) ? sl.city : redraw(pawnCities, rng);
     return { ...sl, city, sheet: sl.sheet.map(() => "(hidden)") };
   },
-});
+};
+export default bioterrorist;
 
 function redraw(pawnCities: string[], rng: Rng): string {
   const free = CITY_NAMES.filter((c) => !pawnCities.includes(c));
   return free[rng.int(free.length)]!;
-}
-
-/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
-function wrap(text: string, width = 34): string {
-  const lines: string[] = [];
-  let line = "";
-  for (const w of text.split(" ")) {
-    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
-    else line = line ? `${line} ${w}` : w;
-  }
-  if (line) lines.push(line);
-  return lines.join("\n");
 }

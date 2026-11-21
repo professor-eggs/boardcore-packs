@@ -7,6 +7,63 @@ the closed gaps are in git history. Mechanics are described generically, with no
 engine or SDK should own), **low** (cosmetic, or one line of pack code). The new generic gaps are also written up
 in `GAPS-FOR-PUBLIC.md`, for the public docs.
 
+## After the fold (3.0.0, 2026-11-21)
+
+The owner decided to remove add-on packs; the five modules are options of this pack, called through an in-pack
+kernel (`src/kernel.ts`). The entries below are kept as written; this is what became of each.
+
+| Entry | Now |
+| --- | --- |
+| "Switchable modules inside one bundle" (closed by add-ons) | Open again in a new form: the modules are options in one bundle. What the manifest can't say is in "New with options" below. |
+| **N1** every point call copies the whole state | **Moot.** The hooks are plain function calls on the state itself. Measured below. |
+| **N5** a point can't return a prompt | **Moot.** A hook's result is a TypeScript type, `Prompt` included. |
+| **N6** an event effect can't mark a reveal | **Moot** as a contract gap. The pack keeps its own `reveal` operation. |
+| **N7** a one-against-all add-on needs the base designed for it | **Moot**: he is a module of the pack. The list is still what the pack needs for him. |
+| **N8** the first phase of round 1 begins inside setup | **Moot**: setup makes every slice before the runner starts. |
+| **G1, G2, G3, G6** (closed) and **G4, G5, G7, G8, N2, N3, N4** | Unchanged: none is about add-ons. |
+| "A free role ability out of turn" (2.0.0 audit) | **Closed in the pack**, as that entry foresaw: the kernel's actions hook marks an ability `anyTime`, the windows outside an epidemic, the wait and the hand-limit discard offer it, and its holder is a window actor (public). Left: N3. |
+
+### New with options
+
+**O1. An option can't need, exclude or bound another (medium).** Same gap as public Q106, with more cases. The
+manifest has one seat range and one independent schema per option, so four rules live in `setup` and are found
+only when the game starts, with the room's options already fixed (README "Option rules"): two options that
+exclude each other, an option that needs 3 seats, a seat count and an option value that each need another
+option. As add-ons the first was a create-time refusal with a named reason. *Suggest:* per-option `requires`,
+`conflicts` and seat bounds in the manifest, checked at create.
+
+**O2. A default can't depend on another option (low).** Three add-ons preset one base option (still editable).
+`setup` can't tell a default from a choice, so the presets are gone and each option's description says what to
+set. *Suggest:* an "auto" value an option may declare, resolved by the pack.
+
+**O3. Every expansion's option is on every create form (note).** A host can no longer leave a module off the
+server, and a fix to one module is a new version and hash of the whole game (the persona's range must still hold).
+
+**O4. One fault name (note).** A fault names the pack, never the module.
+
+### Measured (2026-11-21, Node 22, this host busy with other work)
+
+One move sandboxed is the mover's prompt walked (2.2 `choices` calls), its `view` and the `apply`, on QuickJS
+handles, 3 seeded games a room, the faster of two alternated passes; 2.0.0 composed with its add-ons against 3.0.0
+with the same modules as options, on the same games (equal ply for ply).
+
+| Room | Plies | 2.0.0 + add-ons, ms a move (apply) | 3.0.0 options, ms a move (apply) |
+| --- | --- | --- | --- |
+| 4 seats, base | 633 | 9.5 (3.2) | 9.1 (3.1) |
+| 5 seats, roles | 760 | 11.1 (4.0) | 9.7 (3.3) |
+| 3 seats, events | 460 | 10.2 (3.5) | 8.9 (3.0) |
+| 4 seats, Virulent Strain | 479 | 11.3 (3.4) | 9.1 (3.1) |
+| 4 seats, Bio-Terrorist | 603 | 13.1 (4.8) | 9.7 (3.2) |
+| 5 seats, roles + events + VS + Mutation | 568 | 15.5 (4.9) | 10.7 (3.6) |
+| 5 seats, roles + events + VS + Bio-Terrorist | 712 | 18.3 (6.5) | 10.6 (3.6) |
+
+- A room with every module now costs what the base alone costs (about 10 ms a move); the composer's share was up
+  to 8 ms a move (42%). The costliest sandboxed call fell from 21 to 47 interrupt checks to 5 to 7.
+- The kit's "ms/ply" in the table further down (40 to 100) is a whole kit ply: the Match's own calls, every
+  seat's view and a state hash each ply. On this host today that is 59 against 59 ms for the base and 54 to 62
+  against 43 to 50 ms with four modules. Most of N1's figure was never the copies.
+- Bundle: 131 KB (2.0.0: 94 KB for the base, plus five add-on bundles).
+
 ## Closed by parts 7a and 7b
 
 | Gap | Closed by | What the pack does now |

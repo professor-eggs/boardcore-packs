@@ -1,13 +1,14 @@
 // PR #118 second review: part 7c's X7 fix (the runner's `ended`) was made for this pack, but the base passed
 // no `ended` to phaseRunner, so a game lost early still walked every remaining round (about deck/2 + 3 rounds
-// of ~30 phases, each add-on's seats/begin called) inside the losing action. Fixed: `ended` is the outcome.
+// of ~30 phases, each module phase's seats/begin called) inside the losing action. Fixed: `ended` is the outcome.
 import { describe, expect, it } from "vitest";
 import type { Action, Json, Rng } from "@boardcore/pack-sdk";
 import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
 import { room, seats, type Room } from "./rooms";
+import type { PDState } from "../src/types";
 
-type S = PDState & { addons: { [id: string]: Json } };
+type S = PDState;
 const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 const start = async (r: Room, n: number, seed = 1) => {
   const h = await room(r);
@@ -17,8 +18,8 @@ const act = (p: PackHandle, s: S, seat: string, action: Action, seed = 7) => p.a
 const cur = (s: S) => s.players[s.current]!;
 
 describe("PR #118: the pandemic base stops its runner at the end (X7)", () => {
-  for (const r of [{ addons: [] }, { addons: ["bioterrorist"] }] as Room[]) {
-    it(`a loss in round 1 leaves the runner in round 1 (${r.addons.join() || "base"})`, async () => {
+  for (const r of [{ mods: [] }, { mods: ["bioterrorist"] }] as Room[]) {
+    it(`a loss in round 1 leaves the runner in round 1 (${r.mods.join() || "base"})`, async () => {
       const { p, s: s0 } = await start(r, 3);
       let s = s0;
       // Let the Bio-Terrorist (if any) take up his position first.

@@ -40,18 +40,6 @@ importers:
         specifier: link:../../boardcore/packages/testkit
         version: link:../../boardcore/packages/testkit
 
-  packs/pandemic-bioterrorist:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
-  packs/pandemic-events:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
   packs/pandemic-medic:
     dependencies:
       '@boardcore/pack-sdk':
@@ -70,24 +58,6 @@ importers:
       '@boardcore/testkit':
         specifier: link:../../boardcore/packages/testkit
         version: link:../../boardcore/packages/testkit
-
-  packs/pandemic-mutation:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
-  packs/pandemic-roles:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
-
-  packs/pandemic-virulent-strain:
-    dependencies:
-      '@boardcore/pack-sdk':
-        specifier: link:../../boardcore/packages/pack-sdk
-        version: link:../../boardcore/packages/pack-sdk
 
   packs/seven-wonders:
     dependencies:
