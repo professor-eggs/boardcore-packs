@@ -1,23 +1,20 @@
-// Rules of the five add-ons: through the composed packs (trusted adapter) where a room shows them, and their own
-// handlers called directly where a situation is rare in random play. The map copies the add-ons carry must equal
-// the base's.
+// Rules of the five On the Brink modules, each an option of the pack: through the pack with the option on
+// (trusted adapter) where a room shows them, and the module's own handlers called directly where a situation is
+// rare in random play. Then the option rules: every combination `setup` refuses.
 import { describe, expect, it } from "vitest";
-import type { Action, Json, Rng, Step } from "@boardcore/pack-sdk";
+import type { Action, Rng, Step } from "@boardcore/pack-sdk";
 import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
-import { loadBoth } from "@boardcore-packs/kit";
-import roles from "../../pandemic-roles/src/index";
-import events from "../../pandemic-events/src/index";
-import vs from "../../pandemic-virulent-strain/src/index";
-import mutation from "../../pandemic-mutation/src/index";
-import bt from "../../pandemic-bioterrorist/src/index";
-import * as eventsMap from "../../pandemic-events/src/map";
-import * as vsMap from "../../pandemic-virulent-strain/src/map";
-import * as btMap from "../../pandemic-bioterrorist/src/map";
-import { ADJ, CITIES, CITY_NAMES } from "../src/data";
-import { dist, room, seats, type Room } from "./rooms";
+import roles from "../src/expansions/roles";
+import events from "../src/expansions/events";
+import vs from "../src/expansions/virulent-strain";
+import mutation from "../src/expansions/mutation";
+import bt from "../src/expansions/bioterrorist";
+import { optionProblem } from "../src/index";
+import type { PDOp, PDOutcome, PDPl, PDState } from "../src/types";
+import { room, seats, type Room } from "./rooms";
 
-type S = PDState & { addons: { [id: string]: Json } };
+type S = PDState;
 const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 const start = async (r: Room, n: number, seed = 1) => {
   const h = await room(r);
@@ -28,30 +25,22 @@ const ids = (p: PackHandle, s: S, seat: string, partial: Step[] = []) => p.choic
 const cur = (s: S) => s.players[s.current]!;
 const set = (s: S, seat: string, over: Partial<PDPl>): S => ({ ...s, pl: { ...s.pl, [seat]: { ...s.pl[seat]!, ...over } as PDPl } });
 const hand = (s: S, seat: string, items: string[]): S => set(s, seat, { hand: { ...s.pl[seat]!.hand, items } });
-// The handlers take frozen copies in a room; called directly here with plain objects.
+// A module's handler called directly, with only the fields the case needs.
 const call = <T>(f: unknown, input: object): T => (f as (x: object) => T)(input);
-const BT = "boardcore/pandemic-bioterrorist";
+type BtSlice = { city: string; captured: boolean; free: number; left: number };
+const btOf = (s: S) => s.slices.bioterrorist as unknown as BtSlice;
+const btView = (p: PackHandle, s: S, viewer: string) => (p.view(s, viewer) as unknown as { modules: { bioterrorist: { city: string | null } } }).modules.bioterrorist;
 
-describe("the add-ons carry the base's map", () => {
-  it("has the same cities, colours and connections in every copy", () => {
-    for (const m of [eventsMap, vsMap, btMap]) {
-      expect(m.CITIES).toEqual(CITIES);
-      expect(m.ADJ).toEqual(ADJ);
-      expect(m.CITY_NAMES).toEqual(CITY_NAMES);
-    }
-  });
-});
-
-describe("pandemic-roles", () => {
+describe("option roles", () => {
   it("allows 5 players and the legendary game, and adds its six roles", async () => {
-    const { s } = await start({ addons: ["roles"], options: { epidemics: 7 } }, 5);
+    const { s } = await start({ mods: ["roles"], options: { epidemics: 7 } }, 5);
     expect(s.players).toHaveLength(5);
     expect(s.piles).toHaveLength(7);
     expect([...s.unusedRoles, ...s.players.map((x) => s.pl[x]!.role)]).toHaveLength(13);
   });
 
   it("gives the Generalist 5 actions and the Archivist a hand limit of 8", async () => {
-    const { p, s } = await start({ addons: ["roles"] }, 2);
+    const { p, s } = await start({ mods: ["roles"] }, 2);
     const me = cur(s), other = s.players.find((x) => x !== me)!;
     const g = act(p, set(set(s, me, { role: "Medic" }), other, { role: "Generalist" }), me, ["end"]);
     let t = g;
@@ -62,7 +51,7 @@ describe("pandemic-roles", () => {
   });
 
   it("lets the Epidemiologist ask for a card without seeing the hand (G2), free and once a turn", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2);
     const me = cur(s0), other = s0.players.find((x) => x !== me)!;
     let s = hand(hand(set(set(s0, me, { role: "Epidemiologist" }), other, { role: "Medic" }), other, ["city:Paris", "city:Lima"]), me, []);
     expect(ids(p, s, me)).toContain("epidemiologist");
@@ -76,7 +65,7 @@ describe("pandemic-roles", () => {
   });
 
   it("lets the Field Operative cure with 3 samples for 2 of the cards", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2);
     const me = cur(s0);
     const s = hand(set(s0, me, { role: "Field Operative", samples: { red: 3 } }), me, ["city:Tokyo", "city:Osaka", "city:Seoul"]);
     expect(p.choices(s, me, ["cure"])!.options.filter((o) => !o.disabled).map((o) => o.id)).toEqual(["red+samples"]);
@@ -87,10 +76,10 @@ describe("pandemic-roles", () => {
   });
 });
 
-describe("pandemic-events", () => {
+describe("option events", () => {
   it("puts 2 events per player in the game, from 13", async () => {
     for (const n of [2, 3, 4]) {
-      const { s } = await start({ addons: ["events"] }, n);
+      const { s } = await start({ mods: ["events"] }, n);
       expect(s.nEvents).toBe(2 * n);
       const all = [...s.playerDeck.items, ...s.players.flatMap((x) => s.pl[x]!.hand.items)];
       expect(all.filter((k) => k.startsWith("event:"))).toHaveLength(2 * n);
@@ -105,7 +94,7 @@ describe("pandemic-events", () => {
   });
 
   it("asks another player before Special Orders moves his pawn (G2)", async () => {
-    const { p, s: s0 } = await start({ addons: ["events"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["events"] }, 2);
     const me = cur(s0), other = s0.players.find((x) => x !== me)!;
     let s = hand(s0, me, ["event:Special Orders"]);
     s = act(p, s, me, ["ev:Special Orders", other]);
@@ -118,9 +107,9 @@ describe("pandemic-events", () => {
   });
 });
 
-describe("pandemic-virulent-strain", () => {
-  it("replaces the epidemics with Virulent Strain ones (5 by its preset) and names the strain on the first", async () => {
-    const { s } = await start({ addons: ["virulent-strain"] }, 3);
+describe("option virulentStrain", () => {
+  it("replaces the epidemics with Virulent Strain ones (as many as the room's epidemics) and names the strain on the first", async () => {
+    const { s } = await start({ mods: ["virulentStrain"] }, 3);
     expect(s.epiPool).toHaveLength(8);
     expect(s.playerDeck.items.filter((k) => k.startsWith("epidemic:"))).toHaveLength(5);
     const st = { ...s, cubes: { Tokyo: { red: 3 }, Paris: { blue: 1 } } };
@@ -137,9 +126,9 @@ describe("pandemic-virulent-strain", () => {
   });
 });
 
-describe("pandemic-mutation", () => {
+describe("option mutation", () => {
   it("adds purple: 12 cubes, two Mutation cards in the infection discards, three Mutation cards in the deck", async () => {
-    const { s } = await start({ addons: ["mutation"] }, 3);
+    const { s } = await start({ mods: ["mutation"] }, 3);
     expect(s.supply.purple).toBe(12);
     expect(s.infDiscard.slice(-2)).toEqual(["Mutation! 1", "Mutation! 2"]);
     expect(s.playerDeck.items.filter((k) => k.startsWith("mutation:"))).toHaveLength(3);
@@ -153,44 +142,44 @@ describe("pandemic-mutation", () => {
     expect(call<boolean>(mutation.contributes!.cureGoal, { state: st, value: true })).toBe(true);
   });
 
-  it("can't be in a room with the Bio-Terrorist", async () => {
-    await expect(loadBoth(dist("pandemic"), [dist("pandemic-mutation"), dist("pandemic-bioterrorist")])).rejects.toThrow();
+  it("can't be played with the Bio-Terrorist: setup refuses, naming both", async () => {
+    await expect(start({ mods: ["mutation", "bioterrorist"] }, 4)).rejects.toThrow(/Mutation and the Bio-Terrorist can't be played together/);
   });
 });
 
-describe("pandemic-bioterrorist", () => {
+describe("option bioterrorist", () => {
   it("takes the last seat (no pawn), deals him 2 infection cards and asks him first for his secret city", async () => {
-    const { p, s } = await start({ addons: ["bioterrorist"] }, 4);
+    const { p, s } = await start({ mods: ["bioterrorist"] }, 4);
     expect(s.players).toEqual(["green", "orange", "white"]);
     expect(s.held.pink!.items).toHaveLength(2);
     expect(s.held.pink!.seenBy).toEqual(["pink"]);
     expect(p.status(s).actors).toEqual(["pink"]);
-    const t = act(p, s, "pink", [`${BT}:c:Lima`]);
-    expect((t.addons[BT] as { city: string }).city).toBe("Lima");
-    expect((p.view(t, "green") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe(null);
-    expect((p.view(t, "pink") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Lima");
+    const t = act(p, s, "pink", [`c:Lima`]);
+    expect(btOf(t).city).toBe("Lima");
+    expect(btView(p, t, "green").city).toBe(null);
+    expect(btView(p, t, "pink").city).toBe("Lima");
     expect(p.status(t).actors).toEqual([cur(t)]);
   });
 
   it("is spotted at once when he starts where a pawn stands: a reveal, logged as a spotting (PR #118 review)", async () => {
-    const { p, s } = await start({ addons: ["bioterrorist"] }, 3);
-    const quiet = p.apply(s, "white", [`${BT}:c:Lima`], rng(3));
+    const { p, s } = await start({ mods: ["bioterrorist"] }, 3);
+    const quiet = p.apply(s, "white", [`c:Lima`], rng(3));
     expect(quiet.reveal).toBeFalsy();
-    const r = p.apply(s, "white", [`${BT}:c:Atlanta`], rng(3));
+    const r = p.apply(s, "white", [`c:Atlanta`], rng(3));
     expect(r.reveal).toBe(true);
     const t = r.state as S;
     expect(t.log).toContain("The Bio-Terrorist is spotted in Atlanta!");
-    expect((p.view(t, "green") as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Atlanta");
+    expect(btView(p, t, "green").city).toBe("Atlanta");
   });
 
   it("picks a random seat when asked", async () => {
-    const h = await room({ addons: ["bioterrorist"], addonOptions: { bioterrorist: { seat: "random" } } });
+    const h = await room({ mods: ["bioterrorist"], options: { bioterroristSeat: "random" } });
     const pawns = new Set([1, 2, 3, 4, 5, 6].map((n) => (h.trusted.setup({ options: h.options, seats: seats(4), rng: rng(n) }) as S).players.join()));
     expect(pawns.size).toBeGreaterThan(1);
   });
 
   it("refuses 2 seats (one player besides him)", async () => {
-    await expect(start({ addons: ["bioterrorist"] }, 2)).rejects.toThrow(/Bio-Terrorist/);
+    await expect(start({ mods: ["bioterrorist"] }, 2)).rejects.toThrow(/Bio-Terrorist/);
   });
 
   it("wins when the players lose with purple on the board; otherwise everyone loses; a players' win is theirs", () => {
@@ -202,25 +191,25 @@ describe("pandemic-bioterrorist", () => {
   });
 
   it("is spotted by a pawn entering his city (a reveal either way) and captured there, his hand discarded", async () => {
-    const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
-    let s = act(p, s0, "white", [`${BT}:c:Washington`]);
+    const { p, s: s0 } = await start({ mods: ["bioterrorist"] }, 3);
+    let s = act(p, s0, "white", [`c:Washington`]);
     const me = cur(s);
     s = set(s, me, { role: "Medic" });
     const r = p.apply(s, me, ["drive", "Washington"], rng(3));
     expect(r.reveal).toBe(true);
     s = r.state as S;
     expect(s.log).toContain(`${me} spots the Bio-Terrorist in Washington!`);
-    expect((p.view(s, me) as { addons: { [k: string]: { city: string | null } } }).addons[BT]!.city).toBe("Washington");
+    expect(btView(p, s, me).city).toBe("Washington");
     const held = s.held.white!.items;
     s = act(p, s, me, ["capture"]);
-    expect((s.addons[BT] as { captured: boolean }).captured).toBe(true);
+    expect(btOf(s).captured).toBe(true);
     expect(s.held.white!.items).toEqual([]);
     expect(s.infDiscard.slice(-held.length)).toEqual(held);
   });
 
   it("over his hand limit of 7 discards the card he just drew, without effect and with no choice (OTB p6)", async () => {
-    const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
-    let s = act(p, s0, "white", [`${BT}:c:Lima`]);
+    const { p, s: s0 } = await start({ mods: ["bioterrorist"] }, 3);
+    let s = act(p, s0, "white", [`c:Lima`]);
     const me = cur(s);
     s = act(p, s, me, ["end"]);
     for (let i = 0; i < 40 && !p.status(s).actors.includes("white"); i++) { const x = p.status(s).actors[0]!; s = act(p, s, x, ids(p, s, x).includes("pass") ? ["pass"] : [ids(p, s, x)[0]!]); }
@@ -231,7 +220,7 @@ describe("pandemic-bioterrorist", () => {
     s = { ...s, held: { ...s.held, white: { ...s.held.white!, items: seven } }, infDeck: { ...s.infDeck, items: deck.slice(0, -7) }, infSegs: [deck.length - 7] };
     const top = s.infDeck.items[0]!;
     const cubes = JSON.stringify(s.cubes);
-    const r = p.apply(s, "white", [`${BT}:draw`], rng(1));
+    const r = p.apply(s, "white", ["draw"], rng(1));
     const t = r.state as S;
     expect(t.held.white!.items).toEqual(seven);
     expect(t.infDiscard[t.infDiscard.length - 1]).toBe(top);
@@ -242,24 +231,24 @@ describe("pandemic-bioterrorist", () => {
   });
 
   it("takes his turn after a player's: 2 actions and a free drive, a quiet drive naming no city", async () => {
-    const { p, s: s0 } = await start({ addons: ["bioterrorist"] }, 3);
-    let s = act(p, s0, "white", [`${BT}:c:Lima`]);
+    const { p, s: s0 } = await start({ mods: ["bioterrorist"] }, 3);
+    let s = act(p, s0, "white", [`c:Lima`]);
     const me = cur(s);
     s = act(p, s, me, ["end"]);
     for (let i = 0; i < 40 && !p.status(s).actors.includes("white"); i++) { const x = p.status(s).actors[0]!; s = act(p, s, x, ids(p, s, x).includes("pass") ? ["pass"] : [ids(p, s, x)[0]!]); }
     expect(p.status(s).actors).toEqual(["white"]);
     const opts = ids(p, s, "white");
-    expect(opts).toContain(`${BT}:drive`);
+    expect(opts).toContain("drive");
     expect(p.choices(s, "white", [])!.label).toMatch(/2 actions left/);
-    const r = p.apply(s, "white", [`${BT}:drive`, "c:Santiago"], rng(1));
+    const r = p.apply(s, "white", ["drive", "c:Santiago"], rng(1));
     expect(r.reveal).toBeUndefined();
     s = r.state as S;
-    expect(p.describe!(s, "white", [`${BT}:drive`, "c:Santiago"], "green")).not.toMatch(/Santiago|Lima/);
-    expect((s.addons[BT] as { city: string; free: number; left: number })).toMatchObject({ city: "Santiago", free: 0, left: 2 });
+    expect(p.describe!(s, "white", ["drive", "c:Santiago"], "green")).not.toMatch(/Santiago|Lima/);
+    expect(btOf(s)).toMatchObject({ city: "Santiago", free: 0, left: 2 });
   });
 });
 
-describe("pandemic add-ons: their lines under the table on a phone (phone play, 2026-11-18)", () => {
+describe("pandemic modules: their lines under the table on a phone (phone play, 2026-11-18)", () => {
   it("wraps the Bio-Terrorist's, the travel ban's and the virulent strain's lines within 34 columns", () => {
     const sheet = ["Turn 3: moves from Ho Chi Minh City to Kolkata by train", "Turn 4: infects Kolkata"];
     const lines = [
@@ -270,5 +259,53 @@ describe("pandemic add-ons: their lines under the table on a phone (phone play, 
     for (const t of lines) for (const l of t.split("\n")) expect(l.length, l).toBeLessThanOrEqual(34);
     expect(lines[0]!.replace(/\n +/g, " ")).toContain("Bio-Terrorist (pink): in Ho Chi Minh City; last sighted at St. Petersburg.");
     expect(lines[0]).toContain("Your sheet:");
+  });
+});
+
+describe("option rules: what setup refuses (README, \"Option rules\")", () => {
+  const on = (...mods: string[]) => Object.fromEntries(mods.map((m) => [m, true]));
+  it("says why for each combination that can't be played, and nothing for those that can", () => {
+    expect(optionProblem(on("mutation", "bioterrorist"), 4)).toMatch(/Mutation and the Bio-Terrorist/);
+    expect(optionProblem(on("bioterrorist"), 2)).toMatch(/Bio-Terrorist needs 3 to 5 seats/);
+    expect(optionProblem({}, 5)).toMatch(/5 players need the On the Brink roles/);
+    expect(optionProblem({ epidemics: 7 }, 3)).toMatch(/7 epidemics \(legendary\) need the On the Brink roles/);
+    expect(optionProblem({ ...on("events", "virulentStrain"), epidemics: 7 }, 3)).toMatch(/need the On the Brink roles/);
+    // 5 seats with the Bio-Terrorist are 4 players: no roles needed. With the roles, 5 players and 7 epidemics.
+    expect(optionProblem(on("bioterrorist"), 5)).toBe(null);
+    expect(optionProblem(on("bioterrorist"), 3)).toBe(null);
+    expect(optionProblem({ ...on("roles"), epidemics: 7 }, 5)).toBe(null);
+    expect(optionProblem({ ...on("roles", "events", "virulentStrain", "mutation"), epidemics: 7 }, 5)).toBe(null);
+    expect(optionProblem({ ...on("roles", "events", "virulentStrain", "bioterrorist"), epidemics: 7 }, 5)).toBe(null);
+    for (const n of [2, 3, 4]) for (const e of [4, 5, 6]) expect(optionProblem({ epidemics: e }, n)).toBe(null);
+  });
+
+  it("refuses each of them at setup with that reason, in the pack as built", async () => {
+    await expect(start({ mods: ["mutation", "bioterrorist"] }, 4)).rejects.toThrow(/switch one of them off/);
+    await expect(start({ mods: ["bioterrorist"] }, 2)).rejects.toThrow(/needs 3 to 5 seats/);
+    await expect(start({ mods: ["events"] }, 5)).rejects.toThrow(/5 players need the On the Brink roles/);
+    await expect(start({ mods: ["virulentStrain"], options: { epidemics: 7 } }, 4)).rejects.toThrow(/7 epidemics/);
+  });
+
+  it("leaves the choice of the Bio-Terrorist's seat without effect when he isn't in the game", async () => {
+    const { s } = await start({ mods: [], options: { bioterroristSeat: "random" } }, 3);
+    expect(s.players).toEqual(["green", "orange", "white"]);
+    expect(s.mods).toEqual([]);
+  });
+
+  it("has no presets: a challenge keeps the room's number of epidemics, 4 (introductory, open hands) by default", async () => {
+    for (const m of ["virulentStrain", "mutation", "bioterrorist"] as const) {
+      const h = await room({ mods: [m], options: { epidemics: 4 } });
+      const s = h.trusted.setup({ options: h.options, seats: seats(3), rng: rng(1) }) as S;
+      expect(s.piles).toHaveLength(4);
+      expect(s.openHands).toBe(true);
+    }
+  });
+
+  it("keeps the modules in the kernel's order whatever order the options come in, and none when all are off", async () => {
+    const all = await start({ mods: ["mutation", "virulentStrain", "events", "roles"] }, 4);
+    expect(all.s.mods).toEqual(["roles", "events", "virulentStrain", "mutation"]);
+    const none = await start({ mods: [] }, 4);
+    expect(none.s.mods).toEqual([]);
+    expect(none.s.slices).toEqual({});
   });
 });

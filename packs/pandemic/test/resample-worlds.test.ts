@@ -9,11 +9,12 @@ import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import { legalActions, resamplerKeeps } from "@boardcore/testkit";
 import { pinnedCards } from "../src/resample";
 import { label, room, seats, type Room } from "./rooms";
+import type { PDState } from "../src/types";
 
 const ROOMS: [number, Room, number][] = [
-  [4, { addons: ["roles", "events", "virulent-strain", "mutation"], options: { epidemics: 5 } }, 4],
-  [3, { addons: ["roles", "events", "virulent-strain", "bioterrorist"] }, 3],
-  [2, { addons: [], options: { epidemics: 5 } }, 3],
+  [4, { mods: ["roles", "events", "virulentStrain", "mutation"], options: { epidemics: 5 } }, 4],
+  [3, { mods: ["roles", "events", "virulentStrain", "bioterrorist"] }, 3],
+  [2, { mods: [], options: { epidemics: 5 } }, 3],
 ];
 
 describe("pandemic: resampled worlds", () => {

@@ -1,9 +1,13 @@
 # Pandemic pack: rules audit (2nd edition)
 
 The owner plays **Pandemic, 2nd edition (Z-Man, 2013)** with **On the Brink, 2013 edition**. Since 2.0.0 the
-base and every add-on are checked against those editions only; there is no option for the 1st edition (2008). This
+base and every On the Brink module are checked against those editions only; there is no option for the 1st edition (2008). This
 file replaces the 1.0.0 audit. That audit cited the owner's PDFs, which turned out to be the same 2nd-edition
 books, so its rows are folded in below. Mechanics only: names and numbers, never rulebook text.
+
+Since 3.0.0 (2026-11-21) the five On the Brink modules are options of this one pack, no longer add-on packs. No
+rule changed with the fold (see "Fold into one pack" in the testing record); "add-on" in the dated records below
+means the module as it was packaged then.
 
 ## Sources
 
@@ -28,7 +32,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 |---|---|---|---|---|---|
 | City cards | 48, 12 per colour | 48 city cards, 4 colours | R2 p1 | same | matching, 2E |
 | Events (base) | Airlift, Forecast, Government Grant, One Quiet Night, Resilient Population | 5 event cards (59 player cards = 48 + 6 epidemics + 5 events) | R2 p1, p7 | same count | matching, 2E |
-| Epidemic cards | 4-6 (7 with the roles add-on) | 6 in the box, of which 4, 5 or 6 are used; a 7th comes with On the Brink | R2 p3, OTB p2 | same | matching, 2E |
+| Epidemic cards | 4-6 (7 with the `roles` option) | 6 in the box, of which 4, 5 or 6 are used; a 7th comes with On the Brink | R2 p3, OTB p2 | same | matching, 2E |
 | Roles (base) | 7: Contingency Planner, Dispatcher, Medic, Operations Expert, Quarantine Specialist, Researcher, Scientist | 7 role cards with these names | R2 p1, p8 | 5 roles (no Contingency Planner, no Quarantine Specialist) | matching, 2E |
 | Map connections | the `data.ts` edges | the board pictures: every link visible in R2 p2-p4 agrees, and the wrap-around Sydney–Los Angeles link is named | R2 p2-p4 | same map | matching |
 | Populations | `POPULATION`, all 48 | printed on the city cards; the 7 shown in R2 agree (Essen 575,000; Khartoum 4,887,000; Bogota 8,702,000; Chicago 9,121,000; Moscow 15,512,000; New York 20,464,000; Manila 20,767,000) | R2 p2-p7 | not used for the first player | matching (the other 41 are owner check 2) |
@@ -46,7 +50,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Roles at setup | the Quarantine Specialist and Medic don't block setup cubes | the Quarantine Specialist doesn't affect setup cubes | R2 p8 | no Quarantine Specialist | matching, 2E |
 | Roles dealt | at random; unused roles kept for New Assignment | shuffle the roles, deal 1 face up each, the rest out of the game (On the Brink's New Assignment draws on them) | R2 p2, OTB p2 | same | matching |
 | Hands by seats | 2→4, 3→3, 4→2, 5→2 | same; 5 players with On the Brink | R2 p2, OTB p2 | same | matching |
-| Difficulty | 4 introductory, 5 standard, 6 heroic, 7 legendary (roles add-on) | same; at the 7th epidemic the rate stays at 4 | R2 p3, OTB p2 | same | matching |
+| Difficulty | 4 introductory, 5 standard, 6 heroic, 7 legendary (`roles` option) | same; at the 7th epidemic the rate stays at 4 | R2 p3, OTB p2 | same | matching |
 | Player deck | piles as equal as possible, 1 epidemic each, smaller piles at the bottom | same | R2 p3 | same | matching |
 | First player | the highest city population in hand (a tie goes to the earlier seat) | the highest city population goes first | R2 p3 | the player most recently sick | matching, 2E (the tie is owner check 3) |
 | Open hands | open with 4 epidemics; private with 5 or 6, with open hands as an option | introductory: cards face up; standard and heroic: private, open hands allowed for experienced groups | R2 p7 | | matching, 2E |
@@ -103,7 +107,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 
 | Item | Coded | 2013 edition | Source | Status |
 |---|---|---|---|---|
-| 5 players, legendary | roles add-on: a 5th seat with 2 cards; 7 epidemics, the rate stays at 4 | same | OTB p2 | matching |
+| 5 players, legendary | `roles` option: a 5th seat with 2 cards; 7 epidemics, the rate stays at 4 | same | OTB p2 | matching |
 | Event count | 2 per seat from the 13 (the Bio-Terrorist's seat counts); the rest unseen | same | OTB p2, p5 | matching |
 | Archivist | hand limit 8; once a turn, as an action, takes her city's card from the player discards | same | OTB p8 | matching |
 | Containment Specialist | on entering a city, 1 cube off each colour with 2 or more; also when moved by others; before Mobile Hospital | same | OTB p2, p8 | matching |
@@ -154,7 +158,7 @@ Each such row, and every fixed row, has a test in `test/second-edition.test.ts` 
 | Item | Coded | 2013 edition | Status |
 |---|---|---|---|
 | Seats | 3 or 4 counting him; 5 allowed; not with Mutation | same (5 not recommended) | matching |
-| Choosing him | add-on option: the last seat (a volunteer) or a random one | at random, by the role card, or a volunteer | matching |
+| Choosing him | the option `bioterroristSeat`: the last seat (a volunteer) or a random one | at random, by the role card, or a volunteer | matching |
 | Start | 2 infection cards after the 9 infections; the first player chosen among the others; a secret start city | same | matching |
 | His turn | after each player's Infect Cities: 2 actions plus 1 free Drive/Ferry; each action at most twice (Drive 3 times) | same | matching |
 | Actions | Draw; Drive; Direct and Charter with an airport sighting (flight type hidden); Infect Locally, Infect Remotely (purple only) and Sabotage, each once a turn and only while unspotted | same | matching |
@@ -189,7 +193,7 @@ Items where a source is ambiguous, silent or contradicts itself, for the owner t
 5. **Bio-Terrorist over his hand limit.** OTB p6 says he discards the 8th card. Coded: he chooses which card goes.
    **Resolved (2026-11-18):** the owner's On the Brink rulebook PDF (md5 424745ec…) says his hand limit is 7 and, with
    more than 7, he must discard the 8th card to the infection discard pile, without effect. Now coded so: the card he
-   just drew goes at once, with no question (`addons.test.ts` "over his hand limit of 7").
+   just drew goes at once, with no question (`options.test.ts` "over his hand limit of 7").
 6. **Troubleshooter under the Commercial Travel Ban.** She looks at as many cards as "the current infection rate".
    Coded as 1 while the ban holds.
 7. **New Assignment on the Contingency Planner or the Field Operative.** Not stated. Coded: a stored event goes to

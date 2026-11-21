@@ -1,7 +1,7 @@
 {
   "name": "@boardcore-packs/pandemic",
-  "version": "2.0.0",
-  "description": "Pandemic base on the phase runner, with typed points for its On the Brink add-ons.",
+  "version": "3.0.0",
+  "description": "Pandemic on the phase runner, with On the Brink's modules as options.",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",

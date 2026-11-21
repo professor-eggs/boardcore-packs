@@ -1,27 +1,29 @@
-// Pandemic: On the Brink's six roles, an add-on of boardcore/pandemic 2.x. The roles join the `roles` registry;
-// with them a 5th player and the legendary game (7 epidemics) become possible. Each role works through the base's
-// points: the Generalist's 5 actions and the Archivist's hand limit of 8 are modifiers, the Troubleshooter's look
+// On the Brink's six roles (the option `roles`). The roles join the base's roles; with them a 5th player and the
+// legendary game (7 epidemics) become possible. Each role works through the kernel's hooks (../kernel.ts):
+// the Generalist's 5 actions and the Archivist's hand limit of 8 are modifiers, the Troubleshooter's look
 // at the infection deck is a `peek` at the start of her turn and her direct flights only show the card (`payCard`),
 // the Containment Specialist removes a cube where a colour has 2 or more as she enters (`onEnter`), and the
 // Archivist's, Epidemiologist's and Field Operative's own actions are `actions` with their `steps` and `act`, and
 // the Field Operative's cure with samples is the base's `cureSwap`. The
 // Epidemiologist takes a card through the base's `askCard`: the other player chooses which card from his closed
 // hand, or refuses (G2). Mechanics only.
-import { defineAddon, type Json, type Option, type Prompt, type SeatId } from "@boardcore/pack-sdk";
+import type { Prompt, SeatId } from "@boardcore/pack-sdk";
+import { opt, pick } from "../engine";
+import type { Module } from "../kernel";
+import type { PDActionOpt, PDOp, PDState } from "../types";
 
 const ROLES = ["Archivist", "Containment Specialist", "Epidemiologist", "Field Operative", "Generalist", "Troubleshooter"];
 type S = PDState;
 
-const opt = (id: string, label: string, disabled?: string | null): Option => (disabled ? { id, label, disabled } : { id, label });
-const pick = (label: string, options: Option[]): Prompt | null => (options.length ? { kind: "pick", label, options } : null);
-/** A `steps` answer (a prompt is plain data). */
-const P = (p: Prompt | null) => ({ prompt: p as unknown as Json });
+/** A `steps` answer. */
+const P = (p: Prompt | null) => ({ prompt: p });
 const has = (s: S, seat: SeatId, role: string) => s.pl[seat]?.role === role;
 const here = (s: S, seat: SeatId) => s.pl[seat]!.city;
 const used = (s: S, seat: SeatId, flag: string) => s.pl[seat]!.used.includes(flag);
 const cubesHere = (s: S, city: string) => Object.entries(s.cubes[city] ?? {}).filter(([, n]) => n > 0);
 
-export default defineAddon<"boardcore/pandemic">({
+const roles: Module = {
+  id: "roles",
   contributes: {
     roles: ROLES.map((id) => ({ id })),
     maxPlayers: ({ value }) => Math.max(value, 5),
@@ -88,7 +90,7 @@ export default defineAddon<"boardcore/pandemic">({
       }
     },
   },
-  describe: ({ view }) => (view.log.length ? view.log.join(" ") : null),
   text: { legend: () => "On the Brink roles: the Archivist, Containment Specialist, Epidemiologist, Field Operative, Generalist and Troubleshooter join the roles; up to 5 players." },
-});
+};
+export default roles;
 

@@ -8,8 +8,9 @@ import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
 import { ADJ } from "../src/data";
 import { room, seats, type Room } from "./rooms";
+import type { PDPl, PDState } from "../src/types";
 
-type S = PDState & { addons: { [id: string]: Json } };
+type S = PDState;
 const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 const start = async (r: Room, n: number, seed = 1) => {
   const h = await room(r);
@@ -23,7 +24,7 @@ const hand = (s: S, seat: string, items: string[]): S => set(s, seat, { hand: { 
 
 describe("PR #118: an action that raises a question is free", () => {
   it("Mobile Hospital: driving into a city with two colours of cubes still costs an action", async () => {
-    const { p, s: s0 } = await start({ addons: ["events"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["events"] }, 2);
     const me = cur(s0);
     const to = ADJ[s0.pl[me]!.city]![0]!;
     let s = hand(set(s0, me, { role: "Scientist" }), me, ["event:Mobile Hospital"]);
@@ -39,7 +40,7 @@ describe("PR #118: an action that raises a question is free", () => {
   });
 
   it("Archivist: taking a card back that puts him over his hand limit still costs an action", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2);
     const me = cur(s0);
     const here = s0.pl[me]!.city;
     const eight = ["city:Paris", "city:Lima", "city:Tokyo", "city:Osaka", "city:Seoul", "city:Cairo", "city:Delhi", "city:Milan"];

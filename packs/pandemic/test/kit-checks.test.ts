@@ -6,17 +6,17 @@ import { interleave, kitLeakCheck } from "@boardcore-packs/kit";
 import { label, room, seats, type Room } from "./rooms";
 
 const CHECKS: [number, Room][] = [
-  [2, { addons: [], options: { epidemics: 5 } }],
-  [3, { addons: [], options: { epidemics: 5 } }],
-  [4, { addons: [], options: { epidemics: 6 } }],
-  [5, { addons: ["roles"], options: { epidemics: 5 } }],
-  [3, { addons: ["events"], options: { epidemics: 5 } }],
-  [4, { addons: ["virulent-strain"] }],
-  [3, { addons: ["mutation"] }],
-  [3, { addons: ["bioterrorist"] }],
-  [5, { addons: ["bioterrorist"] }],
-  [5, { addons: ["roles", "events", "virulent-strain", "mutation"] }],
-  [5, { addons: ["roles", "events", "virulent-strain", "bioterrorist"] }],
+  [2, { mods: [], options: { epidemics: 5 } }],
+  [3, { mods: [], options: { epidemics: 5 } }],
+  [4, { mods: [], options: { epidemics: 6 } }],
+  [5, { mods: ["roles"], options: { epidemics: 5 } }],
+  [3, { mods: ["events"], options: { epidemics: 5 } }],
+  [4, { mods: ["virulentStrain"] }],
+  [3, { mods: ["mutation"] }],
+  [3, { mods: ["bioterrorist"] }],
+  [5, { mods: ["bioterrorist"] }],
+  [5, { mods: ["roles", "events", "virulentStrain", "mutation"] }],
+  [5, { mods: ["roles", "events", "virulentStrain", "bioterrorist"] }],
 ];
 
 describe("pandemic: hidden information", () => {
@@ -34,7 +34,7 @@ describe("pandemic: hidden information", () => {
   }
 
   it("runs the leak check the same way in the sandbox", async () => {
-    const h = await room({ addons: ["roles", "events", "virulent-strain", "bioterrorist"] });
+    const h = await room({ mods: ["roles", "events", "virulentStrain", "bioterrorist"] });
     const o = { seats: seats(4), options: h.options, seed: 21, every: 6, perActor: 1 };
     const s = kitLeakCheck(h.sandboxed, o);
     console.log(`leak check, sandboxed, 4 seats, roles + events + virulent-strain + bioterrorist: ${s.states} states, ${s.worlds} worlds, ${s.quietActions} quiet actions`);
@@ -45,9 +45,9 @@ describe("pandemic: hidden information", () => {
 
 describe("pandemic: interleaved rooms", () => {
   it("gives interleaved rooms the same games as rooms played alone", async () => {
-    const all = await room({ addons: ["roles", "events", "virulent-strain", "mutation"] });
+    const all = await room({ mods: ["roles", "events", "virulentStrain", "mutation"] });
     expect(await interleave(all, "trusted", 3, { seats: seats(4), maxPlies: 4000 })).toBe(null);
-    expect(await interleave(await room({ addons: ["bioterrorist"] }), "trusted", 3, { seats: seats(4), maxPlies: 4000 })).toBe(null);
-    expect(await interleave(await room({ addons: [] }), "sandboxed", 2, { seats: seats(2), maxPlies: 4000 })).toBe(null);
+    expect(await interleave(await room({ mods: ["bioterrorist"] }), "trusted", 3, { seats: seats(4), maxPlies: 4000 })).toBe(null);
+    expect(await interleave(await room({ mods: [] }), "sandboxed", 2, { seats: seats(2), maxPlies: 4000 })).toBe(null);
   }, 600_000);
 });

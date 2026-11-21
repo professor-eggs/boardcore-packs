@@ -1,11 +1,14 @@
-// Pandemic: On the Brink's Virulent Strain challenge, an add-on of boardcore/pandemic 2.x. Its 8 epidemic cards
+// On the Brink's Virulent Strain challenge (the option `virulentStrain`). Its 8 epidemic cards
 // replace the normal ones (`epidemics`: as many as the difficulty asks, drawn from the 8; the rest stay unseen).
 // The first one drawn names the strain: the standard disease with the most cubes on the board (ties at random).
 // Immediate effects happen after the epidemic's Infect step (`epidemic`, step "infected"); continuing effects
-// apply from its Intensify on and last all game, through the base's modifiers (`infectCubes`, `cureCost`,
+// apply from its Intensify on and last all game, through the kernel's modifiers (`infectCubes`, `cureCost`,
 // `blockLeave`, `infectBonus`, `outbreakSteps`). Mechanics only.
-import { defineAddon, type Json, type Rng } from "@boardcore/pack-sdk";
-import { CITIES } from "./map";
+import type { Json, Rng } from "@boardcore/pack-sdk";
+import { CITIES } from "../data";
+import type { Module } from "../kernel";
+import type { PDOp, PDState } from "../types";
+import { wrap } from "./wrap";
 
 const NAMES = ["Chronic Effect", "Complex Molecular Structure", "Government Interference", "Hidden Pocket", "Rate Effect", "Slippery Slope", "Unacceptable Loss", "Uncounted Populations"];
 const CONTINUING = ["Chronic Effect", "Complex Molecular Structure", "Government Interference", "Rate Effect", "Slippery Slope"];
@@ -27,7 +30,8 @@ function strainOf(s: S, rng: Rng): string {
   return tied[tied.length > 1 ? rng.int(tied.length) : 0]!;
 }
 
-export default defineAddon<"boardcore/pandemic">({
+const virulentStrain: Module = {
+  id: "virulentStrain",
   contributes: {
     epidemics: ({ value }) => ({ pool: NAMES.map((n) => `epidemic:${n}`), n: value.n }),
     epidemic: ({ state, slice, args, rng }) => {
@@ -81,16 +85,5 @@ export default defineAddon<"boardcore/pandemic">({
       return v?.color ? wrap(`The virulent strain is ${v.color}${v.active.length ? ` (lasting: ${v.active.join(", ")})` : ""}.`) : "";
     },
   },
-});
-
-/** Words wrapped within 34 columns, later lines indented: the line shows under the base's layout on a phone. */
-function wrap(text: string, width = 34): string {
-  const lines: string[] = [];
-  let line = "";
-  for (const w of text.split(" ")) {
-    if (line && line.length + 1 + w.length > width) { lines.push(line); line = `  ${w}`; }
-    else line = line ? `${line} ${w}` : w;
-  }
-  if (line) lines.push(line);
-  return lines.join("\n");
-}
+};
+export default virulentStrain;

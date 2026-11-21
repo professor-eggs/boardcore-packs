@@ -7,6 +7,7 @@ import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
 import { BASE_EVENTS, BASE_ROLES, CITIES, CITY_NAMES, POPULATION } from "../src/data";
 import { room, seats, type Room } from "./rooms";
+import type { PDPl, PDState } from "../src/types";
 
 type S = PDState;
 const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
@@ -14,7 +15,7 @@ const start = async (r: Room, n: number, options: { [k: string]: Json } = {}, se
   const h = await room(r);
   return { p: h.trusted, s: h.trusted.setup({ options: { ...h.options, epidemics: 5, openHands: false, ...options }, seats: seats(n), rng: rng(seed) }) as S };
 };
-const base = (n = 2, options: { [k: string]: Json } = {}, seed = 1) => start({ addons: [] }, n, options, seed);
+const base = (n = 2, options: { [k: string]: Json } = {}, seed = 1) => start({ mods: [] }, n, options, seed);
 const act = (p: PackHandle, s: S, seat: string, action: Action, seed = 7) => p.apply(s, seat, action, rng(seed)).state as S;
 const ids = (p: PackHandle, s: S, seat: string, partial: Step[] = []) => p.choices(s, seat, partial)?.options.map((o) => o.id) ?? [];
 const cur = (s: S) => s.players[s.current]!;
@@ -172,7 +173,7 @@ describe("2nd edition: epidemics", () => {
 
 describe("audit fixes (2.0.0)", () => {
   it("the Epidemiologist's free take is offered with no actions left (once during her turn, not an action)", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2);
     const me = cur(s0), them = other(s0);
     let s = hand(hand({ ...set(s0, me, { role: "Epidemiologist" }), actionsLeft: 0 }, them, ["city:Lima", "city:Tokyo"]), me, []);
     expect(ids(p, s, me)).toContain("epidemiologist");
@@ -185,7 +186,7 @@ describe("audit fixes (2.0.0)", () => {
   });
 
   it("the Field Operative may return samples with no actions left (at any time on her turn)", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles"] }, 2);
     const me = cur(s0);
     const s = { ...set(s0, me, { role: "Field Operative", samples: { red: 2 } }), actionsLeft: 0 };
     expect(ids(p, s, me)).toContain("returnSamples");
@@ -193,7 +194,7 @@ describe("audit fixes (2.0.0)", () => {
   });
 
   it("New Assignment: a player swapped off the Archivist with 8 cards discards down to 7", async () => {
-    const { p, s: s0 } = await start({ addons: ["roles", "events"] }, 2);
+    const { p, s: s0 } = await start({ mods: ["roles", "events"] }, 2);
     const me = cur(s0);
     const eight = ["city:Paris", "city:Lima", "city:Tokyo", "city:Osaka", "city:Seoul", "city:Cairo", "city:Delhi", "city:Milan"];
     let s = hand({ ...set(s0, me, { role: "Archivist" }), unusedRoles: s0.unusedRoles.filter((r) => r !== "Archivist") }, me, [...eight, "event:New Assignment"]);

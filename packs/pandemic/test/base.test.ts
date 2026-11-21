@@ -6,10 +6,11 @@ import { Pcg32 } from "@boardcore/pack-sdk/kernel";
 import type { PackHandle } from "@boardcore/core/rules-runtime";
 import { PHASES } from "../src/index";
 import { room, seats } from "./rooms";
+import type { PDState, PDView } from "../src/types";
 
 type S = PDState;
 const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
-const base = async () => (await room({ addons: [] })).trusted;
+const base = async () => (await room({ mods: [] })).trusted;
 const start = (p: PackHandle, n: number, options: { [k: string]: Json } = {}, seed = 1) =>
   p.setup({ options: { epidemics: 5, openHands: false, ...options }, seats: seats(n), rng: rng(seed) }) as S;
 const act = (p: PackHandle, s: S, seat: string, action: Action, seed = 7) => p.apply(s, seat, action, rng(seed)).state as S;
@@ -52,10 +53,10 @@ describe("pandemic base: setup", () => {
     expect(start(p, 3, { openHands: true }).pl.orange!.hand.seenBy).toBe("all");
   });
 
-  it("refuses 5 players and the legendary game without the On the Brink roles add-on", async () => {
+  it("refuses 5 players and the legendary game without the On the Brink roles", async () => {
     const p = await base();
-    expect(() => start(p, 5)).toThrow(/roles add-on/);
-    expect(() => start(p, 3, { epidemics: 7 })).toThrow(/roles add-on/);
+    expect(() => start(p, 5)).toThrow(/On the Brink roles/);
+    expect(() => start(p, 3, { epidemics: 7 })).toThrow(/On the Brink roles/);
   });
 });
 
@@ -232,7 +233,7 @@ describe("pandemic base: resampleHidden", () => {
   });
 
   it("keeps the committed card the same way in the sandbox", async () => {
-    const h = await room({ addons: [] });
+    const h = await room({ mods: [] });
     const s0 = h.sandboxed.setup({ options: { epidemics: 5, openHands: false }, seats: seats(3), rng: rng(1) }) as S;
     const me = cur(s0), other = s0.players.find((x) => x !== me)!;
     for (const [what, s, card, asked] of committed(h.sandboxed, me, other, s0)) {

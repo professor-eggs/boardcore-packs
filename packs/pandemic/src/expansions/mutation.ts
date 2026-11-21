@@ -1,17 +1,19 @@
-// Pandemic: On the Brink's Mutation challenge, an add-on of boardcore/pandemic 2.x. A fifth, purple disease joins
-// the `diseases` registry (12 cubes, cured with city cards of any colour, at least one of a city with purple on it;
+// On the Brink's Mutation challenge (the option `mutation`; not with the Bio-Terrorist). A fifth, purple disease
+// joins the base's diseases (12 cubes, cured with city cards of any colour, at least one of a city with purple on it;
 // in the infection step a city that already has purple gets one more). Two Mutation infection cards start in the
 // infection discards (`startDiscard`) and three Mutation event cards go into the player deck (`playerCards`); both
 // put purple on the bottom card of the infection deck (`infectCard`, `drawCard`, the base's `infectBottom`). To
 // win, purple must be cured too, or gone from the board (`cureGoal`). Mechanics only.
-import { defineAddon } from "@boardcore/pack-sdk";
+import type { Module } from "../kernel";
+import type { PDOp, PDState } from "../types";
 
 const PURPLE = "purple";
 const EVENTS = ["Mutation Threatens", "Mutation Spreads", "Mutation Intensifies"];
 type S = PDState;
 const onBoard = (s: S, c: string) => Object.values(s.cubes).reduce((t, m) => t + (m[c] ?? 0), 0);
 
-export default defineAddon<"boardcore/pandemic">({
+const mutation: Module = {
+  id: "mutation",
   contributes: {
     diseases: [{ id: PURPLE, cubes: 12, cure: "any", follows: true }],
     startDiscard: ({ value }) => [...value, "Mutation! 1", "Mutation! 2"],
@@ -37,4 +39,5 @@ export default defineAddon<"boardcore/pandemic">({
     cureGoal: ({ state, value }) => value && (state!.cured.includes(PURPLE) || onBoard(state!, PURPLE) === 0),
   },
   text: { legend: () => "Mutation: a fifth, purple disease; Mutation cards put purple on the bottom card of the infection deck. Cure it too (or clear it from the board) to win." },
-});
+};
+export default mutation;

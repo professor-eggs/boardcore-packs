@@ -1,13 +1,13 @@
-// boardcore/pandemic 2.x: the published point declarations (11 §10 "Typed declarations"). A global script with
-// no import of its own: an add-on's build includes this file and `defineAddon<"boardcore/pandemic">` checks
-// every contribution against it. A changed signature is a new major version of the base.
-type PDJson = import("@boardcore/pack-sdk").Json;
-type PDZone = import("@boardcore/pack-sdk").Zone<string>;
-type PDPrompt = import("@boardcore/pack-sdk").Prompt;
-type PDStep = import("@boardcore/pack-sdk").Step;
+// boardcore/pandemic 3.x: the pack's own types, shared by the base (engine, actions, index), the kernel and the
+// On the Brink modules under ./expansions. Plain in-pack types: they were the published point declarations
+// (points.d.ts) while the modules were add-on packs. Mechanics only.
+import type { Json, Run, RunView, Zone } from "@boardcore/pack-sdk";
+
+type PDJson = Json;
+type PDZone = Zone<string>;
 
 /** One pawn: its role, city, closed (or open) hand, a stored event (Contingency Planner) and cubes on its role card. */
-interface PDPl {
+export interface PDPl {
   [k: string]: PDJson;
   role: string;
   city: string;
@@ -25,14 +25,18 @@ interface PDPl {
  * one more of it. `flare`: an outbreak of it first takes this many cubes back from the outbreaking city.
  * `standard`: one of the four the base goal counts.
  */
-interface PDDisease { [k: string]: PDJson; id: string; cubes: number; cure: "color" | "any"; follows?: boolean; flare?: number; standard?: boolean }
+export interface PDDisease { [k: string]: PDJson; id: string; cubes: number; cure: "color" | "any"; follows?: boolean; flare?: number; standard?: boolean }
 
-/** An outcome the base or an add-on gives: `winners` empty is a shared loss (or win for none). */
-interface PDOutcome { [k: string]: PDJson; winners: string[]; text: string }
+/** An outcome the base or a module gives: `winners` empty is a shared loss (or win for none). */
+export interface PDOutcome { [k: string]: PDJson; winners: string[]; text: string }
 
-interface PDState {
+export interface PDState {
   [k: string]: PDJson;
   seats: string[];
+  /** The modules switched on (the options), in the kernel's order: see ./kernel.ts. */
+  mods: string[];
+  /** Each module's own slice of state, by module id (null: none). The Bio-Terrorist's holds his secret city. */
+  slices: { [mod: string]: PDJson };
   /** The seats with a pawn (the cure side), in turn order. */
   players: string[];
   pl: { [seat: string]: PDPl };
@@ -83,11 +87,13 @@ interface PDState {
   called: boolean;
   outcome: PDOutcome | null;
   log: string[];
-  run: import("@boardcore/pack-sdk").Run;
+  run: Run;
 }
 
-/** Operations an add-on's handler may return; the base applies them in order. */
-type PDOp =
+/** Operations a module's handler may return; the base applies them in order. */
+export type PDOp =
+  /** The kernel's own: a module's new slice, put first among its handler's operations. */
+  | { [k: string]: PDJson; op: "slice"; mod: string; slice: PDJson }
   | { [k: string]: PDJson; op: "log"; text: string }
   | { [k: string]: PDJson; op: "place"; city: string; color: string; n: number }
   | { [k: string]: PDJson; op: "remove"; city: string; color: string; n: number }
@@ -128,12 +134,19 @@ type PDOp =
   /** Asks `seat` to agree; on yes the operations follow and `from` pays `cost` actions. */
   | { [k: string]: PDJson; op: "consent"; seat: string; from: string; text: string; ops: PDJson[]; cost: number };
 
-/** A turn action an add-on offers the current player (`disabled` a reason, or absent). */
-interface PDActionOpt { [k: string]: PDJson; id: string; label: string; cost: number; disabled?: string }
+/**
+ * A turn action a module offers the current player (`disabled` a reason, or absent). `anyTime`: no action at
+ * all, so its holder is also offered it wherever an event may be played (a response window, a wait, a hand-limit
+ * discard); the holder is known from public information.
+ */
+export interface PDActionOpt { [k: string]: PDJson; id: string; label: string; cost: number; disabled?: string; anyTime?: boolean }
 
-interface PDView {
+export interface PDView {
   [k: string]: PDJson;
   viewer: string;
+  mods: string[];
+  /** Each module's view of its slice for this viewer, by module id. */
+  modules: { [mod: string]: PDJson };
   players: string[];
   current: string;
   turn: number;
@@ -157,65 +170,7 @@ interface PDView {
   grant: string | null;
   justCured: string | null;
   actors: string[];
-  run: import("@boardcore/pack-sdk").RunView;
+  run: RunView;
   log: string[];
   outcome: PDOutcome | null;
-}
-
-interface BoardcorePoints {
-  "boardcore/pandemic": {
-    state: PDState;
-    view: PDView;
-    options: { epidemics: number; openHands: boolean };
-    points: {
-      roles: { shape: "registry"; entry: { [k: string]: PDJson; id: string } };
-      events: { shape: "registry"; entry: { [k: string]: PDJson; id: string; inEpidemic?: boolean } };
-      diseases: { shape: "registry"; entry: PDDisease };
-      phases: { shape: "phases"; op: PDOp };
-      /** The current player's add-on actions. */
-      actions: { shape: "scoring"; result: PDActionOpt[]; args: { seat: string } };
-      /** The prompt (a Prompt) after an add-on action's or event's id and `rest` (`{ prompt: null }`: complete), or null when not its own. */
-      steps: { shape: "scoring"; first: true; result: { [k: string]: PDJson; prompt: PDJson }; args: { id: string; seat: string; rest: PDStep[] } };
-      /** An add-on action's or event's effect. */
-      act: { shape: "event"; op: PDOp; args: { id: string; seat: string; rest: PDStep[] } };
-      /** Whether a seat may play an add-on event now: `why` null, a reason, or "hide"; null when not its own. */
-      eventCheck: { shape: "scoring"; first: true; result: { [k: string]: PDJson; why: string | null }; args: { id: string; seat: string } };
-      actionLimit: { shape: "modifier"; value: number; args: { seat: string } };
-      handLimit: { shape: "modifier"; value: number; args: { seat: string } };
-      cureCost: { shape: "modifier"; value: number; args: { seat: string; color: string } };
-      /** Samples on the seat's role card that may stand in for cards in a cure: `samples` of the colour for `cards` cards (0: none). */
-      cureSwap: { shape: "modifier"; value: { [k: string]: PDJson; cards: number; samples: number }; args: { seat: string; color: string } };
-      infectionRate: { shape: "modifier"; value: number };
-      infectCubes: { shape: "modifier"; value: number; args: { city: string; color: string } };
-      infectBonus: { shape: "modifier"; value: number; args: { drawn: string[] } };
-      outbreakSteps: { shape: "modifier"; value: number; args: { color: string } };
-      /** A reason the pawn may not leave the city, or null. */
-      blockLeave: { shape: "modifier"; value: string | null; args: { seat: string; from: string } };
-      /** Whether a flight's city card is discarded (false: shown and kept). */
-      payCard: { shape: "modifier"; value: boolean; args: { payer: string; card: string; kind: string } };
-      cureGoal: { shape: "modifier"; value: boolean };
-      /** Setup: the epidemic cards are `n` drawn from `pool`. */
-      epidemics: { shape: "modifier"; value: { [k: string]: PDJson; pool: string[]; n: number } };
-      /** Setup: the player cards shuffled into the piles after the hands are dealt. */
-      playerCards: { shape: "modifier"; value: string[] };
-      /** Setup: cards put in the infection discards before play. */
-      startDiscard: { shape: "modifier"; value: string[] };
-      eventCount: { shape: "modifier"; value: number; args: { seats: number } };
-      maxPlayers: { shape: "modifier"; value: number };
-      maxEpidemics: { shape: "modifier"; value: number };
-      /** Setup (draws): the seats that get a pawn. */
-      pawnSeats: { shape: "modifier"; value: string[] };
-      turnStart: { shape: "event"; op: PDOp; args: { seat: string } };
-      onEnter: { shape: "event"; op: PDOp; args: { seat: string; city: string; how: string } };
-      onCure: { shape: "event"; op: PDOp; args: { seat: string; color: string } };
-      /** An epidemic card, after its Infect step ("infected") and after Intensify ("intensified"); draws. */
-      epidemic: { shape: "event"; op: PDOp; args: { step: string; card: string } };
-      /** A drawn player card that is neither city, event nor epidemic. */
-      drawCard: { shape: "event"; op: PDOp; args: { card: string } };
-      /** An infection card that is no city (any operation: handled). */
-      infectCard: { shape: "event"; op: PDOp; args: { card: string } };
-      /** The end (first answer wins): may replace the base's outcome, a lone winner included. */
-      outcome: { shape: "scoring"; first: true; result: PDOutcome; args: { result: PDOutcome } };
-    };
-  };
 }
