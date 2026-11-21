@@ -1,4 +1,4 @@
-// The base alone, through the runtime (trusted adapter): setup, the hidden pick, the end of a turn, payments,
+// The base game (no expansion on), through the runtime (trusted adapter): setup, the hidden pick, the end of a turn, payments,
 // science, the outcome (D79), and seat counts. The rules helpers are pure, so a few are tested directly.
 import { describe, expect, it } from "@effect/vitest";
 import type { Action, Json, Rng, Step } from "@boardcore/pack-sdk";
@@ -14,7 +14,7 @@ const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 let base: PackHandle;
 const h = async () => (base ??= (await loadBoth(readDist(new URL("../dist/", import.meta.url)))).trusted);
 const start = (p: PackHandle, n: number, options: { [k: string]: Json } = {}, seed = 1) =>
-  p.setup({ options: { sideB: false, randomSides: false, teamPlay: false, startCoins: 3, ...options }, seats: seatsOf(NAMES, n), rng: rng(seed) }) as S;
+  p.setup({ options: { leaders: false, leaderPromos: false, cities: false, wonderPack: false, sideB: false, randomSides: false, teamPlay: false, ...options }, seats: seatsOf(NAMES, n), rng: rng(seed) }) as S;
 const pick = (p: PackHandle, s: S, seat: string, path: Step[] = []): Action => {
   const out = [...path];
   for (;;) {
@@ -32,6 +32,8 @@ describe("seven-wonders base: setup", () => {
       const s = start(p, n);
       expect(s.age).toBe(1);
       expect(s.run.order).toEqual(PHASES);
+      expect(s.sets).toEqual(["base"]);
+      expect(Object.keys(s).filter((k) => ["leaders", "cities", "wonderPack"].includes(k))).toEqual([]);
       for (const x of s.seats) {
         expect(s.players[x]!.hand.items).toHaveLength(7);
         expect(s.players[x]!.hand.seenBy).toEqual([x]);
@@ -43,7 +45,7 @@ describe("seven-wonders base: setup", () => {
       expect(s.decks[2]!.items).toHaveLength(7 * n);
     }
   });
-  it("refuses 8 seats without the Cities add-on, 2 seats, and team play on an odd count", async () => {
+  it("refuses 8 seats without Cities, 2 seats, and team play on an odd count", async () => {
     const p = await h();
     expect(() => start(p, 8)).toThrow(/Cities/);
     expect(() => start(p, 2)).toThrow();

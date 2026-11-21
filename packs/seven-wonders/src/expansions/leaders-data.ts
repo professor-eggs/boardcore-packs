@@ -1,7 +1,7 @@
-// The Leaders add-on as data (mechanics only): the leaders, four guilds and Roma. Leaders whose effects the
-// base reads use the base's kinds (discounts, a bank purchase, free guilds, science, points); the rest use this
-// add-on's kinds `leaders:<name>`, or the Cities add-on's `cities:<name>` (read by that add-on from a seat's
-// extras, and dealt only when Cities is in the room). Costs and effects: the base's RULES-AUDIT.md.
+// Leaders as data (mechanics only): the leaders, four guilds and Roma. Leaders whose effects the base rules
+// read use the base's kinds (discounts, a bank purchase, free guilds, science, points); the rest use this
+// module's kinds `leaders:<name>`, or the Cities module's `cities:<name>` (read by that module from a seat's
+// extras, and dealt only when Cities is on too). Costs and effects: ../../RULES-AUDIT.md.
 type Eff = SWEff;
 export interface LeaderDef { name: string; cost: number; eff: Eff[]; set: "leaders" | "cities" | "promo" }
 const L = (name: string, cost: number, ...eff: Eff[]): LeaderDef => ({ name, cost, eff, set: "leaders" });

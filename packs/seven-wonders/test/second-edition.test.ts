@@ -14,7 +14,7 @@ const rng = (n: number): Rng => Pcg32.seeded(BigInt(n), 3n);
 let base: PackHandle;
 const h = async () => (base ??= (await loadBoth(readDist(new URL("../dist/", import.meta.url)))).trusted);
 const start = (p: PackHandle, n = 3, options: { [k: string]: Json } = {}) =>
-  p.setup({ options: { sideB: false, randomSides: false, teamPlay: false, startCoins: 3, ...options }, seats: seatsOf(NAMES, n), rng: rng(1) }) as S;
+  p.setup({ options: { leaders: false, leaderPromos: false, cities: false, wonderPack: false, sideB: false, randomSides: false, teamPlay: false, ...options }, seats: seatsOf(NAMES, n), rng: rng(1) }) as S;
 
 const cardDef = (name: string, age?: number) => {
   const c = BASE_CARDS.find((x) => x.name === name && (age === undefined || x.age === age));

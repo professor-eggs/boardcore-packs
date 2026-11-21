@@ -7,6 +7,10 @@ the closed gaps are in git history. Mechanics are described generically, with no
 engine or SDK should own), **low** (cosmetic, or one line of pack code). The new generic gaps are also written up
 in `GAPS-FOR-PUBLIC.md`, for the public docs.
 
+**3.0.0 (2026-11-21): add-on packs are gone and the expansions are options of this pack.** Everything below was
+written for the add-on packs and is kept as the record. Moot now: N1, N2, N3, N4, N7, N9 and G7. Still true:
+G2, G4, G5, N5 (as a rule for any `begin`), N6, N8. What the fold found is at the end ("3.0.0").
+
 ## Closed by parts 7a and 7b
 
 | Gap | Closed by | What the pack does now |
@@ -130,3 +134,68 @@ in both adapters and the leak checks pass unchanged otherwise.
   answer; this base never ends early, so nothing changes here.
 
 Re-checked at `d0b034a` (boardcore with the runner's `ended` check before a recorded answer).
+
+## 3.0.0: the expansions as options (2026-11-21)
+
+One pack, no add-on API: `definePack` and the phase runner with no point. Each expansion is a module in
+`src/expansions/` behind a small kernel (`src/kernel.ts`: one interface of plain hooks, called in a fixed
+order). What went away: the points, the operations a point returned, slices, the composed registries, card
+summaries passed as arguments, the published stage-building ways, and about 26 add-on phases whose only job was
+to ask a question an event couldn't.
+
+**Still awkward without add-ons**
+
+**F1. A runner's phase order is fixed for the whole game (medium).** The order depends on the options (a draft
+and a recruitment with Leaders, debt phases with Cities), and options arrive in `setup`, after the pack is
+defined. So the pack builds one runner per mix of expansions (8) when it loads and picks one by `state.sets` in
+every handler. And the draft, which happens in round 1 only, stays in every round's order with no seats (N6:
+each empty pick still resolves as a reveal). *Suggest:* an order as a function of the state, or of the round.
+
+**F2. Option validity is checked only at start (medium; public Q106).** A manifest can't say "8 seats only with
+this option" or "this option needs that one", so a room with a refused mix is made and filled and the refusal
+comes at start. The rules are in the README as a table ready to become manifest rules.
+
+**F3. An option can't change another's default (low).** The add-on's preset set 6 starting coins with Leaders;
+an option can't, so the `startCoins` option was dropped and the number follows `leaders`.
+
+**F4. A question's default is fixed when it is asked (low; N8 again).** Two queued questions can touch the same
+thing: a copy of a neighbour's leader, and that neighbour's choice to turn a leader face down. The first one's
+default could name what the second removes, so the pack holds the copy back until the other is answered.
+*Suggest:* a default computed when the question reaches the front, or "first enabled option".
+
+**F5. A `begin` can't wait for answers (low).** The end of a turn needs every debt answer first, so the debt
+questions sit in a phase of their own before it (`debtN`, `debtWar`), in the order even when nobody owes.
+
+**F6. Text needs the options (low).** `describe` and `choices` get the view, not the options, so the view
+carries `sets` (which expansions are on) for the handlers to find their card tables.
+
+**F7. Typing the state (low).** `Omit<State, "run">` on a state with an index signature loses its keys, so each
+module's `setup` returns only its own part.
+
+**F8. One pack, one hash (low).** A fix to one expansion's card is a new version of the whole game; rooms
+without that expansion change hash too. Bundle: 107,692 bytes (the 2.2.0 base alone was 71,149).
+
+**Test-kit numbers** (2026-11-21, Node 22, same kit; public engine as pinned by the submodule)
+
+| Room | Plies | Trusted s (ms/ply) | Sandboxed s (ms/ply) | Costliest call (checks of 2,000) |
+| --- | --- | --- | --- | --- |
+| 3 seats, base | 54 | 0.27 (5.0) | 2.44 (45.1) | 4 |
+| 4 seats, base, B sides | 73 | 0.34 (4.7) | 3.40 (46.6) | 5 |
+| 7 seats, base, random sides | 129 | 0.76 (5.9) | 10.59 (82.1) | 7 |
+| 4 seats, Leaders + promos | 96 | 0.53 (5.5) | 5.38 (56.1) | 6 |
+| 6 seats, Cities, team play | 141 | 0.89 (6.3) | 11.92 (84.5) | 8 |
+| 5 seats, Wonder Pack | 91 | 0.46 (5.1) | 5.19 (57.0) | 6 |
+| 5 seats, Leaders + Cities | 140 | 1.00 (7.2) | 12.11 (86.5) | 8 |
+| 6 seats, Leaders + Wonder Pack, B sides | 148 | 1.20 (8.1) | 12.70 (85.8) | 9 |
+| 7 seats, Cities + Wonder Pack, random sides | 161 | 1.28 (8.0) | 15.85 (98.5) | 8 |
+| 3 seats, all three + promos | 83 | 0.33 (4.0) | 4.16 (50.1) | 5 |
+| 8 seats, all three + promos, team play, B sides | 215 | 1.80 (8.4) | 21.47 (99.9) | 10 |
+
+- The sandboxed cost per ply fell by a third to a half against the add-on packs, and the costliest call in the
+  largest room from 167 interrupt checks to 10: no composing, no state copy per point call.
+- **Games:** the 11 rooms above in both adapters, equal hashes every ply, each BGN verified in both; every seat
+  count (3 to 7, or 8 with Cities) for each of the 8 mixes in the trusted adapter; interleaved rooms equal to
+  the same games played alone.
+- **Leak check:** 13 trusted games over all 8 mixes (3 to 8 seats), 459 states, 2,448 worlds, 5,847 quiet
+  actions, **no findings**; one game in the sandbox (10 states, 40 worlds, 24 quiet actions), same report.
+- **Scientist** (`seven-wonders-scientist` 3.0.0, range `^3.0.0`): a whole 3-seat game with each of the 8 mixes.

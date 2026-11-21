@@ -1,8 +1,8 @@
-// resampleHidden for the base (11 §2, D52, D82): the same state with everything one seat can't see redrawn.
+// resampleHidden for the base rules (11 §2, D52, D82): the same state with everything one seat can't see redrawn.
 // Test kit only. What a seat can't see: the other seats' hands, the discard pile (unless it is looking through
 // it), the cards under the other seats' stages, and the decks of the ages not dealt yet. The redraw keeps every
 // public fact: hand, pile and marker counts and each slot's age. The phase runner then redraws the other seats'
-// pending picks (and the add-ons their own hidden state), so no world keeps another seat's real pick.
+// pending picks (after each expansion has redrawn its own hidden state), so no world keeps another seat's real pick.
 //
 // It is coarser than a player's knowledge: the state keeps no history, so the cards a seat passed on (and so
 // knows are in its neighbour's hand) are redrawn like any other (CONTRACT-GAPS.md, O3).

@@ -1,7 +1,7 @@
 {
   "name": "@boardcore-packs/seven-wonders",
-  "version": "2.2.0",
-  "description": "7 Wonders base on the phase runner, with typed points for its expansion add-ons.",
+  "version": "3.0.0",
+  "description": "7 Wonders on the phase runner, with Leaders, Cities and the Wonder Pack as options.",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",

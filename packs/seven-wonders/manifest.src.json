@@ -1,8 +1,8 @@
 {
   "id": "boardcore/seven-wonders",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "name": "7 Wonders",
-  "description": "Draft cards over three ages to build a city and a wonder (2nd edition). Leaders, Cities and the Wonder Pack are add-on packs. Private local build: not for distribution.",
+  "description": "Draft cards over three ages to build a city and a wonder (2nd edition). Leaders, Cities and the Wonder Pack are options. Private local build: not for distribution.",
   "authors": ["Boardcore"],
   "licence": "UNLICENSED",
   "contract": 1,
@@ -12,10 +12,13 @@
     "names": ["red", "blue", "green", "yellow", "purple", "orange", "teal", "pink"]
   },
   "options": {
+    "leaders": { "title": "Leaders", "type": "boolean", "default": false, "description": "The Leaders expansion: a leader draft before Age I, a leader recruited at the start of each age, Roma, four guilds, and 6 starting coins instead of 3." },
+    "leaderPromos": { "title": "Promo leaders", "type": "boolean", "default": false, "description": "Adds Louis, Stevie and Esteban to the leaders. Needs Leaders." },
+    "cities": { "title": "Cities", "type": "boolean", "default": false, "description": "The Cities expansion: black cards (one per player per age), debt, diplomacy, three guilds, Petra and Byzantium. Needed for 8 players." },
+    "wonderPack": { "title": "Wonder Pack", "type": "boolean", "default": false, "description": "Four more wonder boards: the Great Wall, Stonehenge, Manneken Pis, and Abu Simbel (dealt only with Leaders)." },
     "sideB": { "title": "Play the B side of every wonder", "type": "boolean", "default": false, "description": "Otherwise every wonder is on its A side." },
     "randomSides": { "title": "Random wonder sides", "type": "boolean", "default": false, "description": "Each wonder's side is drawn at random (overrides the B side option)." },
-    "teamPlay": { "title": "Team play", "type": "boolean", "default": false, "description": "4, 6 or 8 players in adjacent pairs: teammates do not fight, conflict tokens are doubled. Seats stay individual in the result." },
-    "startCoins": { "title": "Starting coins", "type": "integer", "default": 3, "minimum": 0, "maximum": 20, "description": "Coins each city starts with (the Leaders add-on presets 6)." }
+    "teamPlay": { "title": "Team play", "type": "boolean", "default": false, "description": "4, 6 or 8 players in adjacent pairs: teammates do not fight, conflict tokens are doubled. Seats stay individual in the result." }
   },
   "hiddenInformation": true,
   "complexity": 3,
