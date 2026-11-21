@@ -775,3 +775,16 @@ mixes, 459 states, 2,448 worlds, 5,847 quiet actions, no findings, and once in t
 playing a whole game with each mix.
 
 
+### 5a again, on the folded pack (2026-11-21, 3.0.0)
+
+Boardcore `pnpm fuzz` at public commit a6cea2c (the engine still has add-ons; this pack uses none), with
+`FUZZ_EXTRA_PACKS` pointed at the built `seven-wonders` 3.0.0 and `seven-wonders-scientist` 3.0.0 (this branch
+at 10c894d), `FUZZ_GAMES="7 Wonders"`, `FUZZ_SEATS=3,5,7`, `FUZZ_STRICT=1`, `FUZZ_WORKERS=3`, `FUZZ_MINUTES=10`,
+first seed 7001. The expansions and the other options were switched at random on the form, like any control.
+
+- One run, 14.4 minutes on the clock (10 minutes of new episodes, then the last ones finish): **17 episodes,
+  3,212 steps, 23 rooms, 8 games played to the end, no failure** (strict: nothing is waved through as known).
+- Notes (refusals the page showed, not failures): 130 refused starts, each a bare `PackFault` from the option
+  rules (team play is never valid at 3, 5 or 7 seats; promo leaders without Leaders), still without the
+  pack's message on screen (Q106); 9 takebacks refused across a secret pick (by design); 4 revoked tokens.
+- 5b (phone play) was not run again: no screen text changed except option labels and the lost id prefixes.
