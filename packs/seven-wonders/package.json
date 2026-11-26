@@ -1,6 +1,6 @@
 {
   "name": "@boardcore-packs/seven-wonders",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "7 Wonders with the Leaders, Cities and Wonder Pack expansions as switchable add-ons.",
   "license": "UNLICENSED",
   "private": true,
