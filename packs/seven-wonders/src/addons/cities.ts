@@ -5,11 +5,11 @@ import { shuffle, type SeatId } from "@boardcore/pack-sdk";
 import { CARDS, leaderDef, type Eff } from "../data";
 import { effectsOf, gain, nbrs, opt, setP, type Conflict, type Ctx, type Item, type Line, type PayCtx, type State } from "../engine";
 import type { SevenAddOn } from "../flow";
+import type { CitiesExt as Ext } from "../ext";
 
-interface Ext { absent: SeatId[]; caligula: { [seat: string]: number }; berenicePly: number; partner: { [seat: string]: SeatId }; diploSpent: SeatId[] }
-const ext = (s: State): Ext => (s.ext.cities as unknown as Ext | undefined) ?? { absent: [], caligula: {}, berenicePly: -1, partner: {}, diploSpent: [] };
+const ext = (s: State): Ext => s.ext.cities ?? { absent: [], caligula: {}, berenicePly: -1, partner: {}, diploSpent: [] };
 const teamPlay = (s: State) => s.addons.includes("teamPlay");
-const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, cities: e as unknown as State["ext"][string] } });
+const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, cities: e } });
 const leaderEffs = (s: State, seat: SeatId) => s.players[seat]!.leaders.filter((l) => !s.players[seat]!.entombed.includes(l)).flatMap((l) => leaderDef(l).eff);
 
 export const cities: SevenAddOn = {

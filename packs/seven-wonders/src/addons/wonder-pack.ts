@@ -4,10 +4,10 @@ import type { SeatId } from "@boardcore/pack-sdk";
 import { leaderDef, type Eff } from "../data";
 import { defOf, effectsOf, gain, leftOf, nbrs, opt, rightOf, setP, stageDefs, type Ctx, type Item, type Line, type State } from "../engine";
 import type { SevenAddOn } from "../flow";
+import type { WonderPackExt as Ext } from "../ext";
 
-interface Ext { skip: { [seat: string]: number }; absent: SeatId[] }
-const ext = (s: State): Ext => (s.ext.wonderPack as unknown as Ext | undefined) ?? { skip: {}, absent: [] };
-const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, wonderPack: e as unknown as State["ext"][string] } });
+const ext = (s: State): Ext => s.ext.wonderPack ?? { skip: {}, absent: [] };
+const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, wonderPack: e } });
 
 /** Stone symbols on a seat's brown cards (a stone-or-clay card shows one). */
 const stones = (s: State, seat: SeatId) => s.players[seat]!.cards.filter((k) => defOf(k).color === "brown")

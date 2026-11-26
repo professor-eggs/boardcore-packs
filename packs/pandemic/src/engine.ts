@@ -4,6 +4,7 @@
 import { shuffle, type Json, type Option, type Prompt, type Rng, type SeatId, type Step } from "@boardcore/pack-sdk";
 import { ADJ, CITIES, COLORS, OUTBREAK_LIMIT, POPULATION, RATES, SUPPLY, type Color } from "./data";
 import type { Hooks } from "./hooks";
+import type { Exts } from "./ext";
 
 export const POINTS = {
   /** chain(s, rng): after the base setup, before the first turn. */
@@ -129,7 +130,8 @@ export interface State {
   ply: number;
   /** Bumped whenever hidden information is read: the action is a commit point (reveal). */
   touched: number;
-  ext: { [addon: string]: Json };
+  /** Each expansion's own state (see ext.ts). */
+  ext: Exts;
 }
 
 export interface ActionDef {

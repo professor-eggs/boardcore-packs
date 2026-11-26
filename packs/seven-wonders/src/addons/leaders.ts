@@ -7,13 +7,13 @@ import {
   type Conflict, type Ctx, type Item, type Line, type PayCtx, type State, type Way,
 } from "../engine";
 import { turnPhase, type Flow, type SevenAddOn } from "../flow";
+import type { LeadersExt as Ext } from "../ext";
 
-interface Ext { courtesan: { [seat: string]: string }; hatPly: number; estebanUsed?: string[]; frozen?: boolean }
-const ext = (s: State): Ext => (s.ext.leaders as unknown as Ext | undefined) ?? { courtesan: {}, hatPly: -1 };
+const ext = (s: State): Ext => s.ext.leaders ?? { courtesan: {}, hatPly: -1 };
 /** Esteban (a Leaders goodie): once per game, freeze the passing of hands for one turn. */
 const canFreeze = (s: State, seat: SeatId) => !(ext(s).estebanUsed ?? []).includes(seat) && !ext(s).frozen &&
   s.players[seat]!.hand.length >= 3 && active(s, seat).some((l) => leaderDef(l).eff.some((e) => e.k === "esteban"));
-const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, leaders: e as unknown as State["ext"][string] } });
+const withExt = (s: State, e: Ext): State => ({ ...s, ext: { ...s.ext, leaders: e } });
 
 const active = (s: State, seat: SeatId) => s.players[seat]!.leaders.filter((l) => !s.players[seat]!.entombed.includes(l));
 const effs = (s: State, seat: SeatId, ctx: Ctx) => effectsOf(s, seat, ctx).map((e) => e.eff);

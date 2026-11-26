@@ -6,10 +6,10 @@ import { shuffle, type Rng, type SeatId } from "@boardcore/pack-sdk";
 import { CITIES, CITY_NAMES, COLORS, VS_EPIDEMICS, type Color } from "../data";
 import { cubesIn, cur, onBoard, place, say, touch, type Ctx, type State } from "../engine";
 import type { PandemicAddOn } from "../addon";
+import type { VirulentStrainExt as Ext } from "../ext";
 
-interface Ext { color: Color | null; active: string[]; seen: string[] }
-const ext = (s: State): Ext => ({ color: null, active: [], seen: [], ...(s.ext.virulentStrain as unknown as Ext | undefined) });
-const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, virulentStrain: { ...ext(s), ...e } as unknown as State["ext"][string] } });
+const ext = (s: State): Ext => ({ color: null, active: [], seen: [], ...s.ext.virulentStrain });
+const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, virulentStrain: { ...ext(s), ...e } } });
 export const CONTINUING = ["Chronic Effect", "Complex Molecular Structure", "Government Interference", "Rate Effect", "Slippery Slope"];
 const on = (s: State, name: string) => { const e = ext(s); return e.color !== null && e.active.includes(name); };
 const nameOf = (card: string) => card.slice(3);
