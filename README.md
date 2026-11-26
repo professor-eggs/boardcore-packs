@@ -12,8 +12,9 @@ Xavier's own Boardcore packs of published games, for personal use only. Never di
 
 ```sh
 pnpm setup        # submodule, Boardcore's install and build, then this repo's install
-pnpm check        # typecheck, build every pack, run every pack's tests
+pnpm lint         # Boardcore's pack rules (determinism, no module state, SDK-only imports)
+pnpm check        # lint, typecheck, build every pack, run every pack's tests
 pnpm packs out/   # pack files for a local server
 ```
 
-To move to a newer Boardcore: `git -C boardcore fetch origin <ref> && git -C boardcore checkout <commit>`, run `pnpm setup` and `pnpm check`, and commit the new submodule pointer.
+To move to a newer Boardcore: `git -C boardcore fetch origin <ref> && git -C boardcore checkout <commit>`, run `pnpm setup` and `pnpm check`, compare the pack override in `boardcore/.oxlintrc.json` with ours in `.oxlintrc.json` (copy any new pack rule), and commit the new submodule pointer.
