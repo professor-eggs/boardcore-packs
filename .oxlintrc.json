@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["./boardcore/tools/lint/boardcore-plugin.mjs"],
+  "categories": { "correctness": "error" },
+  "ignorePatterns": ["**/dist/**", "boardcore/**"],
+  "overrides": [
+    {
+      "files": ["packs/*/src/**"],
+      "rules": {
+        "boardcore/determinism": "error",
+        "boardcore/no-module-state": "error",
+        "boardcore/only-sdk-imports": "error",
+        "no-eval": "error"
+      }
+    }
+  ]
+}
