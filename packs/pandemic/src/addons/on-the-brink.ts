@@ -10,21 +10,11 @@ import {
 } from "../engine";
 import { canPurple, pickPurple, purpleCards } from "../purple";
 import type { PandemicAddOn } from "../addon";
+import type { OnTheBrinkExt as Ext } from "../ext";
 
-interface Ext {
-  samples: { [seat: string]: { [c: string]: number } };
-  peek: { [seat: string]: string[] };
-  /** Commercial Travel Ban: in front of this player until his next turn begins. */
-  ctb: SeatId | null;
-  /** Mobile Hospital is on for this turn. */
-  mobile: boolean;
-  /** Special Orders: the current player may move this pawn this turn. */
-  orders: SeatId | null;
-  justCured: { color: string; ply: number } | null;
-}
 const E0: Ext = { samples: {}, peek: {}, ctb: null, mobile: false, orders: null, justCured: null };
-const ext = (s: State): Ext => ({ ...E0, ...(s.ext.onTheBrink as unknown as Ext | undefined) });
-const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, onTheBrink: { ...ext(s), ...e } as unknown as State["ext"][string] } });
+const ext = (s: State): Ext => ({ ...E0, ...s.ext.onTheBrink });
+const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, onTheBrink: { ...ext(s), ...e } } });
 const pick = (label: string, options: { id: string; label: string; disabled?: string }[]) => (options.length ? { kind: "pick" as const, label, options } : null);
 const here = (s: State, seat: SeatId) => s.pl[seat]!.city;
 const used = (s: State, seat: SeatId, f: string) => s.pl[seat]!.used.includes(f);

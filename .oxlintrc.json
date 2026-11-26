@@ -1,11 +1,23 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "jsPlugins": ["./boardcore/tools/lint/boardcore-plugin.mjs"],
-  "categories": { "correctness": "error" },
-  "ignorePatterns": ["**/dist/**", "boardcore/**"],
+  "jsPlugins": [
+    "./boardcore/tools/lint/boardcore-plugin.mjs"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "boardcore/no-chained-type-assertions": "error"
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "boardcore/**"
+  ],
   "overrides": [
     {
-      "files": ["packs/*/src/**"],
+      "files": [
+        "packs/*/src/**"
+      ],
       "rules": {
         "boardcore/determinism": "error",
         "boardcore/no-module-state": "error",

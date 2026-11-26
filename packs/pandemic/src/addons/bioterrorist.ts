@@ -7,28 +7,17 @@ import { ADJ, CITIES, CITY_NAMES } from "../data";
 import { nextQueued, onBoard, opt, place, removeCubes, say, touch, type ActionDef, type Ctx, type State } from "../engine";
 import { curePurple, purpleFollows, purpleGoal } from "../purple";
 import type { PandemicAddOn } from "../addon";
+import type { BioterroristExt as Ext } from "../ext";
 
-interface Ext {
-  seat: SeatId;
-  city: string | null;
-  hand: string[];
-  captured: boolean;
-  out: boolean;
-  left: number;
-  freeDrive: number;
-  used: { [k: string]: number };
-  /** Over the hand limit after a draw: one card must go before anything else. */
-  over: boolean;
-  /** The last public sighting. */
-  sighting: string | null;
-  /** His location sheet: every action, by turn, for his eyes only. */
-  sheet: string[];
-  turn: number;
-}
 export const BT_HAND_LIMIT = 7;
 const BASIC_MAX = 2;
-const ext = (s: State): Ext => s.ext.bioterrorist as unknown as Ext;
-const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, bioterrorist: { ...ext(s), ...e } as unknown as State["ext"][string] } });
+/** His state; set up by his setup handler, so present whenever his other handlers run. */
+const ext = (s: State): Ext => {
+  const e = s.ext.bioterrorist;
+  if (!e) throw new Error("the Bio-Terrorist is not set up");
+  return e;
+};
+const withExt = (s: State, e: Partial<Ext>): State => ({ ...s, ext: { ...s.ext, bioterrorist: { ...ext(s), ...e } } });
 /** On the board: in a city with a player (or captured, on a role card). */
 const spotted = (s: State) => { const e = ext(s); return e.city !== null && (e.captured || s.players.some((x) => s.pl[x]!.city === e.city)); };
 const note = (s: State, line: string) => withExt(s, { sheet: [...ext(s).sheet, `Turn ${ext(s).turn}: ${line}`] });
@@ -166,12 +155,12 @@ export const bioterrorist: PandemicAddOn = {
       ...(players < 2 ? ["The Bio-Terrorist needs at least 2 other players"] : []),
     ],
     setup(s: State): State {
-      const seat = String((s.ext as { btSeat?: string }).btSeat ?? s.seats[s.seats.length - 1]);
+      const seat = String(s.ext.btSeat ?? s.seats[s.seats.length - 1]);
       // 2 infection cards, dealt after the 9 starting infections.
       const hand = s.infDeck.slice(0, 2);
       s = { ...s, infDeck: s.infDeck.slice(2), supply: { ...s.supply, purple: 12 } };
       const e: Ext = { seat, city: null, hand, captured: false, out: false, left: 0, freeDrive: 0, used: {}, over: false, sighting: null, sheet: [], turn: 0 };
-      return { ...s, ext: { ...s.ext, bioterrorist: e as unknown as State["ext"][string] }, phase: "btStart" };
+      return { ...s, ext: { ...s.ext, bioterrorist: e }, phase: "btStart" };
     },
     betweenTurns: (q: string[], s: State) => (ext(s).out ? q : [...q, "bt"]),
     // His budget for the turn he takes after this player's.

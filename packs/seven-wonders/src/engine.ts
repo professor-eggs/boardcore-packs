@@ -3,6 +3,7 @@
 import { compareStrings, idiv, shuffle, type Action, type Json, type Option, type Prompt, type Rng, type SeatId, type Step } from "@boardcore/pack-sdk";
 import { cardDef, CARDS, parseCost, wonderDef, WONDERS, type Color, type Eff } from "./data";
 import { makeHooks, type AddOn, type Hooks } from "./hooks";
+import type { Exts } from "./ext";
 
 export const RES = "WSCOGLP";
 export const RAW = "WSCO";
@@ -103,7 +104,8 @@ export interface State {
   log: string[];
   logPly: number;
   ply: number;
-  ext: { [addon: string]: Json };
+  /** Each expansion's own state (see ext.ts). */
+  ext: Exts;
 }
 
 export interface Item { type: "card" | "stage" | "leader"; name: string; age: number; color: Color | "wonder" | "leader"; free?: string }

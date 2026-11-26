@@ -4,7 +4,7 @@ import { definePack, type Action, type Json, type Prompt, type SeatId, type Step
 import { CITIES, CITY_NAMES, RATES } from "./data";
 import { act, actors, prompt, settle } from "./actions";
 import { cardLabel, cur, POINTS, setupState, type ActionDef, type Ctx, type EventDef, type Opts, type State } from "./engine";
-import { makeHooks, type AddOn } from "./hooks";
+import { makeHooks, type AddOn, type Hooks } from "./hooks";
 import type { PandemicAddOn } from "./addon";
 import { base } from "./addons/base";
 import { onTheBrink } from "./addons/on-the-brink";
@@ -16,9 +16,13 @@ import { lab } from "./addons/lab";
 const ADDONS: { [id: string]: PandemicAddOn } = { base, onTheBrink, virulentStrain, mutation, bioterrorist, lab };
 const ORDER = ["onTheBrink", "virulentStrain", "mutation", "bioterrorist"] as const;
 
+/** Stands in for the hooks while the add-on table is built: handlers capture the context, not the hooks. */
+const unbound = (): never => { throw new Error("hooks used before the add-ons are bound"); };
+const UNBOUND: Hooks = { chain: unbound, collect: unbound, first: unbound };
+
 /** The game's context: hooks bound to the add-ons switched on, and the merged registries. */
 function ctxOf(active: readonly string[]): Ctx {
-  const ctx: Ctx = { hooks: null as unknown as Ctx["hooks"], actions: [], events: {}, phases: {}, interrupts: {} };
+  const ctx: Ctx = { hooks: UNBOUND, actions: [], events: {}, phases: {}, interrupts: {} };
   const table: { [id: string]: AddOn } = {};
   for (const id of active) {
     const a = ADDONS[id];

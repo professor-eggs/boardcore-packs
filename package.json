@@ -10,7 +10,7 @@
     "build": "pnpm -r --if-present run build",
     "typecheck": "tsc -p .",
     "test": "pnpm build && vitest run",
-    "lint": "oxlint -c .oxlintrc.json packs tools",
+    "lint": "oxlint -c .oxlintrc.json --report-unused-disable-directives-severity=error packs tools",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "packs": "node tools/local-packs.mjs"
   },
