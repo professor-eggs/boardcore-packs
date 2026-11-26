@@ -2,3 +2,4 @@ node_modules/
 dist/
 local-packs/
 out/
+.claude/settings.local.json
