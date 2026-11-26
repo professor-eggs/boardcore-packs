@@ -1,7 +1,7 @@
 // Pandemic base game: state, cubes and outbreaks, the player and infection decks, epidemics, the turn
 // loop and the end. Add-ons (On the Brink, Virulent Strain, Mutation, the Bio-Terrorist) reach it through
 // the extension points in POINTS and the action, role and event registries; none forks this file.
-import { shuffle, type Json, type Option, type Prompt, type Rng, type SeatId, type Step } from "@boardcore/pack-sdk";
+import { shuffle, type Json, type Option, type Prompt, type Rng, type SeatId } from "@boardcore/pack-sdk";
 import { ADJ, CITIES, COLORS, OUTBREAK_LIMIT, POPULATION, RATES, SUPPLY, type Color } from "./data";
 import type { Hooks } from "./hooks";
 import type { Exts } from "./ext";
@@ -142,8 +142,8 @@ export interface ActionDef {
   check(s: State, seat: SeatId, ctx: Ctx): string | null;
   label(s: State, seat: SeatId): string;
   /** Prompts after the action id (null when complete). */
-  steps(s: State, seat: SeatId, rest: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, rest: Step[], ctx: Ctx, rng: Rng): State;
+  steps(s: State, seat: SeatId, rest: string[], ctx: Ctx): Prompt | null;
+  apply(s: State, seat: SeatId, rest: string[], ctx: Ctx, rng: Rng): State;
 }
 
 export interface EventDef {
@@ -154,19 +154,19 @@ export interface EventDef {
   holdsTurn?(s: State): boolean;
   /** null: playable now by this seat; a string: why not; "hide": not offered. */
   check(s: State, seat: SeatId, ctx: Ctx): string | null;
-  steps(s: State, seat: SeatId, rest: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, rest: Step[], ctx: Ctx, rng: Rng): State;
+  steps(s: State, seat: SeatId, rest: string[], ctx: Ctx): Prompt | null;
+  apply(s: State, seat: SeatId, rest: string[], ctx: Ctx, rng: Rng): State;
 }
 
 export interface PhaseDef {
   actors(s: State, ctx: Ctx): SeatId[];
-  prompt(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, action: Step[], ctx: Ctx, rng: Rng): State;
+  prompt(s: State, seat: SeatId, partial: string[], ctx: Ctx): Prompt | null;
+  apply(s: State, seat: SeatId, action: string[], ctx: Ctx, rng: Rng): State;
 }
 
 export interface InterruptDef {
-  prompt(s: State, seat: SeatId, partial: Step[], data: Json, ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, action: Step[], data: Json, ctx: Ctx, rng: Rng): State;
+  prompt(s: State, seat: SeatId, partial: string[], data: Json, ctx: Ctx): Prompt | null;
+  apply(s: State, seat: SeatId, action: string[], data: Json, ctx: Ctx, rng: Rng): State;
   auto(s: State, seat: SeatId, data: Json, ctx: Ctx, rng: Rng): State;
 }
 

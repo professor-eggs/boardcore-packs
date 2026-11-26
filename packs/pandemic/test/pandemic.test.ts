@@ -204,3 +204,15 @@ describe("pandemic add-ons", () => {
     expect(LAB_REASON).toMatch(/In the Lab/);
   });
 });
+
+describe("pandemic: a partial path that isn't option ids", () => {
+  it("leads to no prompt, and such an action is refused", () => {
+    const s = start(2);
+    const me = pack.status(s).actors[0]!;
+    const bad: Step[][] = [[{ drive: 1 }], [["drive"]], ["drive", { Atlanta: 1 }], ["ev:x", ["y"]]];
+    for (const p of bad) {
+      expect(pack.choices(s, me, p)).toBeNull();
+      expect(() => pack.apply(s, me, p, rngOf(1))).toThrow(/not a legal action/);
+    }
+  });
+});

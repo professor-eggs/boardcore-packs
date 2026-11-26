@@ -42,9 +42,9 @@ const moveAction = (kind: "drive" | "direct" | "charter" | "shuttle", word: stri
 });
 
 /** Station placement, removing one when all six are out. */
-const stationSteps = (s: State, rest: Step[], _city: string): Prompt | null =>
+const stationSteps = (s: State, rest: string[], _city: string): Prompt | null =>
   s.stations.length >= MAX_STATIONS && rest.length === 0 ? pick("All research stations are out: move one", s.stations.map((c) => opt(`rm:${c}`, `Move the one in ${c}`))) : null;
-export const putStation = (s: State, city: string, rest: Step[]): State => {
+export const putStation = (s: State, city: string, rest: string[]): State => {
   const rm = rest.find((x) => String(x).startsWith("rm:"));
   const stations = rm ? s.stations.filter((c) => c !== String(rm).slice(3)) : s.stations;
   return say({ ...s, stations: [...stations, city] }, `A research station goes up in ${city}.`);
@@ -55,7 +55,7 @@ export const putStation = (s: State, city: string, rest: Step[]): State => {
  * `mustOne`, at least one chosen card must pass it. Returns null when the choice is complete, or when every
  * eligible card is needed (no choice to make).
  */
-export function pickCards(eligible: string[], need: number, chosen: Step[], label: string, mustOne?: (k: string) => boolean): Prompt | null {
+export function pickCards(eligible: string[], need: number, chosen: string[], label: string, mustOne?: (k: string) => boolean): Prompt | null {
   if (chosen.length >= need || (chosen.length === 0 && eligible.length === need)) return null;
   const last = chosen.length ? eligible.indexOf(String(chosen[chosen.length - 1])) : -1;
   const has = !mustOne || chosen.some((k) => mustOne(String(k)));
@@ -71,7 +71,7 @@ export function pickCards(eligible: string[], need: number, chosen: Step[], labe
 }
 
 /** The cards picked by pickCards (all eligible ones when there was no choice). */
-export const pickedCards = (eligible: string[], need: number, chosen: Step[]) => (chosen.length ? chosen.map(String) : eligible.slice(0, need));
+export const pickedCards = (eligible: string[], need: number, chosen: string[]) => (chosen.length ? chosen.map(String) : eligible.slice(0, need));
 
 /** Whether `need` cards can be chosen with at least one passing `mustOne`. */
 export const canPick = (eligible: string[], need: number, mustOne?: (k: string) => boolean) => eligible.length >= need && (!mustOne || eligible.some(mustOne));
@@ -292,12 +292,12 @@ export function eventOptions(s: State, seat: SeatId, ctx: Ctx): Prompt["options"
   });
 }
 
-export function eventSteps(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Prompt | null {
+export function eventSteps(s: State, seat: SeatId, partial: string[], ctx: Ctx): Prompt | null {
   const def = ctx.events[String(partial[0]).slice(3)];
   return def ? def.steps(s, seat, partial.slice(1), ctx) : null;
 }
 
-export function playEvent(s: State, seat: SeatId, action: Action, ctx: Ctx, rng: Rng): State {
+export function playEvent(s: State, seat: SeatId, action: string[], ctx: Ctx, rng: Rng): State {
   const name = String(action[0]).slice(3);
   const card = `event:${name}`;
   const p = s.pl[seat]!;
@@ -340,6 +340,10 @@ const WINDOW_TEXT: { [phase: string]: [string, string, string] } = {
 };
 
 export function prompt(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Prompt | null {
+  // Every prompt of this pack is a pick, so a step is an option id. The engine checks an action's steps against
+  // the prompts before `apply`, but a host passes a partial path to `choices` as it came: one holding a step that
+  // isn't a string leads to no prompt.
+  if (!partial.every((x): x is string => typeof x === "string")) return null;
   if (!actors(s, ctx).includes(seat)) return null;
   if (s.pending.length) {
     const it = s.pending[0]!;
@@ -368,7 +372,7 @@ export function prompt(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Promp
   return ph ? ph.prompt(s, seat, partial, ctx) : null;
 }
 
-const validPath = (s: State, seat: SeatId, path: Action, ctx: Ctx) => {
+const validPath = (s: State, seat: SeatId, path: Action, ctx: Ctx): path is string[] => {
   for (let i = 0; i <= path.length; i++) {
     const p = prompt(s, seat, path.slice(0, i), ctx);
     if (i === path.length) return p === null && i > 0;

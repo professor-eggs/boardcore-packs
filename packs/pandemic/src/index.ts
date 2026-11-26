@@ -1,6 +1,6 @@
 // Pandemic (base game) with On the Brink: new roles and events, Virulent Strain, Mutation and the
 // Bio-Terrorist, each a switchable add-on. Mechanics only. Rules summary and gaps: ../README.md.
-import { definePack, type Action, type Json, type Prompt, type SeatId, type Step, type Viewer } from "@boardcore/pack-sdk";
+import { definePack, type Action, type Json, type Prompt, type SeatId, type Viewer } from "@boardcore/pack-sdk";
 import { CITIES, CITY_NAMES, RATES } from "./data";
 import { act, actors, prompt, settle } from "./actions";
 import { cardLabel, cur, POINTS, setupState, type ActionDef, type Ctx, type EventDef, type Opts, type State } from "./engine";
@@ -85,7 +85,7 @@ function viewOf(s: State, viewer: Viewer): View {
 }
 
 function firstPath(s: State, seat: SeatId, ctx: Ctx): Action | null {
-  const path: Step[] = [];
+  const path: string[] = [];
   for (let i = 0; i < 8; i++) {
     const p: Prompt | null = prompt(s, seat, path, ctx);
     if (!p) return path.length ? path : null;

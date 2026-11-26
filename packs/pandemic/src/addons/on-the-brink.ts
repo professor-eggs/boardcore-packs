@@ -1,7 +1,7 @@
 // Pandemic: On the Brink — six roles, eight events, the 5th player, 2 events per player, the legendary game.
 // (Virulent Strain, Mutation and the Bio-Terrorist are separate add-ons. The Petri dishes hold the cube
 // supplies: the limits are in data.ts.)
-import type { SeatId, Step } from "@boardcore/pack-sdk";
+import type { Json, SeatId } from "@boardcore/pack-sdk";
 import { ADJ, CITIES, CITY_NAMES, OTB_EVENTS, OTB_ROLES, RATES } from "../data";
 import { canPick, doMove, markTreated, markUsed, moveOptions, pickCards, pickedCards } from "../actions";
 import {
@@ -125,7 +125,7 @@ const onlyCurrent = (s: State, seat: SeatId) => (s.outcome ? "hide" : seat === c
 const anyTime = (s: State) => (s.outcome ? "hide" : null);
 
 /** Rapid Vaccine Deployment: cubes picked one at a time (cities in map order, a city may repeat), then "done". */
-function rvdSteps(s: State, rest: Step[]) {
+function rvdSteps(s: State, rest: string[]) {
   const c = ext(s).justCured?.color ?? "";
   const chosen = rest.filter((x) => x !== "done").map(String);
   if (rest.includes("done") || chosen.length >= 5) return null;
@@ -205,7 +205,7 @@ const EVENTS: EventDef[] = [
 function rvdNow(s: State) { return ext(s).justCured?.ply === s.ply; }
 
 /** Cubes on the board as "city:colour" (a city's cube may be picked twice when it has two). */
-function cubeIds(s: State, chosen: Step[]): string[] {
+function cubeIds(s: State, chosen: string[]): string[] {
   const out: string[] = [];
   for (const city of CITY_NAMES) for (const [c, n] of Object.entries(s.cubes[city] ?? {})) {
     const taken = chosen.filter((x) => x === `${city}:${c}`).length;
@@ -214,11 +214,16 @@ function cubeIds(s: State, chosen: Step[]): string[] {
   return out;
 }
 
+/** The Mobile Hospital interrupt's data is the city it was queued for (queued in `onEnter` below). */
+const mobileCity = (data: Json): string => {
+  if (typeof data !== "string") throw new Error("the mobileHospital interrupt's data is a city");
+  return data;
+};
 /** Mobile Hospital in a city with cubes of several colours: the player picks which one goes. */
 const mobileInterrupt: InterruptDef = {
-  prompt: (s, _seat, partial, data) => (partial.length || cubesHere(s, String(data)).length < 2 ? null : pick(`Mobile Hospital: remove a cube in ${String(data)}`, cubesHere(s, String(data)).map(([c, n]) => opt(c, `${c} (${n})`)))),
-  apply: (s, seat, action, data) => mobileRemove(s, seat, String(data), String(action[0])),
-  auto(s, seat, data) { const cs = cubesHere(s, String(data)); return cs.length ? mobileRemove(s, seat, String(data), cs[0]![0]) : s; },
+  prompt: (s, _seat, partial, data) => (partial.length || cubesHere(s, mobileCity(data)).length < 2 ? null : pick(`Mobile Hospital: remove a cube in ${mobileCity(data)}`, cubesHere(s, mobileCity(data)).map(([c, n]) => opt(c, `${c} (${n})`)))),
+  apply: (s, seat, action, data) => mobileRemove(s, seat, mobileCity(data), String(action[0])),
+  auto(s, seat, data) { const cs = cubesHere(s, mobileCity(data)); return cs.length ? mobileRemove(s, seat, mobileCity(data), cs[0]![0]) : s; },
 };
 function mobileRemove(s: State, seat: SeatId, city: string, c: string): State {
   s = say(removeCubes(s, city, c, 1), `Mobile Hospital removes a ${c} cube in ${city}.`);

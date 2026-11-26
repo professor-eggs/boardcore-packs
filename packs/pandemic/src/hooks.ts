@@ -5,9 +5,14 @@ import type { Json } from "@boardcore/pack-sdk";
 
 export type Combine = "chain" | "collect" | "first";
 
-/** A handler table keyed by point name. Each handler's signature is fixed by the point (see POINTS in engine.ts). */
+/**
+ * A handler table keyed by point name. Each handler's signature is fixed by the point (see POINTS in engine.ts),
+ * so the table can't state it: a handler takes what its point passes and its result is `unknown` here. The caller
+ * of a point names the result type (`chain<number>(...)`), and `makeHooks` hands the result back as that type
+ * unchecked: the point's comment in POINTS is the only statement of what its handlers return.
+ */
 // biome-ignore lint: handler signatures vary per point
-export type Handlers = { [point: string]: (...args: any[]) => any };
+export type Handlers = { [point: string]: (...args: any[]) => unknown };
 
 export interface AddOn {
   id: string;
@@ -36,15 +41,15 @@ export function makeHooks(table: { [id: string]: AddOn }, active: readonly strin
     return list.flatMap((a) => (a.handlers[point] ? [a.handlers[point]!] : []));
   };
   return {
-    chain: (point, value, ...args) => handlers(point, "chain").reduce((v, h) => h(v, ...args), value),
-    collect: (point, ...args) => handlers(point, "collect").flatMap((h) => {
+    chain: <T>(point: string, value: T, ...args: unknown[]) => handlers(point, "chain").reduce((v, h) => h(v, ...args) as T, value),
+    collect: <T>(point: string, ...args: unknown[]) => handlers(point, "collect").flatMap((h) => {
       const r = h(...args);
-      return r === null || r === undefined ? [] : Array.isArray(r) ? r : [r];
+      return r === null || r === undefined ? [] : Array.isArray(r) ? (r as T[]) : [r as T];
     }),
-    first: (point, fallback, ...args) => {
+    first: <T>(point: string, fallback: T, ...args: unknown[]) => {
       for (const h of handlers(point, "first")) {
         const r = h(...args);
-        if (r !== null && r !== undefined) return r;
+        if (r !== null && r !== undefined) return r as T;
       }
       return fallback;
     },

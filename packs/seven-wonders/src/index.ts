@@ -1,6 +1,6 @@
 // 7 Wonders (base game) with Leaders, Cities and the Wonder Pack as switchable add-ons. Mechanics only:
 // card names and numbers, no rulebook text. Rules summary and gaps: ../README.md.
-import { compareStrings, definePack, type Action, type Json, type Prompt, type SeatId, type Step, type Viewer } from "@boardcore/pack-sdk";
+import { compareStrings, definePack, type Action, type Json, type Prompt, type SeatId, type Viewer } from "@boardcore/pack-sdk";
 import { leaderDef, wonderDef } from "./data";
 import {
   finalScores, keyName, POINTS, RES_NAME, score, setupState, stageDefs, total, type Ctx, type Line, type Opts, type State,
@@ -83,7 +83,7 @@ function viewOf(s: State, viewer: Viewer): View {
 
 /** The first legal path, for timeouts: the first enabled option at each step. */
 function firstPath(s: State, seat: SeatId, f: Flow): Action | null {
-  const path: Step[] = [];
+  const path: string[] = [];
   for (let i = 0; i < 6; i++) {
     const p: Prompt | null = prompt(s, seat, path, f);
     if (!p) return path.length ? path : null;
@@ -134,7 +134,8 @@ export default definePack<State, View>({
     return { actors: [], outcome: { winners: top, text: `${top.join(" and ")} win${top.length === 1 ? "s" : ""}: ${ranking}` } };
   },
 
-  describe(s, seat, action, viewer) {
+  describe(s, seat, action: string[], viewer) {
+    // Every prompt of this pack is a pick, and the engine checks an action against the prompts first: each step is an option id.
     const resolved = s.logPly === s.ply;
     const id = String(action[0]);
     let head: string;

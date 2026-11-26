@@ -12,7 +12,7 @@ import type { AddOn } from "./hooks";
 export interface PhaseDef {
   /** Seats still to choose. */
   actors(s: State, ctx: Ctx): SeatId[];
-  prompt(s: State, seat: SeatId, partial: Step[], ctx: Ctx): Prompt | null;
+  prompt(s: State, seat: SeatId, partial: string[], ctx: Ctx): Prompt | null;
   /** Runs once every actor has chosen (their paths are in s.picks). */
   resolve(s: State, ctx: Ctx, rng: Rng): State;
   /** Runs after the resolution's interrupts and end of turn: where the game goes next. */
@@ -21,8 +21,8 @@ export interface PhaseDef {
 
 export interface InterruptDef {
   /** null: nothing to decide (auto runs instead). */
-  prompt(s: State, seat: SeatId, partial: Step[], data: unknown, ctx: Ctx): Prompt | null;
-  apply(s: State, seat: SeatId, action: Action, data: unknown, ctx: Ctx, rng: Rng): State;
+  prompt(s: State, seat: SeatId, partial: string[], data: unknown, ctx: Ctx): Prompt | null;
+  apply(s: State, seat: SeatId, action: string[], data: unknown, ctx: Ctx, rng: Rng): State;
   auto(s: State, seat: SeatId, data: unknown, ctx: Ctx, rng: Rng): State;
 }
 
@@ -53,6 +53,10 @@ export function actors(s: State, f: Flow): SeatId[] {
 }
 
 export function prompt(s: State, seat: SeatId, partial: Step[], f: Flow): Prompt | null {
+  // Every prompt of this pack is a pick, so a step is an option id. The engine checks an action's steps against
+  // the prompts before `apply`, but a host passes a partial path to `choices` as it came: one holding a step that
+  // isn't a string leads to no prompt.
+  if (!partial.every((x): x is string => typeof x === "string")) return null;
   if (!actors(s, f).includes(seat)) return null;
   if (s.phase === "interrupt") {
     const it = s.pending[0]!;
@@ -118,7 +122,7 @@ export function settle(s: State, f: Flow, rng: Rng): State {
 
 // ---- Base phases -------------------------------------------------------------------------------------------
 
-const handPrompt = (s: State, seat: SeatId, partial: Step[], f: Flow, label: string): Prompt | null => {
+const handPrompt = (s: State, seat: SeatId, partial: string[], f: Flow, label: string): Prompt | null => {
   const p = s.players[seat]!;
   if (partial.length === 0) return { kind: "pick", label, options: p.hand.map((k, i) => opt(`c:${i}`, keyName(k))) };
   const i = Number(String(partial[0]).slice(2));
