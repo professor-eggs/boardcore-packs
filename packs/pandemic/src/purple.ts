@@ -1,5 +1,5 @@
 // The purple disease, shared by the Mutation and Bio-Terrorist challenges (never both at once).
-import type { SeatId, Step } from "@boardcore/pack-sdk";
+import type { SeatId } from "@boardcore/pack-sdk";
 import { canPick, pickCards, pickedCards } from "./actions";
 import { cityOf, cubesIn, cure, cureCost, isCity, onBoard, type ActionDef, type State } from "./engine";
 
@@ -8,7 +8,7 @@ export const purpleCity = (s: State) => (k: string) => cubesIn(s, cityOf(k), "pu
 export const purpleCards = (s: State, seat: SeatId) => s.pl[seat]!.hand.filter(isCity);
 
 /** Picking the cards for a purple cure of `need` cards. */
-export const pickPurple = (s: State, seat: SeatId, need: number, chosen: Step[]) =>
+export const pickPurple = (s: State, seat: SeatId, need: number, chosen: string[]) =>
   pickCards(purpleCards(s, seat), need, chosen, "Discard which card (any colour, one with purple on it)", purpleCity(s));
 export const canPurple = (s: State, seat: SeatId, need: number) => canPick(purpleCards(s, seat), need, purpleCity(s));
 

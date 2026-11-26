@@ -2,7 +2,7 @@
 // plays against the others: a hidden location kept on a location sheet only his view shows, infection cards
 // as his hand, airport sightings, spotting and capture, the purple disease with flare-out outbreaks, and his
 // own win. Not with Mutation.
-import type { SeatId, Step } from "@boardcore/pack-sdk";
+import type { SeatId } from "@boardcore/pack-sdk";
 import { ADJ, CITIES, CITY_NAMES } from "../data";
 import { nextQueued, onBoard, opt, place, removeCubes, say, touch, type ActionDef, type Ctx, type State } from "../engine";
 import { curePurple, purpleFollows, purpleGoal } from "../purple";
@@ -47,7 +47,7 @@ function btOptions(s: State) {
   return out;
 }
 
-function btSteps(s: State, partial: Step[]) {
+function btSteps(s: State, partial: string[]) {
   const e = ext(s);
   if (e.over) return partial.length ? null : pick(`Hand limit ${BT_HAND_LIMIT}: discard a card (no effect)`, [...new Set(e.hand)].map((c) => opt(c, c)));
   if (partial.length === 0) return pick(`Bio-Terrorist in ${e.city}${e.captured ? " (captured)" : ""}: ${e.left} action${e.left === 1 ? "" : "s"}${e.freeDrive && !e.captured ? " and the extra move" : ""}`, btOptions(s));
@@ -67,7 +67,7 @@ function discard(s: State, card: string): State {
   return withExt({ ...s, infDiscard: [...s.infDiscard, card] }, { hand: e.hand.filter((_, j) => j !== i) });
 }
 
-function btApply(s: State, action: Step[], ctx: Ctx): State {
+function btApply(s: State, action: string[], ctx: Ctx): State {
   const id = String(action[0]);
   const arg = action[1] === undefined ? "" : String(action[1]);
   s = touch(s);

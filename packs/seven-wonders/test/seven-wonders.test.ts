@@ -151,3 +151,15 @@ describe("seven-wonders add-ons", () => {
     expect(seen.has("Abu Simbel")).toBe(false);
   });
 });
+
+describe("seven wonders: a partial path that isn't option ids", () => {
+  it("leads to no prompt, and such an action is refused", () => {
+    const s = start(3);
+    const me = pack.status(s).actors[0]!;
+    const bad: Step[][] = [[{ "c:0": 1 }], [["c:0"]], ["c:0", { build: 1 }]];
+    for (const p of bad) {
+      expect(pack.choices(s, me, p)).toBeNull();
+      expect(() => pack.apply(s, me, p, rngOf(1))).toThrow(/not a legal action/);
+    }
+  });
+});

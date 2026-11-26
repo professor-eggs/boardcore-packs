@@ -83,7 +83,8 @@ export interface State {
   /** A phase id from the phase registry ("start", "turn", "lastCard", add-on phases), "interrupt" or "over". */
   phase: string;
   players: { [seat: string]: Player };
-  picks: { [seat: string]: Step[] | null };
+  /** Each seat's chosen path this phase: option ids (every prompt is a pick), checked by `validPath` before it is kept. */
+  picks: { [seat: string]: string[] | null };
   decks: string[][];
   discard: string[];
   /** Leaders not dealt, in the box (Rome B draws from here). */
@@ -322,7 +323,7 @@ export function stageWays(s: State, seat: SeatId, ctx: Ctx): Way[] {
 }
 
 /** The prompts after the card step: the way to play it, then (when coins change hands) how to pay. */
-export function wayPrompts(ways: Way[], rest: Step[], label: string): Prompt | null {
+export function wayPrompts(ways: Way[], rest: string[], label: string): Prompt | null {
   if (rest.length === 0) return { kind: "pick", label, options: ways.map((w) => opt(w.id, w.label, w.disabled)) };
   const way = ways.find((w) => w.id === rest[0]);
   if (!way || way.disabled) return null;
@@ -334,14 +335,14 @@ export function wayPrompts(ways: Way[], rest: Step[], label: string): Prompt | n
 }
 
 /** The plan chosen on a path (the only plan when no payment step was shown). */
-export function chosenPlan(way: Way, rest: Step[]): Plan {
+export function chosenPlan(way: Way, rest: string[]): Plan {
   return rest.length > 1 ? parsePlan(rest[1]) : way.plans[0] ?? { L: 0, R: 0, B: 0 };
 }
 
 export const opt = (id: string, label: string, disabled?: string): Option => (disabled ? { id, label, disabled } : { id, label });
 
-/** True when `path` is a complete legal path through `choices`. */
-export function validPath(choices: (partial: Step[]) => Prompt | null, path: Action): boolean {
+/** True when `path` is a complete legal path through `choices`: each step is then the id of an enabled option. */
+export function validPath(choices: (partial: Step[]) => Prompt | null, path: Action): path is string[] {
   for (let i = 0; i <= path.length; i++) {
     const p = choices(path.slice(0, i));
     if (i === path.length) return p === null;
@@ -400,7 +401,7 @@ export function pay(s: State, seat: SeatId, coins: number, plan: Plan): State {
   return { ...s, bought };
 }
 
-export const parsePlan = (id: Step | undefined): Plan => {
+export const parsePlan = (id: string | undefined): Plan => {
   const m = /^pay:(\d+),(\d+),(\d+)$/.exec(String(id ?? ""));
   return m ? { L: Number(m[1]), R: Number(m[2]), B: Number(m[3]) } : { L: 0, R: 0, B: 0 };
 };

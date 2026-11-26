@@ -1,6 +1,6 @@
 {
   "id": "boardcore/seven-wonders",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "7 Wonders",
   "description": "Draft cards over three ages to build a city and a wonder. Leaders, Cities and the Wonder Pack are switchable add-ons. Private local build: not for distribution.",
   "authors": ["Boardcore"],

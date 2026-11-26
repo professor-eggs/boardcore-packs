@@ -4,21 +4,25 @@
   "license": "UNLICENSED",
   "type": "module",
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "setup": "git submodule update --init && pnpm -C boardcore install --frozen-lockfile && pnpm -C boardcore build && pnpm install",
     "build": "pnpm -r --if-present run build",
     "typecheck": "tsc -p .",
     "test": "pnpm build && vitest run",
     "lint": "oxlint -c .oxlintrc.json --report-unused-disable-directives-severity=error packs tools",
-    "check": "pnpm lint && pnpm typecheck && pnpm test",
-    "packs": "node tools/local-packs.mjs"
+    "check": "pnpm lint && pnpm lint:types && pnpm typecheck && pnpm test",
+    "packs": "node tools/local-packs.mjs",
+    "lint:types": "oxlint -c .oxlintrc.json --type-aware --report-unused-disable-directives-severity=error packs tools"
   },
   "devDependencies": {
     "@effect/vitest": "4.1.2",
     "@types/node": "24.19.2",
     "effect": "4.1.2",
     "oxlint": "1.91.0",
+    "oxlint-tsgolint": "7.0.2008",
     "typescript": "7.0.2",
     "vitest": "5.1.0"
   }

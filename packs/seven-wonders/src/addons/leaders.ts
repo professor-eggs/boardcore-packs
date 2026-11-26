@@ -49,7 +49,7 @@ function leaderWays(s: State, seat: SeatId, name: string, ctx: Ctx, extra: boole
   return ways;
 }
 
-function leaderPrompt(s: State, seat: SeatId, partial: (string | string[] | { [k: string]: number })[], ctx: Ctx, extra: boolean) {
+function leaderPrompt(s: State, seat: SeatId, partial: string[], ctx: Ctx, extra: boolean) {
   const hand = s.players[seat]!.leaderHand;
   if (partial.length === 0) {
     const options = hand.map((l, i) => opt(`l:${i}`, `${l}: ${leaderText(l)}`));
@@ -96,7 +96,7 @@ export function effText(e: Eff): string {
 }
 
 function resolveLeaders(s: State, seats: SeatId[], ctx: Ctx, rng: { int(n: number): number }, extra: boolean): State {
-  const done: { seat: SeatId; name: string; way: Way; path: (string | string[] | { [k: string]: number })[] }[] = [];
+  const done: { seat: SeatId; name: string; way: Way; path: string[] }[] = [];
   for (const seat of seats) {
     const path = s.picks[seat];
     if (!path || path[0] === "skip") continue;
