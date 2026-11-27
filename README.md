@@ -12,8 +12,8 @@ Xavier's own Boardcore packs of published games, for personal use only. Never di
 
 ```sh
 pnpm setup        # submodule, Boardcore's install and build, then this repo's install
-pnpm lint         # Boardcore's pack rules (determinism, no module state, SDK-only imports, no chained casts)
-pnpm lint:types   # the same with type information (oxlint-tsgolint): Boardcore's production rules on packs/*/src, its promise rules on packs/*/test
+pnpm lint         # Boardcore's pack rules (determinism, no module state, SDK-only imports, no chained casts) and its general rules (type-only imports, no accumulating spread, kept error causes, no useless assignment)
+pnpm lint:types   # the same with type information (oxlint-tsgolint): Boardcore's production rules on packs/*/src, its promise rules and the needless-cast rule on packs/*/test
 pnpm check        # lint, lint:types, typecheck, build every pack, run every pack's tests
 pnpm packs out/   # pack files for a local server
 ```
