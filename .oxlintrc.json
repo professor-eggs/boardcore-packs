@@ -8,6 +8,10 @@
   },
   "rules": {
     "boardcore/no-chained-type-assertions": "error",
+    "no-useless-assignment": "error",
+    "oxc/no-accumulating-spread": "error",
+    "preserve-caught-error": "error",
+    "typescript/consistent-type-imports": "error",
     "typescript/await-thenable": "off",
     "typescript/no-array-delete": "off",
     "typescript/no-base-to-string": "off",
@@ -60,7 +64,12 @@
         "typescript/no-unsafe-return": "error",
         "typescript/no-base-to-string": "error",
         "typescript/require-array-sort-compare": "error",
-        "typescript/no-implied-eval": "error"
+        "typescript/no-implied-eval": "error",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/return-await": [
+          "error",
+          "error-handling-correctness-only"
+        ]
       }
     },
     {
@@ -70,7 +79,8 @@
       "rules": {
         "typescript/await-thenable": "error",
         "typescript/no-floating-promises": "error",
-        "typescript/no-misused-promises": "error"
+        "typescript/no-misused-promises": "error",
+        "typescript/no-unnecessary-type-assertion": "error"
       }
     }
   ]

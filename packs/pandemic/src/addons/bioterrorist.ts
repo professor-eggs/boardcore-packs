@@ -182,7 +182,7 @@ export const bioterrorist: PandemicAddOn = {
     view(s: State, viewer: string) {
       const e = ext(s);
       const me = viewer === e.seat;
-      return { bioterrorist: { seat: e.seat, city: me || spotted(s) ? e.city : null, sighting: e.sighting, captured: e.captured, out: e.out, handSize: e.hand.length, hand: me ? e.hand : [], sheet: me ? e.sheet : [] } } as never;
+      return { bioterrorist: { seat: e.seat, city: me || spotted(s) ? e.city : null, sighting: e.sighting, captured: e.captured, out: e.out, handSize: e.hand.length, hand: me ? e.hand : [], sheet: me ? e.sheet : [] } };
     },
   },
 };

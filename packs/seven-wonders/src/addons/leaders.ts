@@ -6,7 +6,7 @@ import {
   built, colorCount, effectsOf, gain, nbrs, opt, openStages, pay, chosenPlan, setP, stageDefs, stageEffects, stageWays, startAge, wayPrompts, leftOf,
   type Conflict, type Ctx, type Item, type Line, type PayCtx, type State, type Way,
 } from "../engine";
-import { turnPhase, type Flow, type SevenAddOn } from "../flow";
+import { turnPhase, type SevenAddOn } from "../flow";
 import type { LeadersExt as Ext } from "../ext";
 
 const ext = (s: State): Ext => s.ext.leaders ?? { courtesan: {}, hatPly: -1 };
@@ -163,7 +163,7 @@ export const leaders: SevenAddOn = {
           s = withExt(s, { ...ext(s), frozen: false });
           if (s.seats.some((x) => s.players[x]!.hand.length > 1)) return { ...s, turn: s.turn + 1, phase: "turn" };
         }
-        return turnPhase.next(s, f as Flow, rng);
+        return turnPhase.next(s, f, rng);
       },
     },
     draft: {
@@ -181,18 +181,18 @@ export const leaders: SevenAddOn = {
           left[x] = s.draft[x]!.filter((_, j) => j !== i);
         }
         // The rest goes to the player on the right: each seat receives from its left.
-        let players = { ...s.players };
+        const players = { ...s.players };
         const draft: { [x: string]: string[] } = {};
         for (const x of s.seats) {
-          players = { ...players, [x]: { ...players[x]!, leaderHand: [...players[x]!.leaderHand, ...kept[x]!] } };
+          players[x] = { ...players[x]!, leaderHand: [...players[x]!.leaderHand, ...kept[x]!] };
           draft[x] = left[leftOf(s, x)]!;
         }
         return { ...s, players, draft, draftRound: s.draftRound + 1, log: [...s.log, `Leader draft: pick ${s.draftRound} made.`] };
       },
       next(s, ctx, rng) {
         if (s.seats.some((x) => (s.draft[x]?.length ?? 0) > 1)) return { ...s, phase: "draft" };
-        let players = { ...s.players };
-        for (const x of s.seats) players = { ...players, [x]: { ...players[x]!, leaderHand: [...players[x]!.leaderHand, ...(s.draft[x] ?? [])] } };
+        const players = { ...s.players };
+        for (const x of s.seats) players[x] = { ...players[x]!, leaderHand: [...players[x]!.leaderHand, ...(s.draft[x] ?? [])] };
         return startAge({ ...s, players, draft: {} }, 1, ctx, rng);
       },
     },
@@ -203,9 +203,9 @@ export const leaders: SevenAddOn = {
       next(s) {
         // Before Age III the unplayed leader goes back to the box.
         if (s.age === 3) {
-          let box = s.leaderBox;
-          let players = { ...s.players };
-          for (const x of s.seats) { box = [...box, ...players[x]!.leaderHand]; players = { ...players, [x]: { ...players[x]!, leaderHand: [] } }; }
+          const box = [...s.leaderBox];
+          const players = { ...s.players };
+          for (const x of s.seats) { box.push(...players[x]!.leaderHand); players[x] = { ...players[x]!, leaderHand: [] }; }
           s = { ...s, players, leaderBox: box };
         }
         return { ...s, phase: "turn", turn: 1 };
