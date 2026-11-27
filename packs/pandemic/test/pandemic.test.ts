@@ -33,9 +33,8 @@ function playOut(s: State, seed: number, max = 4000): State {
     if (st.outcome) return s;
     const seat = st.actors[r.int(st.actors.length)]!;
     s = pack.apply(s, seat, randomPath(s, seat, r), r).state;
-    let total = 0;
     for (const c of ["blue", "yellow", "black", "red", "purple"]) {
-      total = onBoard(s, c) + s.supply[c]!;
+      const total = onBoard(s, c) + s.supply[c]!;
       expect(s.supply[c]).toBeGreaterThanOrEqual(0);
       void total;
     }

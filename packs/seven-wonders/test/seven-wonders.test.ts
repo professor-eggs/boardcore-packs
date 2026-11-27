@@ -82,13 +82,13 @@ describe("seven-wonders turns", () => {
   });
   it("offers trading plans and pays neighbours", () => {
     const pc = { own: [], left: ["W", "WC"], right: ["W"], price: { L: { W: 2, C: 2 }, R: { W: 1 } }, discount: 0, bank: 0, rebate: { L: 0, R: 0 }, waive: false };
-    const ps = plans("WW", pc as never, 10);
+    const ps = plans("WW", pc, 10);
     expect(ps).toContainEqual({ L: 2, R: 1, B: 0 });
     expect(ps.every((p) => p.L + p.R + p.B <= 4)).toBe(true);
-    expect(plans("WWW", pc as never, 10)).toEqual([{ L: 4, R: 1, B: 0 }]);
-    expect(plans("O", pc as never, 10)).toEqual([]);
-    expect(plans("WW", { ...pc, discount: 1 } as never, 10)).toContainEqual({ L: 0, R: 1, B: 0 });
-    expect(plans("WW", { ...pc, discount: 2 } as never, 10)).toEqual([{ L: 0, R: 0, B: 0 }]);
+    expect(plans("WWW", pc, 10)).toEqual([{ L: 4, R: 1, B: 0 }]);
+    expect(plans("O", pc, 10)).toEqual([]);
+    expect(plans("WW", { ...pc, discount: 1 }, 10)).toContainEqual({ L: 0, R: 1, B: 0 });
+    expect(plans("WW", { ...pc, discount: 2 }, 10)).toEqual([{ L: 0, R: 0, B: 0 }]);
   });
   it("scores science with sets and wild symbols", () => {
     const k = (c: number, g: number, t: number, wild = 0) => sciScore({ c, g, t, wild, masks: 0, pool: { c: 0, g: 0, t: 0 } }, 7);

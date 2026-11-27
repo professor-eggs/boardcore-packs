@@ -64,7 +64,7 @@ export function pickCards(eligible: string[], need: number, chosen: string[], la
     if (i <= last) return [];
     const later = eligible.slice(i + 1);
     if (later.length < after) return [];
-    if (!has && !mustOne!(k) && !(after > 0 && later.some(mustOne!))) return [];
+    if (!has && !mustOne(k) && !(after > 0 && later.some(mustOne))) return [];
     return [opt(k, cardLabel(k))];
   });
   return pick(`${label} (${chosen.length + 1} of ${need})`, ok);

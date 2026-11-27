@@ -3,7 +3,7 @@
 import { definePack, type Action, type Json, type Prompt, type SeatId, type Viewer } from "@boardcore/pack-sdk";
 import { CITIES, CITY_NAMES, RATES } from "./data";
 import { act, actors, prompt, settle } from "./actions";
-import { cardLabel, cur, POINTS, setupState, type ActionDef, type Ctx, type EventDef, type Opts, type State } from "./engine";
+import { cardLabel, cur, POINTS, setupState, type ActionDef, type Ctx, type Opts, type State } from "./engine";
 import { makeHooks, type AddOn, type Hooks } from "./hooks";
 import type { PandemicAddOn } from "./addon";
 import { base } from "./addons/base";
@@ -29,7 +29,7 @@ function ctxOf(active: readonly string[]): Ctx {
     if (!a) throw new Error(`unknown add-on ${id}`);
     table[id] = { id, handlers: typeof a.handlers === "function" ? a.handlers(ctx) : a.handlers };
     ctx.actions.push(...(a.actions ?? []).filter((x: ActionDef) => !ctx.actions.some((y) => y.id === x.id)));
-    for (const e of a.events ?? []) ctx.events[(e as EventDef).name] = e;
+    for (const e of a.events ?? []) ctx.events[e.name] = e;
     Object.assign(ctx.phases, a.phases ?? {});
     Object.assign(ctx.interrupts, a.interrupts ?? {});
   }

@@ -68,6 +68,6 @@ export const virulentStrain: PandemicAddOn = {
     infectBonus: (n: number, s: State, drawn: string[]) =>
       (on(s, "Rate Effect") && !s.eradicated.includes(ext(s).color!) && drawn.some((x) => CITIES[x] === ext(s).color) ? n + 1 : n),
     outbreakSteps: (n: number, s: State, c: string) => (on(s, "Slippery Slope") && c === ext(s).color ? 2 : n),
-    view: (s: State) => ({ virulentStrain: { color: ext(s).color, active: ext(s).active, seen: ext(s).seen } }) as never,
+    view: (s: State) => ({ virulentStrain: { color: ext(s).color, active: ext(s).active, seen: ext(s).seen } }),
   }),
 };

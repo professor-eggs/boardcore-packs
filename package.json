@@ -21,7 +21,7 @@
     "@effect/vitest": "4.1.2",
     "@types/node": "24.19.2",
     "effect": "4.1.2",
-    "oxlint": "1.91.0",
+    "oxlint": "1.95.0",
     "oxlint-tsgolint": "7.0.2008",
     "typescript": "7.0.2",
     "vitest": "5.1.0"

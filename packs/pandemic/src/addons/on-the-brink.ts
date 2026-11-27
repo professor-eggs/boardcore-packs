@@ -264,7 +264,7 @@ export const onTheBrink: PandemicAddOn = {
     onCure: (s: State, _seat: SeatId, c: string) => withExt(s, { justCured: { color: c, ply: s.ply } }),
     view(s: State, viewer: string) {
       const e = ext(s);
-      return { samples: e.samples, peek: e.peek[viewer] ?? [], travelBan: e.ctb, mobileHospital: e.mobile, specialOrders: e.orders } as never;
+      return { samples: e.samples, peek: e.peek[viewer] ?? [], travelBan: e.ctb, mobileHospital: e.mobile, specialOrders: e.orders };
     },
   }),
 };

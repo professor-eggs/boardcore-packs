@@ -38,7 +38,7 @@ export function makeHooks(table: { [id: string]: AddOn }, active: readonly strin
   });
   const handlers = (point: string, want: Combine) => {
     if (declared[point] !== want) throw new Error(`extension point ${point} is not a ${want} point`);
-    return list.flatMap((a) => (a.handlers[point] ? [a.handlers[point]!] : []));
+    return list.flatMap((a) => (a.handlers[point] ? [a.handlers[point]] : []));
   };
   return {
     chain: <T>(point: string, value: T, ...args: unknown[]) => handlers(point, "chain").reduce((v, h) => h(v, ...args) as T, value),
